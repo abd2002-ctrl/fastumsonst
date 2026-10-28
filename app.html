@@ -1,0 +1,504 @@
+<title>FastUmsonst</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: one-column phone app, max 480px, content scrolls above a fixed bottom tab bar */
+:root{
+  --bg:#F3F5F2; --surface:#FFFFFF; --line:#DFE5E0; --ink:#14201B; --muted:#4A5550;
+  --accent:#0B6E4F; --accent-ink:#FFFFFF; --accent-soft:#E1F1E8;
+  --hero:#0B3D2E; --hero-ink:#FFFFFF; --hero-muted:#CFE8DC; --hero-track:#1E5544; --hero-bar:#7FD6A8;
+  --warn:#9A4A0B; --warn-soft:#FBE9DA; --warn-bar:#D9731F; --danger:#A3261B;
+  --font:'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1613; --surface:#17201C; --line:#2A3631; --ink:#E8EEEA; --muted:#A3B0A9;
+  --accent:#4CC08F; --accent-ink:#06251A; --accent-soft:#163A2B;
+  --hero:#0E2E23; --hero-ink:#FFFFFF; --hero-muted:#B9D9CA; --hero-track:#1F4A3B; --hero-bar:#7FD6A8;
+  --warn:#F0A867; --warn-soft:#3A2617; --warn-bar:#E08A3C; --danger:#F08A80; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1613; --surface:#17201C; --line:#2A3631; --ink:#E8EEEA; --muted:#A3B0A9;
+  --accent:#4CC08F; --accent-ink:#06251A; --accent-soft:#163A2B;
+  --hero:#0E2E23; --hero-ink:#FFFFFF; --hero-muted:#B9D9CA; --hero-track:#1F4A3B; --hero-bar:#7FD6A8;
+  --warn:#F0A867; --warn-soft:#3A2617; --warn-bar:#E08A3C; --danger:#F08A80; color-scheme:dark}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));-webkit-tap-highlight-color:transparent}
+.app{max-width:480px;margin:0 auto;padding-block:20px 120px;display:flex;flex-direction:column;gap:16px}
+h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.5px;text-wrap:balance}
+h2{margin:0;font-size:17px;font-weight:800}
+p{margin:0}
+.muted{color:var(--muted)} .small{font-size:13px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px}
+.hero{background:var(--hero);color:var(--hero-ink);border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.hero .muted{color:var(--hero-muted)}
+.big{font-size:44px;font-weight:800;letter-spacing:-1.5px;line-height:1;font-variant-numeric:tabular-nums}
+.track{height:8px;background:var(--hero-track);border-radius:4px;overflow:hidden}.track i{display:block;height:100%;background:var(--hero-bar);border-radius:4px}
+.gauge{height:14px;background:var(--line);border-radius:7px;overflow:hidden}.gauge i{display:block;height:100%;border-radius:7px}
+.pill{display:inline-flex;align-self:flex-start;font-size:12px;font-weight:700;border-radius:999px;padding:4px 10px}
+.pill.ok{background:var(--accent-soft);color:var(--accent)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.neutral{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.btn{min-height:46px;padding:0 18px;border:none;border-radius:14px;background:var(--accent);color:var(--accent-ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:var(--surface);color:var(--danger);border:1px solid var(--line)}
+.btn.small{min-height:40px;font-size:14px;padding:0 14px;border-radius:12px}
+.btn:focus-visible,.chip:focus-visible,input:focus-visible,select:focus-visible,nav button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}.btns>.btn{flex:1 1 140px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+label{font-size:13px;font-weight:700}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+input,select{min-height:46px;border:1px solid var(--line);border-radius:12px;padding:0 12px;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);width:100%}
+input[type=range]{padding:0;border:none;background:transparent;accent-color:var(--accent)}
+input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--accent)}
+.check{display:flex;gap:10px;align-items:center;font-size:15px;font-weight:600}
+.tip{display:flex;gap:12px;align-items:flex-start}
+.ico{width:40px;height:40px;flex-shrink:0;border-radius:12px;display:flex;align-items:center;justify-content:center}
+.ico.ok{background:var(--accent-soft);color:var(--accent)} .ico.warn{background:var(--warn-soft);color:var(--warn)} .ico.neutral{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.price{font-size:26px;font-weight:800;letter-spacing:-.5px;white-space:nowrap;font-variant-numeric:tabular-nums}.price sup{font-size:14px}
+.station{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.station .name{font-weight:700;overflow-wrap:anywhere}
+.best{border:2px solid var(--accent)}
+.banner{background:var(--warn-soft);color:var(--warn);border-radius:14px;padding:12px 14px;font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.banner button{background:none;border:none;color:inherit;font:inherit;font-weight:800;text-decoration:underline;cursor:pointer;min-height:32px}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:40px;height:40px;border-radius:12px;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px}
+.beta{font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:3px 8px}
+.empty{color:var(--muted);font-size:14px;text-align:center;padding:8px}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
+  padding:8px max(10px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px))}
+nav.tabs .inner{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
+nav.tabs button{min-height:56px;border:none;border-radius:14px;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+nav.tabs button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.sheet-bg{position:fixed;inset:0;z-index:30;background:rgba(10,20,15,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);color:var(--ink);width:100%;max-width:520px;border-radius:24px 24px 0 0;max-height:90vh;overflow-y:auto;
+  padding:20px max(20px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px));display:flex;flex-direction:column;gap:14px}
+.err{color:var(--danger);font-size:13px;font-weight:700}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom, 0px));z-index:40;background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:999px;font-weight:700;font-size:14px;max-width:calc(100% - 32px);text-align:center}
+.mono{font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+@media (prefers-reduced-motion: no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:none;opacity:1}}}
+</style>
+
+<main class="app" id="app" aria-live="polite"></main>
+<nav class="tabs" id="tabs" aria-label="Hauptmenü" hidden>
+  <div class="inner">
+    <button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</button>
+    <button data-tab="tanken"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v17M2 22h13M14 9h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V8l-3-3M6 8h5"/></svg>Tanken</button>
+    <button data-tab="wunsch"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/></svg>Wunschliste</button>
+    <button data-tab="mehr"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Mehr</button>
+  </div>
+</nav>
+<div id="sheet" hidden></div>
+<div id="toast" class="toast" role="status" hidden></div>
+
+<script>
+(function(){
+'use strict';
+// ===== Einstellungen =====
+const FEEDBACK_EMAIL = 'feedback@fastumsonst.de'; // <- deine echte Feedback-Adresse hier eintragen
+const API_URL = '/api/stations';                  // Server-Funktion für echte Tankpreise
+const VERSION = 'Beta 0.1';
+const KEY = 'fastumsonst-v1';
+const FUELS = {e5:'Super E5', e10:'Super E10', diesel:'Diesel'};
+
+// ===== Daten speichern (nur auf diesem Gerät) =====
+function defaults(){ return {setup:{tankL:50, cons:6.5, weekKm:250, fuel:'e10', done:false}, tank:null, fills:[], wishes:[], demo:false}; }
+function load(){ try{ const r = localStorage.getItem(KEY); if(r){ const d = JSON.parse(r); return Object.assign(defaults(), d, {setup:Object.assign(defaults().setup, d.setup||{})}); } }catch(e){} return defaults(); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+let S = load();
+let tab = 'home', stations = [], source = '', loading = false, resetArmed = false, installEvt = null;
+
+// ===== Helfer =====
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(n || 0);
+const num = (n,d=0) => new Intl.NumberFormat('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d}).format(n || 0);
+const parse = v => { const n = parseFloat(String(v ?? '').trim().replace(/\./g,'').replace(',','.')); return isFinite(n) ? n : NaN; };
+const parsePrice = v => { const n = parseFloat(String(v ?? '').trim().replace(',','.')); return isFinite(n) ? n : NaN; };
+const priceHtml = p => { const s = p.toFixed(3); return s.slice(0,4).replace('.',',') + '<sup>' + s.slice(4) + '</sup>'; };
+const uid = () => Math.random().toString(36).slice(2,10);
+const thisMonth = t => { const d = new Date(t), n = new Date(); return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear(); };
+function toast(msg){ const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2600); }
+
+const I = {
+  pump:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v17M2 22h13M14 9h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V8l-3-3M6 8h5"/></svg>',
+  clock:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  tag:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>',
+  plus:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+  refresh:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>'
+};
+
+// ===== Tank-Schätzung =====
+function tankNow(){
+  if(!S.tank) return null;
+  const days = Math.max(0, (Date.now() - S.tank.at) / 864e5);
+  const km = days * S.setup.weekKm / 7;
+  const liters = Math.max(0, S.tank.liters - km * S.setup.cons / 100);
+  return {liters, pct: Math.min(100, liters / S.setup.tankL * 100), reach: liters / S.setup.cons * 100};
+}
+function learnWeekKm(newOdo){
+  if(!S.tank || !S.tank.odo || !(newOdo > S.tank.odo)) return;
+  const days = (Date.now() - S.tank.at) / 864e5;
+  if(days < 1) return;
+  const perWeek = (newOdo - S.tank.odo) / days * 7;
+  if(perWeek > 5 && perWeek < 5000) S.setup.weekKm = Math.round(S.setup.weekKm * 0.6 + perWeek * 0.4);
+}
+
+// ===== Tankstellen =====
+function getPos(){
+  return new Promise((ok, fail) => {
+    if(!navigator.geolocation) return fail(new Error('kein GPS'));
+    navigator.geolocation.getCurrentPosition(p => ok({lat:p.coords.latitude, lng:p.coords.longitude}), fail, {timeout:8000, maximumAge:300000});
+  });
+}
+function demoStations(){
+  const h = new Date().getHours();
+  const shift = (h >= 18 && h < 22) ? -0.05 : (h >= 6 && h < 10) ? 0.04 : 0;
+  const rows = [
+    ['Tankstelle am Ring','Ringstraße 12',0.8,1.749,1.689,1.599],
+    ['Freie Tankstelle Süd','Südring 3',1.4,1.769,1.709,1.619],
+    ['Autohof West','Industriestraße 40',2.1,1.789,1.729,1.649],
+    ['Tankstelle Bahnhof','Bahnhofstraße 7',0.5,1.819,1.759,1.669],
+    ['Tankstelle Nord','Nordallee 21',3.2,1.799,1.739,1.629]
+  ];
+  return rows.map((r,i) => ({id:'demo'+i, name:r[0], addr:r[1], dist:r[2], isOpen:true, e5:+(r[3]+shift).toFixed(3), e10:+(r[4]+shift).toFixed(3), diesel:+(r[5]+shift).toFixed(3)}));
+}
+async function loadStations(){
+  loading = true; render();
+  try{
+    const pos = await getPos();
+    const r = await fetch(API_URL + '?lat=' + pos.lat.toFixed(3) + '&lng=' + pos.lng.toFixed(3) + '&rad=5');
+    if(!r.ok) throw new Error('api');
+    const j = await r.json();
+    if(!j.ok || !Array.isArray(j.stations) || !j.stations.length) throw new Error('leer');
+    stations = j.stations.map(s => ({
+      id:s.id, name:(s.brand ? s.brand + ' ' : '') + (s.street ? s.street : s.name || 'Tankstelle'),
+      addr:[(s.street||'') + ' ' + (s.houseNumber||''), s.place||''].filter(x => x.trim()).join(', '),
+      dist:s.dist, isOpen:s.isOpen, e5:s.e5, e10:s.e10, diesel:s.diesel
+    }));
+    source = 'live';
+  }catch(e){
+    stations = demoStations(); source = 'demo';
+  }
+  loading = false; render();
+}
+function fuelList(){
+  const f = S.setup.fuel;
+  const list = stations.filter(s => s.isOpen && typeof s[f] === 'number' && s[f] > 0).sort((a,b) => a[f] - b[f]);
+  const avg = list.length ? list.reduce((a,s) => a + s[f], 0) / list.length : null;
+  return {list, avg, f};
+}
+function timeHint(){
+  const h = new Date().getHours();
+  if(h >= 18 && h < 22) return {good:true, title:'Jetzt ist eine gute Zeit', text:'Am frühen Abend sind die Spritpreise meist am niedrigsten.'};
+  if(h >= 6 && h < 12) return {good:false, title:'Wenn es nicht eilt: heute Abend tanken', text:'Morgens sind die Preise meist am höchsten. Ab etwa 18 Uhr wird es in der Regel günstiger.'};
+  if(h >= 12 && h < 18) return {good:false, title:'Lieber bis zum Abend warten', text:'Ab etwa 18 Uhr sinken die Preise meist. Wenn dein Tank reicht, lohnt sich das Warten.'};
+  return {good:false, title:'Faustregel: früher Abend', text:'Nachts und am Morgen steigen die Preise oft. Am günstigsten ist es meist zwischen 18 und 22 Uhr.'};
+}
+
+// ===== Gespart =====
+function savings(){
+  const fuel = S.fills.filter(f => thisMonth(f.at)).reduce((a,f) => a + (f.saved||0), 0);
+  const wish = S.wishes.filter(w => w.bought && thisMonth(w.boughtAt)).reduce((a,w) => a + (w.saved||0), 0);
+  const all = S.fills.reduce((a,f) => a + (f.saved||0), 0) + S.wishes.filter(w => w.bought).reduce((a,w) => a + (w.saved||0), 0);
+  return {fuel, wish, total: fuel + wish, all};
+}
+function wishStatus(w){
+  if(w.bought) return {cls:'ok', text: w.saved > 0 ? 'Gekauft · ' + eur(w.saved) + ' gespart' : 'Gekauft'};
+  if(w.now <= w.target) return {cls:'ok', text:'Zielpreis erreicht – jetzt kaufen'};
+  if(w.now < w.start) return {cls:'warn', text:'Schon ' + eur(w.start - w.now) + ' günstiger · noch ' + eur(w.now - w.target) + ' bis zum Ziel'};
+  return {cls:'neutral', text:'Noch ' + eur(w.now - w.target) + ' über deinem Zielpreis'};
+}
+
+// ===== Ansichten =====
+function demoBanner(){
+  return S.demo ? '<div class="banner"><span>Du siehst Beispieldaten.</span><button data-action="clear-demo">Mit eigenen Daten starten</button></div>' : '';
+}
+function header(title, sub){
+  return '<div class="stack" style="gap:4px"><h1>' + title + '</h1>' + (sub ? '<p class="muted">' + sub + '</p>' : '') + '</div>';
+}
+function viewSetup(){
+  const s = S.setup;
+  return '<div class="brand"><div class="logo" aria-hidden="true">€</div><div><h1>FastUmsonst</h1></div><span class="beta">BETA</span></div>' +
+  '<div class="hero"><p style="font-size:20px;font-weight:800;line-height:1.3">Dein Spar-Assistent fürs Tanken und Einkaufen.</p>' +
+  '<p class="muted">Die App zeigt dir die günstigste Tankstelle in deiner Nähe, rechnet mit, wann dein Tank leer wird, und behält die Preise auf deiner Wunschliste im Blick.</p></div>' +
+  '<form class="card" id="setup-form" novalidate><h2>Dein Auto</h2>' +
+  '<div class="fields">' +
+  '<div class="field"><label for="s-tank">Tankgröße (Liter)</label><input id="s-tank" inputmode="decimal" value="' + num(s.tankL) + '"></div>' +
+  '<div class="field"><label for="s-cons">Verbrauch (l/100 km)</label><input id="s-cons" inputmode="decimal" value="' + num(s.cons,1) + '"></div>' +
+  '<div class="field"><label for="s-week">Km pro Woche (ca.)</label><input id="s-week" inputmode="numeric" value="' + num(s.weekKm) + '"></div>' +
+  '<div class="field"><label for="s-fuel">Sprit</label><select id="s-fuel">' + Object.keys(FUELS).map(k => '<option value="' + k + '"' + (k === s.fuel ? ' selected' : '') + '>' + FUELS[k] + '</option>').join('') + '</select></div>' +
+  '</div><p class="small muted">Keine Sorge, wenn du es nicht genau weißt. Die App lernt mit jeder Tankfüllung dazu.</p>' +
+  '<p class="err" id="setup-err" hidden></p>' +
+  '<div class="btns"><button class="btn" type="submit">Los geht’s</button><button class="btn ghost" type="button" data-action="demo">Erst mit Beispieldaten ansehen</button></div></form>';
+}
+function viewHome(){
+  const sv = savings(), t = tankNow(), {list} = fuelList(), th = timeHint();
+  const max = Math.max(sv.fuel, sv.wish, 0.01);
+  const monthName = new Date().toLocaleDateString('de-DE',{month:'long'});
+  let tips = '';
+  if(t && (t.pct < 30 || t.reach < 150)){
+    const b = list[0];
+    tips += tip('warn', I.pump, 'Bald tanken: noch ca. ' + num(t.reach) + ' km', b ? 'Am günstigsten gerade: ' + esc(b.name) + ' für ' + num(b[S.setup.fuel],3) + ' €/l (' + num(b.dist,1) + ' km). ' + th.title + '.' : th.text, 'tanken');
+  } else if(t){
+    tips += tip('ok', I.pump, 'Tank reicht noch ca. ' + num(t.reach) + ' km', 'Du musst gerade nicht tanken. Ich zeige dir rechtzeitig, wann und wo es günstig ist.', 'tanken');
+  } else {
+    tips += tip('neutral', I.pump, 'Wie voll ist dein Tank?', 'Trag kurz deinen Füllstand ein, dann rechnet die App deine Reichweite mit.', 'tanken');
+  }
+  tips += tip(th.good ? 'ok' : 'neutral', I.clock, th.title, th.text, 'tanken');
+  const reached = S.wishes.filter(w => !w.bought && w.now <= w.target);
+  reached.slice(0,2).forEach(w => tips += tip('ok', I.tag, 'Zielpreis erreicht: ' + esc(w.name), 'Jetzt ' + eur(w.now) + ', dein Ziel war ' + eur(w.target) + '.', 'wunsch'));
+  if(!S.wishes.length) tips += tip('neutral', I.tag, 'Wunschliste anlegen', 'Trag ein, was du kaufen willst, und deinen Wunschpreis. So siehst du, wann es sich lohnt.', 'wunsch');
+
+  return demoBanner() +
+  '<div class="row"><div class="brand"><div class="logo" aria-hidden="true">€</div><h1>FastUmsonst</h1></div><span class="beta">BETA</span></div>' +
+  '<section class="hero" aria-label="Gespart"><div class="row"><span class="muted" style="font-weight:600">Im ' + monthName + ' gespart</span></div>' +
+  '<div class="big">' + eur(sv.total) + '</div>' +
+  (sv.total > 0 || S.fills.length ?
+    '<div class="stack" style="gap:10px">' +
+    '<div><div class="row small"><span>Tanken</span><b class="mono">' + eur(sv.fuel) + '</b></div><div class="track" style="margin-top:4px"><i style="width:' + (sv.fuel/max*100) + '%"></i></div></div>' +
+    '<div><div class="row small"><span>Wunschliste</span><b class="mono">' + eur(sv.wish) + '</b></div><div class="track" style="margin-top:4px"><i style="width:' + (sv.wish/max*100) + '%"></i></div></div>' +
+    '</div><p class="small muted">Gerechnet gegenüber dem Durchschnittspreis in deiner Nähe. Insgesamt gespart: ' + eur(sv.all) + '</p>'
+    : '<p class="small muted">Trag deine erste Tankfüllung ein. Dann siehst du hier, wie viel du gegenüber dem Durchschnitt in deiner Nähe gespart hast.</p>') +
+  '</section>' +
+  '<section class="stack" aria-label="Hinweise"><h2>Für dich gefunden</h2>' + tips + '</section>';
+}
+function tip(cls, icon, title, text, go){
+  return '<button class="card tip" data-action="go" data-go="' + go + '" style="text-align:left;font:inherit;color:inherit;cursor:pointer;flex-direction:row">' +
+    '<span class="ico ' + cls + '">' + icon + '</span><span class="stack" style="gap:2px"><b style="font-size:15px">' + title + '</b><span class="small muted">' + text + '</span></span></button>';
+}
+function viewTanken(){
+  const t = tankNow(), {list, avg, f} = fuelList(), th = timeHint();
+  let tankCard;
+  if(!t){
+    tankCard = '<div class="card"><h2>Wie voll ist dein Tank gerade?</h2><input type="range" id="t-init" min="0" max="100" step="5" value="50" aria-label="Füllstand in Prozent"><p class="muted" id="t-init-out">50 %</p><button class="btn" data-action="tank-init">Speichern</button></div>';
+  } else {
+    const low = t.pct < 30;
+    tankCard = '<div class="card"><div class="row" style="align-items:baseline"><h2>Dein Tank</h2><span class="price" style="color:' + (low ? 'var(--warn)' : 'var(--accent)') + '">' + num(t.pct) + ' %</span></div>' +
+      '<div class="gauge" role="img" aria-label="Füllstand ' + num(t.pct) + ' Prozent"><i style="width:' + t.pct + '%;background:' + (low ? 'var(--warn-bar)' : 'var(--accent)') + '"></i></div>' +
+      '<p class="small muted">Reichweite ca. <b style="color:var(--ink)">' + num(t.reach) + ' km</b> · geschätzt mit ' + num(S.setup.cons,1) + ' l/100 km und ca. ' + num(S.setup.weekKm) + ' km pro Woche.</p>' +
+      '<div class="btns"><button class="btn small" data-action="fill">Getankt</button><button class="btn small ghost" data-action="odo">Kilometerstand eintragen</button></div></div>';
+  }
+  const need = t && (t.pct < 30 || t.reach < 150);
+  const best = list[0];
+  let rec = '';
+  if(best){
+    const save50 = avg ? (avg - best[f]) * Math.min(50, S.setup.tankL) : 0;
+    rec = '<div class="card ' + (need ? 'best' : '') + '" style="' + (need ? 'background:var(--accent-soft)' : '') + '">' +
+      '<span class="pill ' + (need ? 'ok' : 'neutral') + '">' + (need ? 'BESTE WAHL JETZT' : 'NOCH KEIN TANKEN NÖTIG') + '</span>' +
+      '<b style="font-size:18px">' + esc(best.name) + '</b>' +
+      '<p class="small muted">' + num(best.dist,1) + ' km entfernt · ' + num(best[f],3) + ' €/l' + (save50 > 0.5 ? ' · ca. ' + eur(save50) + ' günstiger als der Durchschnitt pro Tankfüllung' : '') + '</p>' +
+      '<div class="tip"><span class="ico ' + (th.good ? 'ok' : 'neutral') + '">' + I.clock + '</span><span class="stack" style="gap:2px"><b>' + th.title + '</b><span class="small muted">' + th.text + '</span></span></div></div>';
+  }
+  const chips = '<div class="chips" role="group" aria-label="Sprit">' + Object.keys(FUELS).map(k => '<button class="chip" data-action="fuel" data-fuel="' + k + '" aria-pressed="' + (k === f) + '">' + FUELS[k].replace('Super ','') + '</button>').join('') + '</div>';
+  let rows;
+  if(loading) rows = '<p class="empty">Suche Tankstellen in deiner Nähe …</p>';
+  else if(!list.length) rows = '<p class="empty">Keine geöffneten Tankstellen gefunden.</p>';
+  else rows = list.map((s,i) => '<div class="card ' + (i === 0 ? 'best' : '') + '"><div class="station"><div class="stack" style="gap:2px;min-width:0">' +
+      (i === 0 ? '<span class="pill ok">AM GÜNSTIGSTEN</span>' : '') +
+      '<span class="name">' + esc(s.name) + '</span><span class="small muted">' + num(s.dist,1) + ' km · ' + esc(s.addr) + '</span></div>' +
+      '<div class="price">' + priceHtml(s[f]) + '</div></div>' +
+      '<button class="btn small ghost" data-action="fill" data-station="' + esc(s.id) + '">Hier getankt</button></div>').join('');
+  const src = source === 'live'
+    ? 'Live-Preise · Quelle: MTS-K über Tankerkönig.de (CC BY 4.0)'
+    : 'Beispieldaten · Echte Preise erscheinen, sobald die App online ist und du den Standort erlaubst.';
+  return demoBanner() + header('Tanken', 'Dein Tank und die günstigsten Preise in der Nähe') + tankCard + rec +
+    '<div class="row"><h2>Tankstellen in der Nähe</h2><button class="btn small ghost" data-action="reload" aria-label="Preise aktualisieren">' + I.refresh + '</button></div>' +
+    chips + '<p class="small muted">' + src + '</p><div class="stack">' + rows + '</div>';
+}
+function viewWunsch(){
+  const open = S.wishes.filter(w => !w.bought), done = S.wishes.filter(w => w.bought);
+  const item = w => {
+    const st = wishStatus(w);
+    return '<div class="card"><div class="row" style="align-items:flex-start"><div class="stack" style="gap:2px;min-width:0"><b style="overflow-wrap:anywhere">' + esc(w.name) + '</b><span class="small muted">Zielpreis ' + eur(w.target) + ' · eingetragen für ' + eur(w.start) + '</span></div>' +
+      '<b class="mono" style="font-size:18px;white-space:nowrap">' + eur(w.now) + '</b></div>' +
+      '<span class="pill ' + st.cls + '">' + st.text + '</span>' +
+      (w.bought ? '' :
+      '<div class="row" style="gap:8px;align-items:flex-end"><div class="field" style="flex:1"><label for="p-' + w.id + '">Neuer Preis</label><input id="p-' + w.id + '" inputmode="decimal" placeholder="' + num(w.now,2) + '"></div><button class="btn small ghost" data-action="wish-price" data-id="' + w.id + '">Aktualisieren</button></div>' +
+      '<div class="btns"><a class="btn small ghost" href="https://www.idealo.de/preisvergleich/MainSearchProductCategory.html?q=' + encodeURIComponent(w.name) + '" target="_blank" rel="noopener">Preise vergleichen</a><button class="btn small" data-action="wish-buy" data-id="' + w.id + '">Gekauft</button></div>') +
+      '<button class="btn small danger" data-action="wish-del" data-id="' + w.id + '" style="align-self:flex-start">Entfernen</button></div>';
+  };
+  return demoBanner() + header('Wunschliste', 'Trag ein, was du kaufen willst. Sobald der Preis passt, siehst du es sofort.') +
+    '<form class="card" id="wish-form" novalidate><h2>Neuer Wunsch</h2>' +
+    '<div class="field"><label for="w-name">Was möchtest du kaufen?</label><input id="w-name" placeholder="z. B. Kabellose Kopfhörer" maxlength="80"></div>' +
+    '<div class="fields"><div class="field"><label for="w-now">Aktueller Preis (€)</label><input id="w-now" inputmode="decimal" placeholder="189,00"></div>' +
+    '<div class="field"><label for="w-target">Dein Wunschpreis (€)</label><input id="w-target" inputmode="decimal" placeholder="150,00"></div></div>' +
+    '<p class="err" id="wish-err" hidden></p><button class="btn" type="submit">' + I.plus + ' Hinzufügen</button>' +
+    '<p class="small muted">In der nächsten Version prüft die App die Preise automatisch für dich.</p></form>' +
+    '<div class="stack">' + (open.length ? open.map(item).join('') : '<p class="empty">Noch nichts auf deiner Wunschliste.</p>') + '</div>' +
+    (done.length ? '<h2>Gekauft</h2><div class="stack">' + done.map(item).join('') + '</div>' : '');
+}
+function viewMehr(){
+  const s = S.setup;
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  return header('Mehr', '') +
+  '<form class="card" id="profile-form" novalidate><h2>Dein Auto</h2><div class="fields">' +
+  '<div class="field"><label for="m-tank">Tankgröße (Liter)</label><input id="m-tank" inputmode="decimal" value="' + num(s.tankL) + '"></div>' +
+  '<div class="field"><label for="m-cons">Verbrauch (l/100 km)</label><input id="m-cons" inputmode="decimal" value="' + num(s.cons,1) + '"></div>' +
+  '<div class="field"><label for="m-week">Km pro Woche</label><input id="m-week" inputmode="numeric" value="' + num(s.weekKm) + '"></div>' +
+  '<div class="field"><label for="m-fuel">Sprit</label><select id="m-fuel">' + Object.keys(FUELS).map(k => '<option value="' + k + '"' + (k === s.fuel ? ' selected' : '') + '>' + FUELS[k] + '</option>').join('') + '</select></div>' +
+  '</div><p class="small muted">Verbrauch und Kilometer pro Woche passt die App automatisch an, wenn du beim Tanken den Kilometerstand einträgst.</p><p class="err" id="profile-err" hidden></p><button class="btn" type="submit">Speichern</button></form>' +
+  '<div class="card"><h2>Als App auf den Startbildschirm</h2>' +
+  (installEvt ? '<button class="btn" data-action="install">App installieren</button>' : '') +
+  '<p class="small muted">' + (ios ? 'iPhone: In Safari unten auf das Teilen-Symbol tippen und „Zum Home-Bildschirm“ wählen.' : 'Android: Im Chrome-Menü (drei Punkte) „App installieren“ oder „Zum Startbildschirm hinzufügen“ wählen. iPhone: In Safari auf Teilen und dann „Zum Home-Bildschirm“.') + '</p></div>' +
+  '<div class="card"><h2>Feedback</h2><p class="small muted">Was fehlt dir? Was nervt? Schreib uns, jede Nachricht hilft, die App besser zu machen.</p>' +
+  '<div class="row" style="flex-wrap:wrap"><b style="user-select:all;overflow-wrap:anywhere">' + esc(FEEDBACK_EMAIL) + '</b><button class="btn small ghost" data-action="copy-mail">Adresse kopieren</button></div></div>' +
+  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Daten bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Alle Angaben ohne Gewähr.</p></div>' +
+  '<div class="card"><h2>Daten zurücksetzen</h2><p class="small muted">Löscht Tankfüllungen, Wunschliste und Einstellungen auf diesem Gerät.</p>' +
+  (resetArmed ? '<div class="btns"><button class="btn danger" data-action="reset-yes">Ja, alles löschen</button><button class="btn ghost" data-action="reset-no">Abbrechen</button></div>' : '<button class="btn danger" data-action="reset">Zurücksetzen</button>') + '</div>';
+}
+
+// ===== Bottom-Sheets =====
+let sheetCtx = null;
+function openSheet(html, ctx){ sheetCtx = ctx || null; const el = $('sheet'); el.innerHTML = '<div class="sheet-bg" data-action="sheet-bg"><div class="sheet" role="dialog" aria-modal="true">' + html + '</div></div>'; el.hidden = false; const f = el.querySelector('input'); if(f) setTimeout(() => f.focus(), 50); }
+function closeSheet(){ $('sheet').hidden = true; $('sheet').innerHTML = ''; sheetCtx = null; }
+function fillSheet(stationId){
+  const {list, avg, f} = fuelList();
+  const st = stations.find(s => s.id === stationId);
+  const t = tankNow();
+  const gap = t ? Math.max(0, S.setup.tankL - t.liters) : '';
+  openSheet('<h2>' + (st ? 'Getankt bei ' + esc(st.name) : 'Tankfüllung eintragen') + '</h2>' +
+    '<form id="fill-form" class="stack" novalidate><div class="fields">' +
+    '<div class="field"><label for="f-l">Liter getankt</label><input id="f-l" inputmode="decimal" value="' + (gap !== '' ? num(gap,1) : '') + '"></div>' +
+    '<div class="field"><label for="f-p">Preis pro Liter (€)</label><input id="f-p" inputmode="decimal" value="' + (st ? num(st[f],3) : '') + '" placeholder="1,689"></div>' +
+    '<div class="field" style="grid-column:1/-1"><label for="f-o">Kilometerstand (optional)</label><input id="f-o" inputmode="numeric" placeholder="z. B. 84.250"></div></div>' +
+    '<label class="check"><input type="checkbox" id="f-full" checked> Vollgetankt</label>' +
+    '<p class="small muted">Mit dem Kilometerstand lernt die App deinen echten Verbrauch.</p>' +
+    '<p class="err" id="fill-err" hidden></p>' +
+    '<div class="btns"><button class="btn" type="submit">Speichern</button><button class="btn ghost" type="button" data-action="sheet-close">Abbrechen</button></div></form>',
+    {station: st ? st.name : null, avg: avg});
+}
+function odoSheet(){
+  openSheet('<h2>Kilometerstand eintragen</h2><form id="odo-form" class="stack" novalidate>' +
+    '<div class="field"><label for="o-v">Aktueller Kilometerstand</label><input id="o-v" inputmode="numeric" placeholder="' + (S.tank && S.tank.odo ? num(S.tank.odo) : 'z. B. 84.250') + '"></div>' +
+    '<p class="small muted">So wird die Tankanzeige genauer. Die App passt deine Kilometer pro Woche automatisch an.</p>' +
+    '<p class="err" id="odo-err" hidden></p>' +
+    '<div class="btns"><button class="btn" type="submit">Speichern</button><button class="btn ghost" type="button" data-action="sheet-close">Abbrechen</button></div></form>');
+}
+function showErr(id, msg){ const e = $(id); e.textContent = msg; e.hidden = false; }
+
+// ===== Beispieldaten =====
+function loadDemo(){
+  const d = defaults(); d.setup.done = true; d.demo = true;
+  const day = 864e5, now = Date.now(), monthStart = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
+  const t1 = Math.max(monthStart + 3600e3, now - 12*day), t2 = Math.max(monthStart + 7200e3, now - 5*day);
+  d.fills = [
+    {at:t1, station:'Tankstelle am Ring', price:1.679, liters:41.2, avg:1.731, saved:+((1.731-1.679)*41.2).toFixed(2), full:true, odo:83510},
+    {at:t2, station:'Freie Tankstelle Süd', price:1.699, liters:38.5, avg:1.744, saved:+((1.744-1.699)*38.5).toFixed(2), full:true, odo:84110}
+  ];
+  d.tank = {liters: 16, at: now - day, odo: 84390};
+  d.wishes = [
+    {id:uid(), name:'Kabellose Kopfhörer', start:189, now:149, target:150, bought:false},
+    {id:uid(), name:'Saugroboter', start:299, now:279, target:230, bought:false},
+    {id:uid(), name:'Winterjacke', start:129.99, now:99.99, target:100, bought:true, boughtAt:now - 3*day, saved:30}
+  ];
+  S = d; save(); tab = 'home'; render(); toast('Beispieldaten geladen');
+}
+
+// ===== Rendern =====
+function render(){
+  const app = $('app');
+  if(!S.setup.done){ app.innerHTML = viewSetup(); $('tabs').hidden = true; return; }
+  $('tabs').hidden = false;
+  app.innerHTML = tab === 'home' ? viewHome() : tab === 'tanken' ? viewTanken() : tab === 'wunsch' ? viewWunsch() : viewMehr();
+  document.querySelectorAll('#tabs button').forEach(b => { if(b.dataset.tab === tab) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
+  const r = $('t-init'); if(r) r.addEventListener('input', () => $('t-init-out').textContent = r.value + ' %');
+}
+function readProfile(prefix, errId){
+  const tankL = parse($(prefix+'-tank').value), cons = parsePrice($(prefix+'-cons').value), week = parse($(prefix+'-week').value), fuel = $(prefix+'-fuel').value;
+  if(!(tankL >= 10 && tankL <= 200)) return showErr(errId, 'Bitte eine Tankgröße zwischen 10 und 200 Litern eingeben.'), null;
+  if(!(cons >= 2 && cons <= 30)) return showErr(errId, 'Bitte einen Verbrauch zwischen 2 und 30 Litern eingeben.'), null;
+  if(!(week >= 0 && week <= 5000)) return showErr(errId, 'Bitte die Kilometer pro Woche als Zahl eingeben.'), null;
+  return {tankL, cons, weekKm:week, fuel};
+}
+
+// ===== Ereignisse =====
+document.addEventListener('click', e => {
+  const tb = e.target.closest('#tabs button');
+  if(tb){ tab = tb.dataset.tab; resetArmed = false; render(); window.scrollTo(0,0); if(tab === 'tanken' && !stations.length) loadStations(); return; }
+  const a = e.target.closest('[data-action]'); if(!a) return;
+  const act = a.dataset.action;
+  if(act === 'sheet-bg' && e.target !== a) return;
+  switch(act){
+    case 'demo': loadDemo(); loadStations(); break;
+    case 'clear-demo': S = defaults(); save(); render(); break;
+    case 'go': tab = a.dataset.go; render(); window.scrollTo(0,0); if(tab === 'tanken' && !stations.length) loadStations(); break;
+    case 'fuel': S.setup.fuel = a.dataset.fuel; save(); render(); break;
+    case 'reload': loadStations(); break;
+    case 'tank-init': { const v = +$('t-init').value; S.tank = {liters: S.setup.tankL * v / 100, at: Date.now(), odo: null}; save(); render(); toast('Füllstand gespeichert'); break; }
+    case 'fill': fillSheet(a.dataset.station); break;
+    case 'odo': odoSheet(); break;
+    case 'sheet-close': case 'sheet-bg': closeSheet(); break;
+    case 'wish-price': { const w = S.wishes.find(x => x.id === a.dataset.id); const v = parsePrice($('p-' + w.id).value); if(!(v > 0)) { toast('Bitte einen Preis eingeben'); break; } w.now = v; save(); render(); toast(v <= w.target ? 'Zielpreis erreicht!' : 'Preis aktualisiert'); break; }
+    case 'wish-buy': { const w = S.wishes.find(x => x.id === a.dataset.id); w.bought = true; w.boughtAt = Date.now(); w.saved = Math.max(0, +(w.start - w.now).toFixed(2)); save(); render(); toast(w.saved > 0 ? eur(w.saved) + ' gespart!' : 'Als gekauft markiert'); break; }
+    case 'wish-del': S.wishes = S.wishes.filter(x => x.id !== a.dataset.id); save(); render(); break;
+    case 'copy-mail': navigator.clipboard && navigator.clipboard.writeText(FEEDBACK_EMAIL).then(() => toast('Adresse kopiert'), () => toast('Bitte die Adresse markieren und kopieren')); break;
+    case 'install': if(installEvt){ installEvt.prompt(); installEvt = null; render(); } break;
+    case 'reset': resetArmed = true; render(); break;
+    case 'reset-no': resetArmed = false; render(); break;
+    case 'reset-yes': S = defaults(); save(); resetArmed = false; tab = 'home'; render(); toast('Daten gelöscht'); break;
+  }
+});
+document.addEventListener('submit', e => {
+  e.preventDefault();
+  const id = e.target.id;
+  if(id === 'setup-form'){
+    const p = readProfile('s', 'setup-err'); if(!p) return;
+    Object.assign(S.setup, p, {done:true}); save(); tab = 'tanken'; render(); loadStations();
+  }
+  if(id === 'profile-form'){
+    const p = readProfile('m', 'profile-err'); if(!p) return;
+    Object.assign(S.setup, p); save(); render(); toast('Gespeichert');
+  }
+  if(id === 'wish-form'){
+    const name = $('w-name').value.trim(), now = parsePrice($('w-now').value), target = parsePrice($('w-target').value);
+    if(!name) return showErr('wish-err', 'Bitte gib ein, was du kaufen möchtest.');
+    if(!(now > 0) || !(target > 0)) return showErr('wish-err', 'Bitte aktuellen Preis und Wunschpreis als Zahl eingeben, z. B. 149,99.');
+    S.wishes.unshift({id:uid(), name, start:now, now, target, bought:false}); save(); render(); toast('Zur Wunschliste hinzugefügt');
+  }
+  if(id === 'fill-form'){
+    const liters = parsePrice($('f-l').value), price = parsePrice($('f-p').value), odoRaw = $('f-o').value.trim(), odo = odoRaw ? parse(odoRaw) : null, full = $('f-full').checked;
+    if(!(liters > 0 && liters <= 300)) return showErr('fill-err', 'Bitte die getankten Liter eingeben, z. B. 42,5.');
+    if(!(price > 0.5 && price < 5)) return showErr('fill-err', 'Bitte den Preis pro Liter eingeben, z. B. 1,689.');
+    if(odoRaw && !(odo > 0)) return showErr('fill-err', 'Der Kilometerstand muss eine Zahl sein.');
+    const avg = (sheetCtx && sheetCtx.avg) || fuelList().avg;
+    const saved = avg ? Math.max(0, +((avg - price) * liters).toFixed(2)) : 0;
+    if(full && odo){
+      const last = [...S.fills].reverse().find(x => x.full && x.odo);
+      if(last && odo > last.odo + 50){ const c = liters / (odo - last.odo) * 100; if(c > 2 && c < 25) S.setup.cons = Math.round((S.setup.cons * 0.5 + c * 0.5) * 10) / 10; }
+    }
+    if(odo) learnWeekKm(odo);
+    const before = tankNow();
+    const newL = full ? S.setup.tankL : Math.min(S.setup.tankL, (before ? before.liters : 0) + liters);
+    S.tank = {liters:newL, at:Date.now(), odo: odo || (S.tank && S.tank.odo) || null};
+    S.fills.push({at:Date.now(), station:(sheetCtx && sheetCtx.station) || null, price, liters, avg:avg || null, saved, full, odo});
+    save(); closeSheet(); render(); toast(saved > 0 ? eur(saved) + ' gespart gegenüber dem Durchschnitt' : 'Tankfüllung gespeichert');
+  }
+  if(id === 'odo-form'){
+    const odo = parse($('o-v').value);
+    if(!(odo > 0)) return showErr('odo-err', 'Bitte den Kilometerstand als Zahl eingeben.');
+    const t = tankNow();
+    if(S.tank && S.tank.odo){
+      if(odo < S.tank.odo) return showErr('odo-err', 'Der Wert ist kleiner als der letzte Kilometerstand (' + num(S.tank.odo) + ').');
+      const driven = odo - S.tank.odo;
+      learnWeekKm(odo);
+      S.tank = {liters: Math.max(0, S.tank.liters - driven * S.setup.cons / 100), at: Date.now(), odo};
+    } else {
+      S.tank = {liters: t ? t.liters : S.setup.tankL / 2, at: Date.now(), odo};
+    }
+    save(); closeSheet(); render(); toast('Kilometerstand gespeichert');
+  }
+});
+document.addEventListener('keydown', e => { if(e.key === 'Escape' && !$('sheet').hidden) closeSheet(); });
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; if(tab === 'mehr') render(); });
+if('serviceWorker' in navigator && location.protocol === 'https:'){ navigator.serviceWorker.register('sw.js').catch(() => {}); }
+
+render();
+if(S.setup.done) loadStations();
+})();
+</script>

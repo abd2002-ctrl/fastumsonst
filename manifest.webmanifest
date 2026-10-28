@@ -1,0 +1,16 @@
+{
+  "name": "FastUmsonst",
+  "short_name": "FastUmsonst",
+  "description": "Dein Spar-Assistent fürs Tanken und Einkaufen.",
+  "lang": "de",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F3F5F2",
+  "theme_color": "#0B6E4F",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
