@@ -15,8 +15,8 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
 <title>FastUmsonst</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
+@font-face{font-family:'Manrope';font-style:normal;font-display:swap;font-weight:200 800;src:url('manrope.woff2') format('woff2')}
 /* Layout: one-column phone app, max 480px, content scrolls above a fixed bottom tab bar */
 :root{
   --bg:#F3F5F2; --surface:#FFFFFF; --line:#DFE5E0; --ink:#14201B; --muted:#4A5550;
@@ -68,6 +68,11 @@ label{font-size:13px;font-weight:700}
 .field{display:flex;flex-direction:column;gap:6px;min-width:0}
 .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 input,select{min-height:46px;border:1px solid var(--line);border-radius:12px;padding:0 12px;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);width:100%}
+.select{position:relative}
+.select select{-webkit-appearance:none;appearance:none;padding-right:40px;cursor:pointer}
+.select svg{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted)}
+.legal{display:flex;justify-content:center;gap:18px;font-size:13px;padding-block:4px}
+.legal a{color:var(--muted);text-decoration:underline}
 input[type=range]{padding:0;border:none;background:transparent;accent-color:var(--accent)}
 input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--accent)}
 .check{display:flex;gap:10px;align-items:center;font-size:15px;font-weight:600}
@@ -117,7 +122,7 @@ a{color:var(--accent)}
 (function(){
 'use strict';
 // ===== Einstellungen =====
-const FEEDBACK_EMAIL = 'feedback@fastumsonst.de'; // <- deine echte Feedback-Adresse hier eintragen
+const FEEDBACK_EMAIL = 'fastumsonst.app@gmx.de';
 const API_URL = '/api/stations';                  // Server-Funktion für echte Tankpreise
 const VERSION = 'Beta 0.1';
 const KEY = 'fastumsonst-v1';
@@ -139,6 +144,9 @@ const parse = v => { const n = parseFloat(String(v ?? '').trim().replace(/\./g,'
 const parsePrice = v => { const n = parseFloat(String(v ?? '').trim().replace(',','.')); return isFinite(n) ? n : NaN; };
 const priceHtml = p => { const s = p.toFixed(3); return s.slice(0,4).replace('.',',') + '<sup>' + s.slice(4) + '</sup>'; };
 const uid = () => Math.random().toString(36).slice(2,10);
+const CHEV = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
+const fuelSelect = (id, cur) => '<div class="select"><select id="' + id + '">' + Object.keys(FUELS).map(k => '<option value="' + k + '"' + (k === cur ? ' selected' : '') + '>' + FUELS[k] + '</option>').join('') + '</select>' + CHEV + '</div>';
+const LEGAL = '<nav class="legal" aria-label="Rechtliches"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a></nav>';
 const thisMonth = t => { const d = new Date(t), n = new Date(); return d.getMonth() === n.getMonth() && d.getFullYear() === n.getFullYear(); };
 function toast(msg){ const t = $('toast'); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2600); }
 
@@ -249,10 +257,10 @@ function viewSetup(){
   '<div class="field"><label for="s-tank">Tankgröße (Liter)</label><input id="s-tank" inputmode="decimal" value="' + num(s.tankL) + '"></div>' +
   '<div class="field"><label for="s-cons">Verbrauch (l/100 km)</label><input id="s-cons" inputmode="decimal" value="' + num(s.cons,1) + '"></div>' +
   '<div class="field"><label for="s-week">Km pro Woche (ca.)</label><input id="s-week" inputmode="numeric" value="' + num(s.weekKm) + '"></div>' +
-  '<div class="field"><label for="s-fuel">Sprit</label><select id="s-fuel">' + Object.keys(FUELS).map(k => '<option value="' + k + '"' + (k === s.fuel ? ' selected' : '') + '>' + FUELS[k] + '</option>').join('') + '</select></div>' +
+  '<div class="field"><label for="s-fuel">Sprit</label>' + fuelSelect('s-fuel', s.fuel) + '</div>' +
   '</div><p class="small muted">Keine Sorge, wenn du es nicht genau weißt. Die App lernt mit jeder Tankfüllung dazu.</p>' +
   '<p class="err" id="setup-err" hidden></p>' +
-  '<div class="btns"><button class="btn" type="submit">Los geht’s</button><button class="btn ghost" type="button" data-action="demo">Erst mit Beispieldaten ansehen</button></div></form>';
+  '<div class="btns"><button class="btn" type="submit">Los geht’s</button><button class="btn ghost" type="button" data-action="demo">Erst mit Beispieldaten ansehen</button></div></form>' + LEGAL;
 }
 function viewHome(){
   const sv = savings(), t = tankNow(), {list} = fuelList(), th = timeHint();
@@ -358,16 +366,16 @@ function viewMehr(){
   '<div class="field"><label for="m-tank">Tankgröße (Liter)</label><input id="m-tank" inputmode="decimal" value="' + num(s.tankL) + '"></div>' +
   '<div class="field"><label for="m-cons">Verbrauch (l/100 km)</label><input id="m-cons" inputmode="decimal" value="' + num(s.cons,1) + '"></div>' +
   '<div class="field"><label for="m-week">Km pro Woche</label><input id="m-week" inputmode="numeric" value="' + num(s.weekKm) + '"></div>' +
-  '<div class="field"><label for="m-fuel">Sprit</label><select id="m-fuel">' + Object.keys(FUELS).map(k => '<option value="' + k + '"' + (k === s.fuel ? ' selected' : '') + '>' + FUELS[k] + '</option>').join('') + '</select></div>' +
+  '<div class="field"><label for="m-fuel">Sprit</label>' + fuelSelect('m-fuel', s.fuel) + '</div>' +
   '</div><p class="small muted">Verbrauch und Kilometer pro Woche passt die App automatisch an, wenn du beim Tanken den Kilometerstand einträgst.</p><p class="err" id="profile-err" hidden></p><button class="btn" type="submit">Speichern</button></form>' +
   '<div class="card"><h2>Als App auf den Startbildschirm</h2>' +
   (installEvt ? '<button class="btn" data-action="install">App installieren</button>' : '') +
   '<p class="small muted">' + (ios ? 'iPhone: In Safari unten auf das Teilen-Symbol tippen und „Zum Home-Bildschirm“ wählen.' : 'Android: Im Chrome-Menü (drei Punkte) „App installieren“ oder „Zum Startbildschirm hinzufügen“ wählen. iPhone: In Safari auf Teilen und dann „Zum Home-Bildschirm“.') + '</p></div>' +
   '<div class="card"><h2>Feedback</h2><p class="small muted">Was fehlt dir? Was nervt? Schreib uns, jede Nachricht hilft, die App besser zu machen.</p>' +
   '<div class="row" style="flex-wrap:wrap"><b style="user-select:all;overflow-wrap:anywhere">' + esc(FEEDBACK_EMAIL) + '</b><button class="btn small ghost" data-action="copy-mail">Adresse kopieren</button></div></div>' +
-  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Daten bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Alle Angaben ohne Gewähr.</p></div>' +
+  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Einstellungen, Tankfüllungen und deine Wunschliste bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Alle Angaben ohne Gewähr.</p></div>' +
   '<div class="card"><h2>Daten zurücksetzen</h2><p class="small muted">Löscht Tankfüllungen, Wunschliste und Einstellungen auf diesem Gerät.</p>' +
-  (resetArmed ? '<div class="btns"><button class="btn danger" data-action="reset-yes">Ja, alles löschen</button><button class="btn ghost" data-action="reset-no">Abbrechen</button></div>' : '<button class="btn danger" data-action="reset">Zurücksetzen</button>') + '</div>';
+  (resetArmed ? '<div class="btns"><button class="btn danger" data-action="reset-yes">Ja, alles löschen</button><button class="btn ghost" data-action="reset-no">Abbrechen</button></div>' : '<button class="btn danger" data-action="reset">Zurücksetzen</button>') + '</div>' + LEGAL;
 }
 
 // ===== Bottom-Sheets =====
