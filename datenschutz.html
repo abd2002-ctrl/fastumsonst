@@ -29,6 +29,7 @@ p{margin:0 0 10px}
 .lead{color:var(--muted)}
 section{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
 section p:last-child{margin-bottom:0}
+section ul{margin:0 0 10px;padding-left:20px}
 .mail{font-weight:700;overflow-wrap:anywhere;user-select:all}
 .foot{display:flex;gap:18px;justify-content:center;font-size:14px}
 .foot a{color:var(--muted)}
@@ -38,7 +39,7 @@ section p:last-child{margin-bottom:0}
 <main class="wrap">
 <a class="back" href="./"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>Zurück zur App</a>
 <h1>Datenschutzerklärung</h1>
-<p class="lead">Stand: Oktober 2026. Hier steht, welche Daten FastUmsonst verarbeitet und warum. Kurz gesagt: Wir haben kein Benutzerkonto, setzen keine Cookies und kein Tracking ein, und deine Eingaben bleiben auf deinem Gerät.</p>
+<p class="lead">Stand: Oktober 2026. Hier steht, welche Daten FastUmsonst verarbeitet und warum. Kurz gesagt: Wir setzen keine Cookies und kein Tracking ein. Solange du die Alarme nicht einschaltest, bleiben deine Eingaben auf deinem Gerät.</p>
 
 <section>
 <h2>1. Verantwortlicher</h2>
@@ -48,35 +49,49 @@ E-Mail: <span class="mail">fastumsonst.app@gmx.de</span></p>
 
 <section>
 <h2>2. Daten auf deinem Gerät</h2>
-<p>Deine Einstellungen (Tankgröße, Verbrauch, Kilometer pro Woche, Spritsorte), deine Tankfüllungen und deine Wunschliste speichert die App ausschließlich im Speicher deines Browsers bzw. Geräts („Local Storage“). Diese Daten werden nicht an uns übertragen. Zusätzlich legt die App eine Kopie ihrer eigenen Dateien auf deinem Gerät ab, damit sie schneller startet.</p>
+<p>Deine Einstellungen (Tankgröße, Verbrauch, Kilometer pro Woche, Spritsorte), deine Tankfüllungen und deine Wunschliste speichert die App ausschließlich im Speicher deines Browsers bzw. Geräts („Local Storage“). Diese Daten werden nicht an uns übertragen. Zusätzlich legt die App eine Kopie ihrer eigenen Dateien auf deinem Gerät ab, damit sie schneller startet. Wenn du die Alarme nutzt, speichert sie dort auch den Anmeldeschlüssel deines anonymen Kontos.</p>
 <p>Rechtsgrundlage ist § 25 Abs. 2 Nr. 2 TDDDG, weil diese Speicherung für die von dir gewünschte Funktion unbedingt erforderlich ist. Du kannst die Daten jederzeit in der App unter „Mehr“ → „Daten zurücksetzen“ oder über die Einstellungen deines Browsers löschen.</p>
 </section>
 
 <section>
 <h2>3. Standort und Spritpreise</h2>
 <p>Damit wir dir Tankstellen in deiner Nähe zeigen können, fragt die App deinen Standort ab. Das passiert nur, wenn du es in deinem Browser erlaubst, und nur, solange die App geöffnet ist. Es gibt keine Standortabfrage im Hintergrund.</p>
-<p>Deine Koordinaten werden auf etwa einen Kilometer gerundet an unseren Server (siehe Hosting) gesendet. Der Server fragt damit die aktuellen Preise bei Tankerkönig.de ab, das die Daten der Markttransparenzstelle für Kraftstoffe bereitstellt. An Tankerkönig gehen dabei nur die gerundeten Koordinaten, nicht deine IP-Adresse. Wir speichern deinen Standort nicht.</p>
+<p>Deine Koordinaten werden auf etwa einen Kilometer gerundet an unseren Server (siehe Hosting) gesendet. Der Server fragt damit die aktuellen Preise bei Tankerkönig.de ab, das die Daten der Markttransparenzstelle für Kraftstoffe bereitstellt. An Tankerkönig gehen dabei nur die gerundeten Koordinaten, nicht deine IP-Adresse. Für die Tankstellen-Liste speichern wir deinen Standort nicht. Zum Heimatort bei den Alarmen siehe Punkt 4.</p>
 <p>Rechtsgrundlage ist deine Einwilligung (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Du kannst sie jederzeit widerrufen, indem du der App in den Einstellungen deines Browsers bzw. Handys den Standortzugriff entziehst.</p>
 </section>
 
 <section>
-<h2>4. Hosting</h2>
+<h2>4. Alarme und Benachrichtigungen</h2>
+<p>Wenn du unter „Alarme“ die Benachrichtigungen einschaltest, legt die App für dich ein anonymes Nutzerkonto an. Dafür brauchen wir weder Namen noch E-Mail-Adresse. Gespeichert werden dann:</p>
+<ul>
+<li>eine zufällige Nutzerkennung,</li>
+<li>deine Auto-Einstellungen und dein geschätzter Tankstand (Liter und Zeitpunkt der letzten Eingabe),</li>
+<li>dein Heimatort, auf etwa einen Kilometer gerundet,</li>
+<li>deine Preisalarme (Spritsorte, Höchstpreis),</li>
+<li>die technische Adresse, an die dein Gerät Benachrichtigungen empfängt.</li>
+</ul>
+<p>Alle 30 Minuten prüft unser Server mit diesen Daten die Spritpreise in der Nähe deines Heimatorts und schickt dir bei Bedarf eine Benachrichtigung. Die Benachrichtigung läuft über den Push-Dienst deines Geräts bzw. Browsers (bei iPhones Apple, bei Android meist Google). Diese Dienste erhalten nur den verschlüsselten Inhalt der Nachricht.</p>
+<p>Die Daten liegen bei Supabase Inc. auf Servern in Frankfurt am Main. Supabase verarbeitet sie in unserem Auftrag. Rechtsgrundlage ist deine Einwilligung durch das Einschalten (Art. 6 Abs. 1 lit. a DSGVO). Mit „Ausschalten und Daten löschen“ unter „Alarme“ widerrufst du sie: Dann werden dein Konto und alle zugehörigen Daten sofort gelöscht.</p>
+</section>
+
+<section>
+<h2>5. Hosting</h2>
 <p>Die App wird bei Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA, betrieben. Beim Aufruf verarbeitet Vercel technisch notwendige Daten wie IP-Adresse, Datum und Uhrzeit, aufgerufene Adresse und Browsertyp, um die App auszuliefern und vor Missbrauch zu schützen. Diese Protokolle werden von Vercel nach kurzer Zeit gelöscht.</p>
 <p>Rechtsgrundlage ist unser berechtigtes Interesse an einer sicheren und zuverlässigen Bereitstellung der App (Art. 6 Abs. 1 lit. f DSGVO). Dabei können Daten in die USA übermittelt werden. Die Übermittlung stützt sich auf das EU-US Data Privacy Framework bzw. auf EU-Standardvertragsklauseln.</p>
 </section>
 
 <section>
-<h2>5. Kontakt per E-Mail</h2>
+<h2>6. Kontakt per E-Mail</h2>
 <p>Wenn du uns schreibst, etwa mit Feedback, verarbeiten wir deine E-Mail-Adresse und deine Nachricht, um dir zu antworten und die App zu verbessern (Art. 6 Abs. 1 lit. f DSGVO). Wir löschen die Nachricht, sobald sie erledigt ist, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.</p>
 </section>
 
 <section>
-<h2>6. Schriftarten und externe Links</h2>
-<p>Die Schriftart ist direkt in der App enthalten. Es werden keine Schriften von Google oder anderen Drittanbietern geladen. Links zu anderen Webseiten, zum Beispiel zu Preisvergleichen, öffnen sich erst, wenn du sie antippst. Ab dann gilt die Datenschutzerklärung des jeweiligen Anbieters.</p>
+<h2>7. Schriftarten und externe Links</h2>
+<p>Die Schriftart und alle Programmteile sind direkt in der App enthalten. Es werden keine Schriften oder Skripte von Google oder anderen Drittanbietern geladen. Links zu anderen Webseiten, zum Beispiel zu Preisvergleichen, öffnen sich erst, wenn du sie antippst. Ab dann gilt die Datenschutzerklärung des jeweiligen Anbieters.</p>
 </section>
 
 <section>
-<h2>7. Deine Rechte</h2>
+<h2>8. Deine Rechte</h2>
 <p>Du hast das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21). Eine erteilte Einwilligung kannst du jederzeit für die Zukunft widerrufen. Schreib uns dazu einfach eine E-Mail.</p>
 <p>Außerdem kannst du dich bei einer Datenschutz-Aufsichtsbehörde beschweren, zum Beispiel beim Bayerischen Landesamt für Datenschutzaufsicht (BayLDA), Promenade 18, 91522 Ansbach.</p>
 </section>

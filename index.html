@@ -91,8 +91,11 @@ input[type=checkbox]{width:22px;height:22px;min-height:0;accent-color:var(--acce
 .empty{color:var(--muted);font-size:14px;text-align:center;padding:8px}
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
   padding:8px max(10px, env(safe-area-inset-right, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(10px, env(safe-area-inset-left, 0px))}
-nav.tabs .inner{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}
-nav.tabs button{min-height:56px;border:none;border-radius:14px;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+nav.tabs .inner{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}
+.switch{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;font-weight:400;font-size:15px}
+.switch input{width:46px;height:28px;flex-shrink:0}
+.alert-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+nav.tabs button{min-height:56px;border:none;border-radius:14px;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;padding:0 2px;min-width:0}
 nav.tabs button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
 .sheet-bg{position:fixed;inset:0;z-index:30;background:rgba(10,20,15,.45);display:flex;align-items:flex-end;justify-content:center}
 .sheet{background:var(--surface);color:var(--ink);width:100%;max-width:520px;border-radius:24px 24px 0 0;max-height:90vh;overflow-y:auto;
@@ -112,12 +115,14 @@ a{color:var(--accent)}
     <button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</button>
     <button data-tab="tanken"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v17M2 22h13M14 9h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V8l-3-3M6 8h5"/></svg>Tanken</button>
     <button data-tab="wunsch"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/></svg>Wunschliste</button>
+    <button data-tab="alarme"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Alarme</button>
     <button data-tab="mehr"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Mehr</button>
   </div>
 </nav>
 <div id="sheet" hidden></div>
 <div id="toast" class="toast" role="status" hidden></div>
 
+<script src="supabase.js"></script>
 <script>
 (function(){
 'use strict';
@@ -129,11 +134,117 @@ const KEY = 'fastumsonst-v1';
 const FUELS = {e5:'Super E5', e10:'Super E10', diesel:'Diesel'};
 
 // ===== Daten speichern (nur auf diesem Gerät) =====
-function defaults(){ return {setup:{tankL:50, cons:6.5, weekKm:250, fuel:'e10', done:false}, tank:null, fills:[], wishes:[], demo:false}; }
+const SUPABASE_URL = 'https://ejnhcduokkjfubgildyy.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_xTaqmavv44TYZvdd_xqRAg_vOeAowNl';
+const VAPID_PUBLIC = 'BLLNu7AkOUtEwNouUgIEQsaz2tS4cCBgFrFefBz1mp2Ku4E9qvl4dlSxE2wq4rREBP7KrElu4MIGVlsrKhBZF0k';
+function defaults(){ return {setup:{tankL:50, cons:6.5, weekKm:250, fuel:'e10', done:false}, tank:null, fills:[], wishes:[], demo:false, cloud:{enabled:false, tankAlarm:true}}; }
 function load(){ try{ const r = localStorage.getItem(KEY); if(r){ const d = JSON.parse(r); return Object.assign(defaults(), d, {setup:Object.assign(defaults().setup, d.setup||{})}); } }catch(e){} return defaults(); }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} scheduleSync(); }
 let S = load();
+if(!S.cloud) S.cloud = defaults().cloud;
 let tab = 'home', stations = [], source = '', loading = false, resetArmed = false, installEvt = null;
+let alerts = [], alertsLoaded = false, alertsTried = false, busy = false, alarmMsg = '', offArmed = false;
+
+// ===== Konto, Datenbank und Benachrichtigungen =====
+let sbClient = null;
+function sb(){ if(!sbClient && window.supabase) sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{persistSession:true, autoRefreshToken:true, storageKey:'fastumsonst-auth'}}); return sbClient; }
+const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+function pushState(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)){
+    return isIOS && !isStandalone() ? 'install' : 'unsupported';
+  }
+  if(Notification.permission === 'denied') return 'denied';
+  return 'ok';
+}
+function b64ToBytes(s){ const p = '='.repeat((4 - s.length % 4) % 4); const b = atob((s + p).replace(/-/g,'+').replace(/_/g,'/')); return Uint8Array.from(b, c => c.charCodeAt(0)); }
+async function userId(){
+  const c = sb(); if(!c) throw new Error('Die Verbindung zur Datenbank konnte nicht geladen werden.');
+  const {data} = await c.auth.getSession();
+  if(data.session) return data.session.user.id;
+  const r = await c.auth.signInAnonymously();
+  if(r.error) throw new Error('Anmeldung fehlgeschlagen: ' + r.error.message);
+  return r.data.user.id;
+}
+function settingsRow(uid){
+  const r = {user_id:uid, tank_l:S.setup.tankL, cons:S.setup.cons, week_km:S.setup.weekKm, fuel:S.setup.fuel, tank_alarm:!!S.cloud.tankAlarm, updated_at:new Date().toISOString()};
+  if(S.tank){ r.tank_liters = Math.round(S.tank.liters * 10) / 10; r.tank_at = new Date(S.tank.at).toISOString(); }
+  if(S.cloud.home){ r.home_lat = S.cloud.home.lat; r.home_lng = S.cloud.home.lng; }
+  return r;
+}
+let syncTimer = null;
+function scheduleSync(){
+  if(!S.cloud || !S.cloud.enabled) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(async () => { try{ const uid = await userId(); await sb().from('settings').upsert(settingsRow(uid)); }catch(e){} }, 1200);
+}
+async function roundedPos(){ const p = await getPos(); return {lat:+p.lat.toFixed(2), lng:+p.lng.toFixed(2)}; }
+async function enableAlarms(){
+  busy = true; alarmMsg = ''; render();
+  try{
+    const st = pushState();
+    if(st !== 'ok') throw new Error('Benachrichtigungen sind auf diesem Gerät gerade nicht möglich.');
+    const perm = await Notification.requestPermission();
+    if(perm !== 'granted') throw new Error('Du hast Benachrichtigungen nicht erlaubt. Du kannst das in den Einstellungen deines Handys ändern.');
+    const reg = await navigator.serviceWorker.ready;
+    const sub = (await reg.pushManager.getSubscription()) || (await reg.pushManager.subscribe({userVisibleOnly:true, applicationServerKey:b64ToBytes(VAPID_PUBLIC)}));
+    const uid = await userId();
+    const j = sub.toJSON();
+    let e = (await sb().from('push_subscriptions').upsert({endpoint:j.endpoint, user_id:uid, p256dh:j.keys.p256dh, auth:j.keys.auth})).error;
+    if(e) throw new Error('Speichern fehlgeschlagen: ' + e.message);
+    try{ S.cloud.home = await roundedPos(); }catch(err){ throw new Error('Bitte erlaube den Standort, damit die App Tankstellen in deiner Nähe prüfen kann.'); }
+    S.cloud.enabled = true; S.cloud.tankAlarm = true;
+    e = (await sb().from('settings').upsert(settingsRow(uid))).error;
+    if(e) throw new Error('Speichern fehlgeschlagen: ' + e.message);
+    save(); toast('Benachrichtigungen eingeschaltet');
+    await loadAlerts();
+  }catch(err){ alarmMsg = err.message || 'Das hat nicht geklappt. Bitte versuch es noch einmal.'; }
+  busy = false; render();
+}
+async function loadAlerts(){
+  try{
+    await userId();
+    const r = await sb().from('price_alerts').select('*').order('created_at');
+    if(r.error) throw r.error;
+    alerts = r.data; alertsLoaded = true;
+  }catch(e){ alertsLoaded = true; alarmMsg = 'Deine Preisalarme konnten nicht geladen werden. Prüf deine Internetverbindung und öffne die App neu.'; }
+  render();
+}
+async function addAlert(fuel, maxPrice){
+  busy = true; render();
+  try{
+    const uid = await userId();
+    const pos = S.cloud.home || await roundedPos();
+    const r = await sb().from('price_alerts').insert({user_id:uid, fuel, max_price:maxPrice, lat:pos.lat, lng:pos.lng, radius:5});
+    if(r.error) throw new Error(/Maximal/.test(r.error.message) ? 'Du kannst höchstens 5 Preisalarme anlegen.' : 'Speichern fehlgeschlagen: ' + r.error.message);
+    toast('Preisalarm gespeichert');
+    await loadAlerts();
+  }catch(err){ alarmMsg = err.message; }
+  busy = false; render();
+}
+async function deleteAlert(id){
+  await sb().from('price_alerts').delete().eq('id', id);
+  alerts = alerts.filter(a => a.id !== id); render();
+}
+async function updateHome(){
+  busy = true; render();
+  try{ S.cloud.home = await roundedPos(); save(); const uid = await userId(); await sb().from('settings').upsert(settingsRow(uid)); toast('Heimatort aktualisiert'); }
+  catch(e){ alarmMsg = 'Standort konnte nicht abgefragt werden.'; }
+  busy = false; render();
+}
+async function testNotification(){
+  try{ const reg = await navigator.serviceWorker.ready; await reg.showNotification('FastUmsonst', {body:'So sehen deine Benachrichtigungen aus. Alles funktioniert.', icon:'icon-192.png', badge:'icon-192.png'}); }
+  catch(e){ alarmMsg = 'Test-Benachrichtigung fehlgeschlagen. Prüf, ob Benachrichtigungen erlaubt sind.'; render(); }
+}
+async function disableAlarms(){
+  busy = true; render();
+  try{
+    const reg = await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if(sub) await sub.unsubscribe();
+  }catch(e){}
+  try{ await userId(); await sb().rpc('delete_me'); await sb().auth.signOut(); }catch(e){}
+  S.cloud = defaults().cloud; alerts = []; alertsLoaded = false; alertsTried = false; offArmed = false; save();
+  busy = false; render(); toast('Benachrichtigungen aus, Daten gelöscht');
+}
 
 // ===== Helfer =====
 const $ = id => document.getElementById(id);
@@ -378,6 +489,49 @@ function viewMehr(){
   (resetArmed ? '<div class="btns"><button class="btn danger" data-action="reset-yes">Ja, alles löschen</button><button class="btn ghost" data-action="reset-no">Abbrechen</button></div>' : '<button class="btn danger" data-action="reset">Zurücksetzen</button>') + '</div>' + LEGAL;
 }
 
+function viewAlarme(){
+  const st = pushState();
+  const head = header('Alarme', 'Die App meldet sich bei dir, wenn es sich lohnt, auch wenn sie geschlossen ist.') +
+    '<span class="pill ok">PREMIUM · IN DER BETA KOSTENLOS</span>' +
+    (alarmMsg ? '<div class="banner" role="alert"><span>' + esc(alarmMsg) + '</span><button data-action="msg-close">OK</button></div>' : '');
+  if(!S.cloud.enabled){
+    let action;
+    if(st === 'install') action = '<p class="small muted">Auf dem iPhone funktionieren Benachrichtigungen nur, wenn die App auf dem Home-Bildschirm liegt: In Safari auf Teilen tippen, dann „Zum Home-Bildschirm“. Danach die App über das neue Symbol öffnen und hier einschalten.</p>';
+    else if(st === 'unsupported') action = '<p class="small muted">Dieser Browser unterstützt leider keine Benachrichtigungen. Am Handy klappt es mit Chrome (Android) oder mit der App auf dem Home-Bildschirm (iPhone).</p>';
+    else if(st === 'denied') action = '<p class="small muted">Benachrichtigungen sind für FastUmsonst blockiert. Erlaube sie in den Einstellungen deines Handys bzw. Browsers und öffne die App dann neu.</p>';
+    else action = '<button class="btn" data-action="alarms-on"' + (busy ? ' disabled' : '') + '>' + (busy ? 'Wird eingeschaltet …' : 'Benachrichtigungen einschalten') + '</button>' +
+      '<p class="small muted">Du brauchst kein Konto und keine E-Mail-Adresse. Die App fragt nach Benachrichtigungen und deinem Standort.</p>';
+    return head +
+      '<div class="card"><h2>Das bekommst du</h2>' +
+      '<div class="tip"><span class="ico ok">' + I.pump + '</span><span class="stack" style="gap:2px"><b>Tank-Alarm</b><span class="small muted">Wird dein Tank knapp, meldet sich die App am Nachmittag mit der günstigsten Tankstelle in deiner Nähe.</span></span></div>' +
+      '<div class="tip"><span class="ico ok">' + I.tag + '</span><span class="stack" style="gap:2px"><b>Sprit-Wunschpreis</b><span class="small muted">Du legst fest, z. B. „E10 unter 1,85 €“. Sobald eine Tankstelle in der Nähe so günstig ist, bekommst du Bescheid.</span></span></div>' +
+      action + '</div>';
+  }
+  if(!alertsLoaded && !alertsTried){ alertsTried = true; setTimeout(loadAlerts, 0); }
+  const f = S.setup.fuel;
+  const {list} = fuelList();
+  const now = list[0] ? list[0][f] : null;
+  const tankHint = !S.tank ? '<p class="small muted">Trag unter „Tanken“ einmal deinen Füllstand ein, damit der Tank-Alarm rechnen kann.</p>' : '';
+  const alertRows = alerts.length ? alerts.map(a => '<div class="alert-row"><span class="stack" style="gap:2px"><b>' + FUELS[a.fuel] + ' unter ' + num(+a.max_price,2) + ' €</b><span class="small muted">im Umkreis von ' + num(+a.radius) + ' km' + (a.last_notified_at ? ' · zuletzt gemeldet ' + new Date(a.last_notified_at).toLocaleDateString('de-DE') : '') + '</span></span>' +
+    '<button class="btn small danger" data-action="alert-del" data-id="' + esc(a.id) + '" aria-label="Preisalarm löschen">Löschen</button></div>').join('')
+    : '<p class="small muted">' + (alertsLoaded ? 'Noch kein Preisalarm angelegt.' : 'Lade deine Preisalarme …') + '</p>';
+  return head +
+    '<div class="card"><label class="switch" for="a-tank"><span class="stack" style="gap:2px"><b style="font-size:15px">Tank-Alarm</b><span class="small muted">Meldet sich zwischen 16 und 19 Uhr, wenn dein Tank unter ca. 25 % oder 120 km Reichweite fällt.</span></span>' +
+    '<input type="checkbox" id="a-tank"' + (S.cloud.tankAlarm ? ' checked' : '') + '></label>' + tankHint + '</div>' +
+    '<form class="card" id="alert-form" novalidate><h2>Sprit-Wunschpreis</h2>' +
+    '<div class="fields"><div class="field"><label for="al-fuel">Sprit</label>' + fuelSelect('al-fuel', f) + '</div>' +
+    '<div class="field"><label for="al-price">Höchstpreis (€/l)</label><input id="al-price" inputmode="decimal" placeholder="' + (now ? num(Math.floor((now - 0.03) * 100) / 100, 2) : '1,79') + '"></div></div>' +
+    (now ? '<p class="small muted">Gerade am günstigsten in deiner Nähe: ' + num(now,3) + ' €/l.</p>' : '') +
+    '<button class="btn" type="submit"' + (busy ? ' disabled' : '') + '>' + I.plus + ' Preisalarm anlegen</button>' +
+    '<div class="stack">' + alertRows + '</div>' +
+    '<p class="small muted">Geprüft wird alle 30 Minuten zwischen 7 und 22 Uhr, im Umkreis von 5 km um deinen Heimatort. Pro Alarm meldet sich die App höchstens alle 12 Stunden. Maximal 5 Alarme.</p></form>' +
+    '<div class="card"><h2>Einstellungen</h2>' +
+    '<div class="btns"><button class="btn small ghost" data-action="alarm-test">Test-Benachrichtigung</button><button class="btn small ghost" data-action="home-update">Heimatort aktualisieren</button></div>' +
+    '<p class="small muted">Heimatort ist dein Standort beim Einschalten, auf ca. 1 km gerundet.</p>' +
+    (offArmed ? '<div class="btns"><button class="btn danger" data-action="alarms-off-yes">Ja, ausschalten und löschen</button><button class="btn ghost" data-action="alarms-off-no">Abbrechen</button></div>'
+      : '<button class="btn small danger" data-action="alarms-off" style="align-self:flex-start">Ausschalten und Daten löschen</button>') + '</div>';
+}
+
 // ===== Bottom-Sheets =====
 let sheetCtx = null;
 function openSheet(html, ctx){ sheetCtx = ctx || null; const el = $('sheet'); el.innerHTML = '<div class="sheet-bg" data-action="sheet-bg"><div class="sheet" role="dialog" aria-modal="true">' + html + '</div></div>'; el.hidden = false; const f = el.querySelector('input'); if(f) setTimeout(() => f.focus(), 50); }
@@ -430,7 +584,8 @@ function render(){
   const app = $('app');
   if(!S.setup.done){ app.innerHTML = viewSetup(); $('tabs').hidden = true; return; }
   $('tabs').hidden = false;
-  app.innerHTML = tab === 'home' ? viewHome() : tab === 'tanken' ? viewTanken() : tab === 'wunsch' ? viewWunsch() : viewMehr();
+  app.innerHTML = tab === 'home' ? viewHome() : tab === 'tanken' ? viewTanken() : tab === 'wunsch' ? viewWunsch() : tab === 'alarme' ? viewAlarme() : viewMehr();
+  const at = $('a-tank'); if(at) at.addEventListener('change', () => { S.cloud.tankAlarm = at.checked; save(); toast(at.checked ? 'Tank-Alarm an' : 'Tank-Alarm aus'); });
   document.querySelectorAll('#tabs button').forEach(b => { if(b.dataset.tab === tab) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   const r = $('t-init'); if(r) r.addEventListener('input', () => $('t-init-out').textContent = r.value + ' %');
 }
@@ -445,7 +600,7 @@ function readProfile(prefix, errId){
 // ===== Ereignisse =====
 document.addEventListener('click', e => {
   const tb = e.target.closest('#tabs button');
-  if(tb){ tab = tb.dataset.tab; resetArmed = false; render(); window.scrollTo(0,0); if(tab === 'tanken' && !stations.length) loadStations(); return; }
+  if(tb){ tab = tb.dataset.tab; resetArmed = false; offArmed = false; alarmMsg = ''; render(); window.scrollTo(0,0); if((tab === 'tanken' || tab === 'alarme') && !stations.length) loadStations(); return; }
   const a = e.target.closest('[data-action]'); if(!a) return;
   const act = a.dataset.action;
   if(act === 'sheet-bg' && e.target !== a) return;
@@ -464,9 +619,17 @@ document.addEventListener('click', e => {
     case 'wish-del': S.wishes = S.wishes.filter(x => x.id !== a.dataset.id); save(); render(); break;
     case 'copy-mail': navigator.clipboard && navigator.clipboard.writeText(FEEDBACK_EMAIL).then(() => toast('Adresse kopiert'), () => toast('Bitte die Adresse markieren und kopieren')); break;
     case 'install': if(installEvt){ installEvt.prompt(); installEvt = null; render(); } break;
+    case 'alarms-on': if(!busy) enableAlarms(); break;
+    case 'alarms-off': offArmed = true; render(); break;
+    case 'alarms-off-no': offArmed = false; render(); break;
+    case 'alarms-off-yes': disableAlarms(); break;
+    case 'alert-del': deleteAlert(a.dataset.id); break;
+    case 'alarm-test': testNotification(); break;
+    case 'home-update': updateHome(); break;
+    case 'msg-close': alarmMsg = ''; render(); break;
     case 'reset': resetArmed = true; render(); break;
     case 'reset-no': resetArmed = false; render(); break;
-    case 'reset-yes': S = defaults(); save(); resetArmed = false; tab = 'home'; render(); toast('Daten gelöscht'); break;
+    case 'reset-yes': if(S.cloud && S.cloud.enabled) disableAlarms(); S = defaults(); save(); resetArmed = false; tab = 'home'; render(); toast('Daten gelöscht'); break;
   }
 });
 document.addEventListener('submit', e => {
@@ -504,6 +667,11 @@ document.addEventListener('submit', e => {
     S.fills.push({at:Date.now(), station:(sheetCtx && sheetCtx.station) || null, price, liters, avg:avg || null, saved, full, odo});
     save(); closeSheet(); render(); toast(saved > 0 ? eur(saved) + ' gespart gegenüber dem Durchschnitt' : 'Tankfüllung gespeichert');
   }
+  if(id === 'alert-form'){
+    const fuel = $('al-fuel').value, p = parsePrice($('al-price').value);
+    if(!(p > 0.5 && p < 5)){ alarmMsg = 'Bitte einen Höchstpreis pro Liter eingeben, z. B. 1,79.'; render(); return; }
+    alarmMsg = ''; addAlert(fuel, Math.round(p * 1000) / 1000);
+  }
   if(id === 'odo-form'){
     const odo = parse($('o-v').value);
     if(!(odo > 0)) return showErr('odo-err', 'Bitte den Kilometerstand als Zahl eingeben.');
@@ -523,6 +691,7 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape' && !$('sheet')
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; if(tab === 'mehr') render(); });
 if('serviceWorker' in navigator && location.protocol === 'https:'){ navigator.serviceWorker.register('sw.js').catch(() => {}); }
 
+if(/^#(tanken|alarme|wunsch|mehr)$/.test(location.hash)) tab = location.hash.slice(1);
 render();
 if(S.setup.done) loadStations();
 })();
