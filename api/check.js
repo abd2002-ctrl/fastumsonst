@@ -10,7 +10,7 @@ const VAPID_PUBLIC = 'BLLNu7AkOUtEwNouUgIEQsaz2tS4cCBgFrFefBz1mp2Ku4E9qvl4dlSxE2
 const FUEL_NAME = { e5: 'Super E5', e10: 'Super E10', diesel: 'Diesel' };
 const HOUR = 3600e3;
 
-const berlinHour = () => Number(new Intl.DateTimeFormat('de-DE', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Europe/Berlin' }).format(new Date()));
+const berlinHour = () => Number(new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Berlin' }).formatToParts(new Date()).find(p => p.type === 'hour').value);
 const price = p => p.toFixed(3).replace('.', ',');
 
 export default async function handler(req, res) {
