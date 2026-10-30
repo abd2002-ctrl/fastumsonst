@@ -1,10 +1,11 @@
 {
   "name": "fastumsonst",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "2.45.4",
+    "stripe": "17.7.0",
     "web-push": "3.6.7"
   }
 }

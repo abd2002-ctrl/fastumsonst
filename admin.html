@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>FastUmsonst Verwaltung</title>
+<link rel="icon" href="icon-192.png">
+<style>
+@font-face{font-family:'Manrope';font-style:normal;font-display:swap;font-weight:200 800;src:url('manrope.woff2') format('woff2')}
+:root{--bg:#F3F5F2;--surface:#FFFFFF;--line:#DFE5E0;--ink:#14201B;--muted:#4A5550;--accent:#0B6E4F;--accent-ink:#FFFFFF;--accent-soft:#E1F1E8;--warn:#9A4A0B;--warn-soft:#FBE9DA;--danger:#A3261B}
+@media (prefers-color-scheme: dark){:root{--bg:#0F1613;--surface:#17201C;--line:#2A3631;--ink:#E8EEEA;--muted:#A3B0A9;--accent:#4CC08F;--accent-ink:#06251A;--accent-soft:#163A2B;--warn:#F0A867;--warn-soft:#3A2617;--danger:#F08A80;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Manrope',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.45;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:820px;margin:0 auto;padding-block:20px 60px;display:flex;flex-direction:column;gap:16px}
+h1{margin:0;font-size:26px;font-weight:800} h2{margin:0;font-size:18px;font-weight:800}
+p{margin:0}.muted{color:var(--muted)}.small{font-size:13px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.grid .full{grid-column:1/-1}
+@media (max-width:560px){.grid{grid-template-columns:minmax(0,1fr)}}
+label{font-size:13px;font-weight:700;display:flex;flex-direction:column;gap:6px;min-width:0}
+input,select,textarea{min-height:44px;border:1px solid var(--line);border-radius:12px;padding:8px 12px;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);width:100%}
+textarea{min-height:160px;font-family:ui-monospace,Menlo,monospace;font-size:13px}
+input[type=checkbox]{width:22px;height:22px;min-height:0}
+.check{flex-direction:row;align-items:center;gap:10px;font-size:15px}
+.btn{min-height:44px;padding:0 16px;border:none;border-radius:12px;background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;cursor:pointer}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+.btn.danger{background:var(--surface);color:var(--danger);border:1px solid var(--line)}
+.btn.small{min-height:36px;font-size:13px;padding:0 12px}
+.btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.msg{border-radius:12px;padding:12px 14px;font-weight:600;font-size:14px}
+.msg.ok{background:var(--accent-soft);color:var(--accent)} .msg.err{background:var(--warn-soft);color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px}
+.tbl{overflow-x:auto}
+.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;background:var(--accent-soft);color:var(--accent)}
+.pill.old{background:var(--warn-soft);color:var(--warn)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="row"><h1>FastUmsonst Verwaltung</h1><button class="btn small ghost" id="logout" hidden>Abmelden</button></div>
+  <div id="msg" class="msg" role="status" hidden></div>
+
+  <form class="card" id="login" novalidate>
+    <h2>Anmelden</h2>
+    <label>Passwort<input id="pw" type="password" autocomplete="current-password"></label>
+    <button class="btn" type="submit">Anmelden</button>
+    <p class="small muted">Das Passwort ist bei Vercel als ADMIN_PASSWORD hinterlegt.</p>
+  </form>
+
+  <div id="app" hidden style="display:flex;flex-direction:column;gap:16px">
+    <div class="card"><div class="row"><span><b id="stat-offers">0</b> aktuelle Angebote · <b id="stat-prem">0</b> Premium-Kunden</span><a class="btn small ghost" href="./" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">App öffnen</a></div></div>
+
+    <form class="card" id="offer-form" novalidate>
+      <div class="row"><h2 id="form-title">Neues Angebot</h2><button class="btn small ghost" type="button" id="form-reset">Leeren</button></div>
+      <input type="hidden" id="o-id">
+      <div class="grid">
+        <label class="full">Produkt *<input id="o-title" maxlength="120" placeholder="z. B. Rinderhackfleisch"></label>
+        <label>Laden *<input id="o-store" list="stores" maxlength="40" placeholder="z. B. Lidl"></label>
+        <label>Stichwort für Rezepte<input id="o-keyword" maxlength="40" placeholder="z. B. Hackfleisch"></label>
+        <label>Preis (€) *<input id="o-price" inputmode="decimal" placeholder="3,99"></label>
+        <label>Statt-Preis (€)<input id="o-old" inputmode="decimal" placeholder="5,49"></label>
+        <label>Menge / Einheit<input id="o-unit" maxlength="40" placeholder="z. B. 500 g"></label>
+        <label>Kategorie<input id="o-cat" list="cats" maxlength="40" placeholder="z. B. Fleisch"></label>
+        <label>Gültig ab<input id="o-from" type="date"></label>
+        <label>Gültig bis *<input id="o-until" type="date"></label>
+        <label>Region<input id="o-region" maxlength="40" placeholder="bundesweit oder z. B. Nürnberg"></label>
+        <label>Link zum Angebot (https)<input id="o-url" inputmode="url" placeholder="https://…"></label>
+        <label>Rezept 1: Titel<input id="o-r1t" maxlength="60" placeholder="z. B. Paprika-Hack-Pfanne"></label>
+        <label>Rezept 1: TikTok-Link<input id="o-r1u" inputmode="url" placeholder="https://www.tiktok.com/@…"></label>
+        <label>Rezept 2: Titel<input id="o-r2t" maxlength="60"></label>
+        <label>Rezept 2: TikTok-Link<input id="o-r2u" inputmode="url"></label>
+        <label class="check full"><input type="checkbox" id="o-teaser"> Als kostenlose Vorschau für alle zeigen (2 bis 3 pro Woche reichen)</label>
+      </div>
+      <div class="btns"><button class="btn" type="submit" id="save-btn">Angebot speichern</button></div>
+      <p class="small muted">Nur Fakten in eigenen Worten eintragen: Produkt, Laden, Preis, Gültigkeit. Keine Bilder oder Texte aus Prospekten übernehmen.</p>
+    </form>
+
+    <form class="card" id="import-form" novalidate>
+      <h2>Mehrere Angebote auf einmal</h2>
+      <p class="small muted">Eine Zeile pro Angebot, getrennt mit Semikolon:<br><span style="font-family:ui-monospace,Menlo,monospace">Produkt; Laden; Preis; Statt-Preis; Menge; gültig bis; Stichwort; Rezept-Link</span></p>
+      <textarea id="import-text" placeholder="Rinderhackfleisch; Lidl; 3,99; 5,49; 500 g; 07.11.2026; Hackfleisch; https://www.tiktok.com/@…&#10;Paprika rot; Aldi Süd; 0,99; ; 500 g; 07.11.2026; Paprika;"></textarea>
+      <label>Region für alle Zeilen<input id="import-region" maxlength="40" placeholder="bundesweit"></label>
+      <div class="btns"><button class="btn" type="submit">Importieren</button><button class="btn ghost" type="button" id="copy-prompt">KI-Anleitung kopieren</button></div>
+      <p class="small muted">Tipp: Mit „KI-Anleitung kopieren“ bekommst du einen Text, den du zusammen mit deinen Notizen zu den Angeboten in einen KI-Chat einfügen kannst. Die KI gibt dir die Liste dann genau in diesem Format zurück.</p>
+    </form>
+
+    <div class="card">
+      <div class="row"><h2>Angebote</h2><div class="btns"><button class="btn small ghost" id="reload">Aktualisieren</button><button class="btn small danger" id="cleanup">Alte löschen (älter als 14 Tage)</button></div></div>
+      <div class="tbl"><table><thead><tr><th>Produkt</th><th>Laden</th><th>Preis</th><th>Gültig bis</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+
+    <form class="card" id="grant-form" novalidate>
+      <h2>Premium manuell freischalten</h2>
+      <p class="small muted">Für Gerätewechsel, Tests oder als Geschenk. Die Geräte-ID steht in der App unter „Mehr“ (sie erscheint, sobald dort Alarme oder Premium genutzt wurden).</p>
+      <div class="grid"><label>Geräte-ID<input id="g-id" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"></label><label>Tage (0 = Premium entziehen)<input id="g-days" inputmode="numeric" value="30"></label></div>
+      <button class="btn" type="submit">Speichern</button>
+    </form>
+  </div>
+</main>
+<datalist id="stores"><option>Aldi Nord</option><option>Aldi Süd</option><option>Lidl</option><option>Rewe</option><option>Edeka</option><option>Netto</option><option>Penny</option><option>Kaufland</option><option>Norma</option><option>dm</option><option>Rossmann</option></datalist>
+<datalist id="cats"><option>Obst & Gemüse</option><option>Fleisch</option><option>Fisch</option><option>Milchprodukte</option><option>Brot & Backwaren</option><option>Getränke</option><option>Süßes & Snacks</option><option>Vorrat</option><option>Tiefkühl</option><option>Drogerie</option><option>Haushalt</option></datalist>
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const KEY = 'fastumsonst-admin';
+let pw = ''; try{ pw = localStorage.getItem(KEY) || ''; }catch(e){}
+let offers = [];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const eur = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(+n || 0);
+const de = iso => iso ? iso.split('-').reverse().join('.') : '';
+const today = () => new Date().toISOString().slice(0,10);
+function nextSaturday(){ const d = new Date(); d.setDate(d.getDate() + ((6 - d.getDay() + 7) % 7 || 7)); return d.toISOString().slice(0,10); }
+function msg(text, ok){ const m = $('msg'); m.textContent = text; m.className = 'msg ' + (ok ? 'ok' : 'err'); m.hidden = false; clearTimeout(msg.t); msg.t = setTimeout(() => m.hidden = true, ok ? 3500 : 8000); window.scrollTo({top:0, behavior:'smooth'}); }
+async function api(action, data){
+  const r = await fetch('/api/admin', {method:'POST', headers:{'Content-Type':'application/json','x-admin-password':pw}, body:JSON.stringify(Object.assign({action}, data || {}))});
+  let j = {}; try{ j = await r.json(); }catch(e){}
+  if(!r.ok || !j.ok){ const err = new Error(j.message || ('Fehler ' + r.status)); err.status = r.status; throw err; }
+  return j;
+}
+function showApp(on){ $('login').hidden = on; $('app').hidden = !on; $('logout').hidden = !on; }
+async function load(){
+  const j = await api('list');
+  offers = j.offers || [];
+  $('stat-prem').textContent = j.premiumCount;
+  $('stat-offers').textContent = offers.filter(o => o.valid_until >= today()).length;
+  $('rows').innerHTML = offers.length ? offers.map(o => '<tr><td>' + esc(o.title) + (o.is_teaser ? ' <span class="pill">Vorschau</span>' : '') + (o.valid_until < today() ? ' <span class="pill old">abgelaufen</span>' : '') + '<div class="small muted">' + esc([o.unit, o.region].filter(Boolean).join(' · ')) + '</div></td><td>' + esc(o.store) + '</td><td class="num">' + eur(o.price) + '</td><td class="num">' + de(o.valid_until) + '</td><td><div class="btns"><button class="btn small ghost" data-edit="' + o.id + '">Bearbeiten</button><button class="btn small danger" data-del="' + o.id + '">Löschen</button></div></td></tr>').join('') : '<tr><td colspan="5" class="muted">Noch keine Angebote.</td></tr>';
+}
+function resetForm(){
+  ['o-id','o-title','o-store','o-keyword','o-price','o-old','o-unit','o-cat','o-from','o-url','o-r1t','o-r1u','o-r2t','o-r2u'].forEach(id => $(id).value = '');
+  $('o-until').value = nextSaturday(); $('o-teaser').checked = false;
+  let reg = ''; try{ reg = localStorage.getItem(KEY + '-region') || ''; }catch(e){} $('o-region').value = reg;
+  $('form-title').textContent = 'Neues Angebot'; $('save-btn').textContent = 'Angebot speichern';
+}
+function fillForm(o){
+  $('o-id').value = o.id; $('o-title').value = o.title || ''; $('o-store').value = o.store || ''; $('o-keyword').value = o.keyword || '';
+  $('o-price').value = String(o.price).replace('.', ','); $('o-old').value = o.old_price ? String(o.old_price).replace('.', ',') : '';
+  $('o-unit').value = o.unit || ''; $('o-cat').value = o.category || ''; $('o-from').value = o.valid_from || ''; $('o-until').value = o.valid_until || '';
+  $('o-region').value = o.region || ''; $('o-url').value = o.source_url || '';
+  const l = Array.isArray(o.recipe_links) ? o.recipe_links : [];
+  $('o-r1t').value = l[0] ? l[0].title : ''; $('o-r1u').value = l[0] ? l[0].url : ''; $('o-r2t').value = l[1] ? l[1].title : ''; $('o-r2u').value = l[1] ? l[1].url : '';
+  $('o-teaser').checked = !!o.is_teaser;
+  $('form-title').textContent = 'Angebot bearbeiten'; $('save-btn').textContent = 'Änderungen speichern';
+  $('offer-form').scrollIntoView({behavior:'smooth'});
+}
+function parseLines(text, region){
+  return text.split(/\r?\n/).map(l => l.trim()).filter(l => l && !/^produkt\s*;/i.test(l)).map(l => {
+    const c = l.split(';').map(x => x.trim());
+    return {title:c[0], store:c[1], price:c[2], old_price:c[3] || null, unit:c[4] || null, valid_until:c[5], keyword:c[6] || null,
+      recipe_links: c[7] ? [{title:'Rezept-Idee', url:c[7]}] : [], region: region || 'bundesweit'};
+  });
+}
+const PROMPT = 'Wandle die folgenden Supermarkt-Angebote in eine Liste um. Eine Zeile pro Angebot, Felder mit Semikolon getrennt, ohne Überschrift und ohne weitere Erklärungen:\nProdukt; Laden; Preis; Statt-Preis; Menge; gültig bis; Stichwort\n- Preise mit Komma, ohne Euro-Zeichen (z. B. 3,99)\n- Statt-Preis leer lassen, wenn keiner angegeben ist\n- gültig bis im Format TT.MM.JJJJ\n- Stichwort = die Hauptzutat in einem Wort, z. B. Hackfleisch, Paprika, Lachs\n- Produktnamen in eigenen, kurzen Worten\n\nHier sind die Angebote:\n';
+
+document.addEventListener('click', async e => {
+  const ed = e.target.closest('[data-edit]'), del = e.target.closest('[data-del]');
+  if(ed){ const o = offers.find(x => x.id === ed.dataset.edit); if(o) fillForm(o); }
+  if(del){
+    const o = offers.find(x => x.id === del.dataset.del);
+    if(del.dataset.armed !== '1'){ del.dataset.armed = '1'; del.textContent = 'Wirklich löschen?'; setTimeout(() => { del.dataset.armed = ''; del.textContent = 'Löschen'; }, 4000); return; }
+    try{ await api('delete', {id:del.dataset.del}); msg('„' + (o ? o.title : 'Angebot') + '“ gelöscht.', true); load(); }catch(err){ msg(err.message); }
+  }
+});
+$('login').addEventListener('submit', async e => {
+  e.preventDefault(); pw = $('pw').value;
+  try{ await api('login'); try{ localStorage.setItem(KEY, pw); }catch(e){} showApp(true); resetForm(); load(); }
+  catch(err){ msg(err.message); }
+});
+$('logout').addEventListener('click', () => { pw = ''; try{ localStorage.removeItem(KEY); }catch(e){} showApp(false); });
+$('form-reset').addEventListener('click', resetForm);
+$('reload').addEventListener('click', () => load().catch(err => msg(err.message)));
+$('cleanup').addEventListener('click', async () => { try{ const j = await api('cleanup'); msg(j.count + ' alte Angebote gelöscht.', true); load(); }catch(err){ msg(err.message); } });
+$('offer-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const links = [];
+  if($('o-r1u').value.trim()) links.push({title:$('o-r1t').value.trim() || 'Rezept-Idee', url:$('o-r1u').value.trim()});
+  if($('o-r2u').value.trim()) links.push({title:$('o-r2t').value.trim() || 'Rezept-Idee', url:$('o-r2u').value.trim()});
+  const offer = {id:$('o-id').value || undefined, title:$('o-title').value, store:$('o-store').value, keyword:$('o-keyword').value, price:$('o-price').value, old_price:$('o-old').value,
+    unit:$('o-unit').value, category:$('o-cat').value, valid_from:$('o-from').value, valid_until:$('o-until').value, region:$('o-region').value, source_url:$('o-url').value, recipe_links:links, is_teaser:$('o-teaser').checked};
+  if(links.some(l => !/^https:\/\//.test(l.url))) return msg('Rezept-Links müssen mit https:// beginnen.');
+  try{ await api('save', {offer}); try{ localStorage.setItem(KEY + '-region', $('o-region').value); }catch(e){} msg('„' + offer.title + '“ gespeichert.', true); resetForm(); load(); }
+  catch(err){ msg(err.message); }
+});
+$('import-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const rows = parseLines($('import-text').value, $('import-region').value.trim());
+  if(!rows.length) return msg('Keine Zeilen gefunden.');
+  try{ const j = await api('import', {offers:rows}); msg(j.count + ' Angebote importiert.', true); $('import-text').value = ''; load(); }
+  catch(err){ msg(err.message); }
+});
+$('copy-prompt').addEventListener('click', () => {
+  const done = () => msg('Anleitung kopiert. Füg sie in einen KI-Chat ein und schreib deine Angebote darunter.', true);
+  if(navigator.clipboard) navigator.clipboard.writeText(PROMPT).then(done, () => { $('import-text').value = PROMPT; msg('Kopieren ging nicht, die Anleitung steht jetzt im Textfeld.'); });
+  else { $('import-text').value = PROMPT; msg('Die Anleitung steht jetzt im Textfeld.'); }
+});
+$('grant-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  try{ const j = await api('grant', {userId:$('g-id').value, days:$('g-days').value}); msg(j.plan === 'premium' ? 'Premium freigeschaltet bis ' + new Date(j.premium_until).toLocaleDateString('de-DE') + '.' : 'Premium entzogen.', true); }
+  catch(err){ msg(err.message); }
+});
+if(pw){ api('login').then(() => { showApp(true); resetForm(); load(); }).catch(() => showApp(false)); }
+})();
+</script>
+</body>
+</html>

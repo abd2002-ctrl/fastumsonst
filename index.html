@@ -94,6 +94,7 @@ nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surf
 nav.tabs .inner{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px}
 .switch{display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;font-weight:400;font-size:15px}
 .switch input{width:46px;height:28px;flex-shrink:0}
+.chips.seg{flex-wrap:nowrap;gap:6px}.chips.seg .chip{padding:0 12px;font-size:14px;flex:1 1 auto;white-space:nowrap}
 .alert-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
 nav.tabs button{min-height:56px;border:none;border-radius:14px;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:inherit;font-size:11px;font-weight:700;cursor:pointer;padding:0 2px;min-width:0}
 nav.tabs button[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
@@ -114,7 +115,7 @@ a{color:var(--accent)}
   <div class="inner">
     <button data-tab="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Start</button>
     <button data-tab="tanken"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v17M2 22h13M14 9h2a2 2 0 0 1 2 2v6a1.5 1.5 0 0 0 3 0V8l-3-3M6 8h5"/></svg>Tanken</button>
-    <button data-tab="wunsch"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7z"/></svg>Wunschliste</button>
+    <button data-tab="angebote"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>Angebote</button>
     <button data-tab="alarme"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>Alarme</button>
     <button data-tab="mehr"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Mehr</button>
   </div>
@@ -362,7 +363,7 @@ function viewSetup(){
   const s = S.setup;
   return '<div class="brand"><div class="logo" aria-hidden="true">€</div><div><h1>FastUmsonst</h1></div><span class="beta">BETA</span></div>' +
   '<div class="hero"><p style="font-size:20px;font-weight:800;line-height:1.3">Dein Spar-Assistent fürs Tanken und Einkaufen.</p>' +
-  '<p class="muted">Die App zeigt dir die günstigste Tankstelle in deiner Nähe, rechnet mit, wann dein Tank leer wird, und behält die Preise auf deiner Wunschliste im Blick.</p></div>' +
+  '<p class="muted">Die App zeigt dir die günstigste Tankstelle in deiner Nähe, rechnet mit, wann dein Tank leer wird, und mit Premium die besten Supermarkt-Angebote der Woche.</p></div>' +
   '<form class="card" id="setup-form" novalidate><h2>Dein Auto</h2>' +
   '<div class="fields">' +
   '<div class="field"><label for="s-tank">Tankgröße (Liter)</label><input id="s-tank" inputmode="decimal" value="' + num(s.tankL) + '"></div>' +
@@ -387,9 +388,11 @@ function viewHome(){
     tips += tip('neutral', I.pump, 'Wie voll ist dein Tank?', 'Trag kurz deinen Füllstand ein, dann rechnet die App deine Reichweite mit.', 'tanken');
   }
   tips += tip(th.good ? 'ok' : 'neutral', I.clock, th.title, th.text, 'tanken');
+  if(isPremium()){ const n = offers.length; tips += tip('ok', I.tag, n ? n + ' Top-Angebote diese Woche' : 'Top-Angebote der Woche', n ? 'Schau rein und setz die besten direkt auf deine Einkaufsliste.' : 'Die neuen Angebote kommen in Kürze.', 'angebote', 'offers'); }
+  else tips += tip('neutral', I.tag, 'Top-Angebote der Woche', 'Die besten Supermarkt-Angebote in deiner Nähe, mit Einkaufsliste und Rezept-Ideen. 7 Tage kostenlos testen.', 'angebote', 'offers');
   const reached = S.wishes.filter(w => !w.bought && w.now <= w.target);
-  reached.slice(0,2).forEach(w => tips += tip('ok', I.tag, 'Zielpreis erreicht: ' + esc(w.name), 'Jetzt ' + eur(w.now) + ', dein Ziel war ' + eur(w.target) + '.', 'wunsch'));
-  if(!S.wishes.length) tips += tip('neutral', I.tag, 'Wunschliste anlegen', 'Trag ein, was du kaufen willst, und deinen Wunschpreis. So siehst du, wann es sich lohnt.', 'wunsch');
+  reached.slice(0,2).forEach(w => tips += tip('ok', I.tag, 'Zielpreis erreicht: ' + esc(w.name), 'Jetzt ' + eur(w.now) + ', dein Ziel war ' + eur(w.target) + '.', 'angebote', 'wunsch'));
+  if(!S.wishes.length) tips += tip('neutral', I.tag, 'Wunschliste anlegen', 'Trag ein, was du kaufen willst, und deinen Wunschpreis. So siehst du, wann es sich lohnt.', 'angebote', 'wunsch');
 
   return demoBanner() +
   '<div class="row"><div class="brand"><div class="logo" aria-hidden="true">€</div><h1>FastUmsonst</h1></div><span class="beta">BETA</span></div>' +
@@ -404,8 +407,8 @@ function viewHome(){
   '</section>' +
   '<section class="stack" aria-label="Hinweise"><h2>Für dich gefunden</h2>' + tips + '</section>';
 }
-function tip(cls, icon, title, text, go){
-  return '<button class="card tip" data-action="go" data-go="' + go + '" style="text-align:left;font:inherit;color:inherit;cursor:pointer;flex-direction:row">' +
+function tip(cls, icon, title, text, go, sg){
+  return '<button class="card tip" data-action="go" data-go="' + go + '"' + (sg ? ' data-seg="' + sg + '"' : '') + ' style="text-align:left;font:inherit;color:inherit;cursor:pointer;flex-direction:row">' +
     '<span class="ico ' + cls + '">' + icon + '</span><span class="stack" style="gap:2px"><b style="font-size:15px">' + title + '</b><span class="small muted">' + text + '</span></span></button>';
 }
 function viewTanken(){
@@ -447,7 +450,7 @@ function viewTanken(){
     '<div class="row"><h2>Tankstellen in der Nähe</h2><button class="btn small ghost" data-action="reload" aria-label="Preise aktualisieren">' + I.refresh + '</button></div>' +
     chips + '<p class="small muted">' + src + '</p><div class="stack">' + rows + '</div>';
 }
-function viewWunsch(){
+function viewWunsch(embedded){
   const open = S.wishes.filter(w => !w.bought), done = S.wishes.filter(w => w.bought);
   const item = w => {
     const st = wishStatus(w);
@@ -459,7 +462,7 @@ function viewWunsch(){
       '<div class="btns"><a class="btn small ghost" href="https://www.idealo.de/preisvergleich/MainSearchProductCategory.html?q=' + encodeURIComponent(w.name) + '" target="_blank" rel="noopener">Preise vergleichen</a><button class="btn small" data-action="wish-buy" data-id="' + w.id + '">Gekauft</button></div>') +
       '<button class="btn small danger" data-action="wish-del" data-id="' + w.id + '" style="align-self:flex-start">Entfernen</button></div>';
   };
-  return demoBanner() + header('Wunschliste', 'Trag ein, was du kaufen willst. Sobald der Preis passt, siehst du es sofort.') +
+  return (embedded ? '' : demoBanner() + header('Wunschliste', 'Trag ein, was du kaufen willst. Sobald der Preis passt, siehst du es sofort.')) +
     '<form class="card" id="wish-form" novalidate><h2>Neuer Wunsch</h2>' +
     '<div class="field"><label for="w-name">Was möchtest du kaufen?</label><input id="w-name" placeholder="z. B. Kabellose Kopfhörer" maxlength="80"></div>' +
     '<div class="fields"><div class="field"><label for="w-now">Aktueller Preis (€)</label><input id="w-now" inputmode="decimal" placeholder="189,00"></div>' +
@@ -482,6 +485,8 @@ function viewMehr(){
   '<div class="card"><h2>Als App auf den Startbildschirm</h2>' +
   (installEvt ? '<button class="btn" data-action="install">App installieren</button>' : '') +
   '<p class="small muted">' + (ios ? 'iPhone: In Safari unten auf das Teilen-Symbol tippen und „Zum Home-Bildschirm“ wählen.' : 'Android: Im Chrome-Menü (drei Punkte) „App installieren“ oder „Zum Startbildschirm hinzufügen“ wählen. iPhone: In Safari auf Teilen und dann „Zum Home-Bildschirm“.') + '</p></div>' +
+  '<div class="card"><h2>Premium</h2>' + (isPremium() ? '<p class="small muted">Aktiv bis ' + new Date(premium.until).toLocaleDateString('de-DE') + '.</p><button class="btn small ghost" data-action="portal" style="align-self:flex-start">Abo verwalten oder hier kündigen</button>' : '<p class="small muted">Top-Angebote der Woche, Einkaufsliste und Rezept-Ideen. 7 Tage kostenlos, danach 4,99 € im Monat.</p><button class="btn small" data-action="go" data-go="angebote" data-seg="offers" style="align-self:flex-start">Premium ansehen</button>') +
+  (S.uid ? '<div class="row" style="flex-wrap:wrap;margin-top:6px"><span class="small muted">Geräte-ID: <span class="mono" style="user-select:all;overflow-wrap:anywhere">' + esc(S.uid) + '</span></span><button class="btn small ghost" data-action="copy-id">Kopieren</button></div>' : '') + '</div>' +
   '<div class="card"><h2>Feedback</h2><p class="small muted">Was fehlt dir? Was nervt? Schreib uns, jede Nachricht hilft, die App besser zu machen.</p>' +
   '<div class="row" style="flex-wrap:wrap"><b style="user-select:all;overflow-wrap:anywhere">' + esc(FEEDBACK_EMAIL) + '</b><button class="btn small ghost" data-action="copy-mail">Adresse kopieren</button></div></div>' +
   '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Einstellungen, Tankfüllungen und deine Wunschliste bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Alle Angaben ohne Gewähr.</p></div>' +
@@ -492,7 +497,7 @@ function viewMehr(){
 function viewAlarme(){
   const st = pushState();
   const head = header('Alarme', 'Die App meldet sich bei dir, wenn es sich lohnt, auch wenn sie geschlossen ist.') +
-    '<span class="pill ok">PREMIUM · IN DER BETA KOSTENLOS</span>' +
+    '<span class="pill ok">KOSTENLOS</span>' +
     (alarmMsg ? '<div class="banner" role="alert"><span>' + esc(alarmMsg) + '</span><button data-action="msg-close">OK</button></div>' : '');
   if(!S.cloud.enabled){
     let action;
@@ -530,6 +535,161 @@ function viewAlarme(){
     '<p class="small muted">Heimatort ist dein Standort beim Einschalten, auf ca. 1 km gerundet.</p>' +
     (offArmed ? '<div class="btns"><button class="btn danger" data-action="alarms-off-yes">Ja, ausschalten und löschen</button><button class="btn ghost" data-action="alarms-off-no">Abbrechen</button></div>'
       : '<button class="btn small danger" data-action="alarms-off" style="align-self:flex-start">Ausschalten und Daten löschen</button>') + '</div>';
+}
+
+// ===== Premium: Angebote der Woche, Einkaufsliste, Rezepte =====
+let offers = [], offersLoaded = false, offersLoading = false, storeFilter = 'Alle', seg = 'offers';
+let premium = null, cfg = null, premiumMsg = '', premiumPoll = 0;
+const todayISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); };
+const deDate = iso => { if(!iso) return ''; const [y,m,d] = iso.split('-'); return d + '.' + m + '.'; };
+const isPremium = () => !!(premium && premium.plan === 'premium' && new Date(premium.until) > new Date());
+async function loadConfig(){ if(cfg) return cfg; try{ const r = await fetch('/api/config'); cfg = r.ok ? await r.json() : {}; }catch(e){ cfg = {}; } return cfg; }
+async function hasSession(){ const c = sb(); if(!c) return false; try{ const {data} = await c.auth.getSession(); return !!data.session; }catch(e){ return false; } }
+async function loadProfile(){
+  if(!(await hasSession())){ premium = null; return null; }
+  try{
+    const uidv = await userId(); S.uid = uidv;
+    const r = await sb().from('profiles').select('plan,premium_until,stripe_customer_id').eq('user_id', uidv).maybeSingle();
+    if(!r.error && r.data) premium = {plan:r.data.plan, until:r.data.premium_until, customer:r.data.stripe_customer_id};
+    S.premiumCache = premium; save();
+  }catch(e){}
+  return premium;
+}
+async function loadOffers(force){
+  if(offersLoading || (offersLoaded && !force)) return;
+  offersLoading = true;
+  try{
+    const c = sb(); if(!c) throw new Error('offline');
+    const r = await c.from('offers').select('*').gte('valid_until', todayISO()).order('store').order('price');
+    if(r.error) throw r.error;
+    offers = r.data || []; offersLoaded = true;
+  }catch(e){ offersLoaded = true; }
+  offersLoading = false; render();
+}
+async function refreshPremium(){ await loadProfile(); offersLoaded = false; await loadOffers(true); }
+async function startPremium(){
+  busy = true; premiumMsg = ''; render();
+  try{
+    const c = await loadConfig();
+    if(!c.paymentLink) throw new Error('Premium ist gleich verfügbar. Bitte versuch es in Kürze noch einmal.');
+    const uidv = await userId();
+    const sep = c.paymentLink.indexOf('?') >= 0 ? '&' : '?';
+    location.href = c.paymentLink + sep + 'client_reference_id=' + encodeURIComponent(uidv);
+    return;
+  }catch(e){ premiumMsg = e.message || 'Das hat nicht geklappt. Bitte versuch es noch einmal.'; }
+  busy = false; render();
+}
+async function openPortal(){
+  busy = true; premiumMsg = ''; render();
+  try{
+    const c = sb(); const {data} = await c.auth.getSession();
+    if(!data.session) throw new Error('Auf diesem Gerät ist kein Abo hinterlegt.');
+    const r = await fetch('/api/portal', {method:'POST', headers:{Authorization:'Bearer ' + data.session.access_token}});
+    const j = await r.json();
+    if(j.url){ location.href = j.url; return; }
+    throw new Error(j.message || 'Das Kundenportal ist gerade nicht erreichbar.');
+  }catch(e){
+    const c = await loadConfig();
+    if(c.portalLogin){ location.href = c.portalLogin; return; }
+    premiumMsg = (e.message || 'Fehler') + ' Schreib uns an ' + FEEDBACK_EMAIL + ', dann helfen wir dir sofort.';
+  }
+  busy = false; render();
+}
+function onList(o){ return (S.list || []).some(i => i.id === o.id); }
+function toggleList(o){
+  S.list = S.list || [];
+  if(onList(o)) S.list = S.list.filter(i => i.id !== o.id);
+  else S.list.push({id:o.id, title:o.title, store:o.store, price:+o.price, unit:o.unit || '', keyword:o.keyword || '', valid_until:o.valid_until, done:false});
+  save(); render(); toast(onList(o) ? 'Auf der Einkaufsliste' : 'Von der Liste entfernt');
+}
+function recipeSearchUrl(items){
+  const words = items.map(i => i.keyword || i.title.split(/[,(]/)[0]).map(w => w.trim()).filter(Boolean);
+  const uniq = [...new Set(words)].slice(0, 5);
+  return 'https://www.tiktok.com/search?q=' + encodeURIComponent('Rezept ' + uniq.join(' '));
+}
+function offerCard(o, locked){
+  const pct = o.old_price && +o.old_price > +o.price ? Math.round((1 - o.price / o.old_price) * 100) : 0;
+  const links = (Array.isArray(o.recipe_links) ? o.recipe_links : []).filter(l => l && /^https:\/\//.test(l.url));
+  return '<div class="card offer"><div class="row" style="align-items:flex-start">' +
+    '<div class="stack" style="gap:4px;min-width:0"><span class="pill neutral">' + esc(o.store) + '</span><b style="font-size:16px;overflow-wrap:anywhere">' + esc(o.title) + '</b>' +
+    '<span class="small muted">' + (o.unit ? esc(o.unit) + ' · ' : '') + 'gültig bis ' + deDate(o.valid_until) + (o.region && o.region !== 'bundesweit' ? ' · ' + esc(o.region) : '') + '</span></div>' +
+    '<div class="stack" style="gap:2px;align-items:flex-end;flex-shrink:0"><span class="price" style="font-size:22px">' + eur(+o.price) + '</span>' +
+    (o.old_price ? '<span class="small muted" style="text-decoration:line-through">' + eur(+o.old_price) + '</span>' : '') +
+    (pct >= 5 ? '<span class="pill ok">−' + pct + ' %</span>' : '') + '</div></div>' +
+    (locked ? '' : '<div class="btns">' +
+      '<button class="btn small ' + (onList(o) ? '' : 'ghost') + '" data-action="list-toggle" data-id="' + esc(o.id) + '">' + (onList(o) ? '✓ Auf der Liste' : '+ Einkaufsliste') + '</button>' +
+      links.map(l => '<a class="btn small ghost" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.title || 'Rezept-Idee') + '</a>').join('') +
+      (o.source_url ? '<a class="btn small ghost" href="' + esc(o.source_url) + '" target="_blank" rel="noopener">Zum Angebot</a>' : '') + '</div>') +
+    '</div>';
+}
+function segTabs(){
+  const n = (S.list || []).filter(i => !i.done).length;
+  const b = (id, label) => '<button class="chip" data-action="seg" data-seg="' + id + '" aria-pressed="' + (seg === id) + '">' + label + '</button>';
+  return '<div class="chips seg" role="group" aria-label="Bereich">' + b('offers','Angebote') + b('list','Einkaufsliste' + (n ? ' (' + n + ')' : '')) + b('wunsch','Wünsche') + '</div>';
+}
+function premiumBox(){
+  if(isPremium()){
+    return '<div class="card"><div class="row"><span class="stack" style="gap:2px"><b>Premium ist aktiv</b><span class="small muted">bis ' + new Date(premium.until).toLocaleDateString('de-DE') + ', verlängert sich automatisch</span></span><span class="pill ok">PREMIUM</span></div>' +
+      '<button class="btn small ghost" data-action="portal"' + (busy ? ' disabled' : '') + ' style="align-self:flex-start">Abo verwalten oder hier kündigen</button></div>';
+  }
+  return '<div class="hero"><span class="pill" style="background:var(--hero-bar);color:var(--hero);font-weight:800">7 TAGE KOSTENLOS</span>' +
+    '<p style="font-size:20px;font-weight:800;line-height:1.3">Alle Top-Angebote der Woche in deiner Nähe</p>' +
+    '<div class="stack" style="gap:6px;font-size:14px">' +
+    '<span>✓ Die besten Angebote von Aldi, Lidl, Rewe, Edeka und Co., jede Woche neu</span>' +
+    '<span>✓ Einkaufsliste mit Gesamtpreis, sortiert nach Laden</span>' +
+    '<span>✓ Rezept-Ideen zu deinen Einkäufen</span></div>' +
+    '<button class="btn" data-action="premium-start"' + (busy ? ' disabled' : '') + ' style="background:var(--hero-bar);color:var(--hero);font-weight:800">' + (busy ? 'Einen Moment …' : '7 Tage kostenlos testen') + '</button>' +
+    '<p class="small muted">Danach 4,99 € pro Monat inkl. MwSt. Jederzeit kündbar, in der Testwoche kostenlos. Bezahlung sicher über Stripe.</p></div>';
+}
+function viewOffersSeg(){
+  const prem = isPremium();
+  let html = '';
+  if(premiumMsg) html += '<div class="banner" role="alert"><span>' + esc(premiumMsg) + '</span><button data-action="pmsg-close">OK</button></div>';
+  if(!offersLoaded) setTimeout(() => loadOffers(), 0);
+  const stores = ['Alle', ...[...new Set(offers.map(o => o.store))].sort()];
+  if(storeFilter !== 'Alle' && stores.indexOf(storeFilter) < 0) storeFilter = 'Alle';
+  const shown = offers.filter(o => storeFilter === 'Alle' || o.store === storeFilter);
+  if(!prem){
+    const teasers = offers.filter(o => o.is_teaser).slice(0, 3);
+    html += premiumBox();
+    if(teasers.length) html += '<h2>Vorschau aus dieser Woche</h2><div class="stack">' + teasers.map(o => offerCard(o, true)).join('') + '</div>';
+    html += '<p class="small muted">Schon Premium auf einem anderen Gerät? Schreib uns an ' + esc(FEEDBACK_EMAIL) + ' und nenn deine Geräte-ID (unter „Mehr“), dann übertragen wir dein Abo.</p>';
+    return html;
+  }
+  html += premiumBox();
+  html += '<div class="row"><h2>Top-Angebote der Woche</h2><button class="btn small ghost" data-action="offers-reload" aria-label="Angebote aktualisieren">' + I.refresh + '</button></div>';
+  if(stores.length > 2) html += '<div class="chips" role="group" aria-label="Laden">' + stores.map(s => '<button class="chip" data-action="store" data-store="' + esc(s) + '" aria-pressed="' + (s === storeFilter) + '">' + esc(s) + '</button>').join('') + '</div>';
+  if(!offersLoaded || offersLoading) html += '<p class="empty">Lade die Angebote …</p>';
+  else if(!shown.length) html += '<p class="empty">Die neuen Angebote kommen in Kürze. Schau bald wieder vorbei.</p>';
+  else html += '<div class="stack">' + shown.map(o => offerCard(o, false)).join('') + '</div>';
+  html += '<p class="small muted">Alle Angaben ohne Gewähr. Es gelten Preis und Verfügbarkeit im jeweiligen Markt.</p>';
+  return html;
+}
+function viewListSeg(){
+  const list = S.list || [];
+  const sum = list.filter(i => !i.done).reduce((a,i) => a + (+i.price || 0), 0);
+  const bought = list.filter(i => i.done);
+  const byStore = {};
+  list.forEach(i => { (byStore[i.store] = byStore[i.store] || []).push(i); });
+  let html = '<form class="card" id="own-item-form" novalidate><label for="own-item">Eigenen Artikel hinzufügen</label><div style="display:flex;gap:8px"><input id="own-item" placeholder="z. B. Milch" maxlength="60"><button class="btn small" type="submit">' + I.plus + '</button></div></form>';
+  if(!list.length) return html + '<p class="empty">Deine Einkaufsliste ist leer. Tippe bei einem Angebot auf „+ Einkaufsliste“.</p>';
+  Object.keys(byStore).sort().forEach(st => {
+    html += '<div class="card"><h2>' + esc(st) + '</h2>' + byStore[st].map(i =>
+      '<label class="check" style="justify-content:space-between;font-weight:500"><span style="display:flex;gap:10px;align-items:center;min-width:0"><input type="checkbox" data-action="list-done" data-id="' + esc(i.id) + '"' + (i.done ? ' checked' : '') + '>' +
+      '<span style="overflow-wrap:anywhere;' + (i.done ? 'text-decoration:line-through;color:var(--muted)' : '') + '">' + esc(i.title) + (i.unit ? ' <span class="small muted">' + esc(i.unit) + '</span>' : '') + '</span></span>' +
+      (i.price ? '<b class="mono" style="white-space:nowrap">' + eur(+i.price) + '</b>' : '') + '</label>').join('') + '</div>';
+  });
+  const recipeItems = bought.length ? bought : list;
+  html += '<div class="card"><div class="row"><b>Noch offen</b><b class="price" style="font-size:20px">' + eur(sum) + '</b></div>' +
+    '<a class="btn" href="' + recipeSearchUrl(recipeItems) + '" target="_blank" rel="noopener">Was koche ich damit? Rezept-Ideen auf TikTok</a>' +
+    '<p class="small muted">' + (bought.length ? 'Wir suchen Rezepte mit deinen gekauften Sachen.' : 'Hake ab, was du gekauft hast. Dann suchen wir Rezepte genau damit.') + '</p>' +
+    '<div class="btns"><button class="btn small ghost" data-action="list-clear-done">Gekaufte entfernen</button><button class="btn small danger" data-action="list-clear">Liste leeren</button></div></div>';
+  return html;
+}
+function viewAngebote(){
+  const sub = seg === 'offers' ? 'Die besten Angebote der Woche, ausgewählt für dich.' : seg === 'list' ? 'Alles für deinen nächsten Einkauf.' : 'Behalte Preise für größere Käufe im Blick.';
+  let body = seg === 'offers' ? viewOffersSeg() : seg === 'list' ? viewListSeg() : viewWunsch(true);
+  return demoBanner() + header('Angebote', sub) + segTabs() + body;
 }
 
 // ===== Bottom-Sheets =====
@@ -584,7 +744,7 @@ function render(){
   const app = $('app');
   if(!S.setup.done){ app.innerHTML = viewSetup(); $('tabs').hidden = true; return; }
   $('tabs').hidden = false;
-  app.innerHTML = tab === 'home' ? viewHome() : tab === 'tanken' ? viewTanken() : tab === 'wunsch' ? viewWunsch() : tab === 'alarme' ? viewAlarme() : viewMehr();
+  app.innerHTML = tab === 'home' ? viewHome() : tab === 'tanken' ? viewTanken() : tab === 'angebote' ? viewAngebote() : tab === 'alarme' ? viewAlarme() : viewMehr();
   const at = $('a-tank'); if(at) at.addEventListener('change', () => { S.cloud.tankAlarm = at.checked; save(); toast(at.checked ? 'Tank-Alarm an' : 'Tank-Alarm aus'); });
   document.querySelectorAll('#tabs button').forEach(b => { if(b.dataset.tab === tab) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   const r = $('t-init'); if(r) r.addEventListener('input', () => $('t-init-out').textContent = r.value + ' %');
@@ -600,14 +760,14 @@ function readProfile(prefix, errId){
 // ===== Ereignisse =====
 document.addEventListener('click', e => {
   const tb = e.target.closest('#tabs button');
-  if(tb){ tab = tb.dataset.tab; resetArmed = false; offArmed = false; alarmMsg = ''; render(); window.scrollTo(0,0); if((tab === 'tanken' || tab === 'alarme') && !stations.length) loadStations(); return; }
+  if(tb){ tab = tb.dataset.tab; resetArmed = false; offArmed = false; alarmMsg = ''; render(); window.scrollTo(0,0); if((tab === 'tanken' || tab === 'alarme') && !stations.length) loadStations(); if(tab === 'angebote'){ premiumMsg = ''; loadOffers(); } return; }
   const a = e.target.closest('[data-action]'); if(!a) return;
   const act = a.dataset.action;
   if(act === 'sheet-bg' && e.target !== a) return;
   switch(act){
     case 'demo': loadDemo(); loadStations(); break;
     case 'clear-demo': S = defaults(); save(); render(); break;
-    case 'go': tab = a.dataset.go; render(); window.scrollTo(0,0); if(tab === 'tanken' && !stations.length) loadStations(); break;
+    case 'go': tab = a.dataset.go; if(a.dataset.seg) seg = a.dataset.seg; render(); window.scrollTo(0,0); if(tab === 'tanken' && !stations.length) loadStations(); break;
     case 'fuel': S.setup.fuel = a.dataset.fuel; save(); render(); break;
     case 'reload': loadStations(); break;
     case 'tank-init': { const v = +$('t-init').value; S.tank = {liters: S.setup.tankL * v / 100, at: Date.now(), odo: null}; save(); render(); toast('Füllstand gespeichert'); break; }
@@ -619,6 +779,17 @@ document.addEventListener('click', e => {
     case 'wish-del': S.wishes = S.wishes.filter(x => x.id !== a.dataset.id); save(); render(); break;
     case 'copy-mail': navigator.clipboard && navigator.clipboard.writeText(FEEDBACK_EMAIL).then(() => toast('Adresse kopiert'), () => toast('Bitte die Adresse markieren und kopieren')); break;
     case 'install': if(installEvt){ installEvt.prompt(); installEvt = null; render(); } break;
+    case 'seg': seg = a.dataset.seg; premiumMsg = ''; render(); break;
+    case 'store': storeFilter = a.dataset.store; render(); break;
+    case 'offers-reload': refreshPremium(); break;
+    case 'list-toggle': { const o = offers.find(x => x.id === a.dataset.id); if(o) toggleList(o); break; }
+    case 'list-done': { const it = (S.list || []).find(x => x.id === a.dataset.id); if(it){ it.done = !it.done; save(); render(); } break; }
+    case 'list-clear-done': S.list = (S.list || []).filter(x => !x.done); save(); render(); break;
+    case 'list-clear': S.list = []; save(); render(); toast('Einkaufsliste geleert'); break;
+    case 'premium-start': if(!busy) startPremium(); break;
+    case 'portal': if(!busy) openPortal(); break;
+    case 'pmsg-close': premiumMsg = ''; render(); break;
+    case 'copy-id': navigator.clipboard && navigator.clipboard.writeText(S.uid || '').then(() => toast('Geräte-ID kopiert'), () => toast('Bitte die ID markieren und kopieren')); break;
     case 'alarms-on': if(!busy) enableAlarms(); break;
     case 'alarms-off': offArmed = true; render(); break;
     case 'alarms-off-no': offArmed = false; render(); break;
@@ -667,6 +838,10 @@ document.addEventListener('submit', e => {
     S.fills.push({at:Date.now(), station:(sheetCtx && sheetCtx.station) || null, price, liters, avg:avg || null, saved, full, odo});
     save(); closeSheet(); render(); toast(saved > 0 ? eur(saved) + ' gespart gegenüber dem Durchschnitt' : 'Tankfüllung gespeichert');
   }
+  if(id === 'own-item-form'){
+    const t = $('own-item').value.trim(); if(!t) return;
+    S.list = S.list || []; S.list.push({id:'own-' + uid(), title:t, store:'Sonstiges', price:0, unit:'', keyword:t, done:false}); save(); render(); toast('Hinzugefügt');
+  }
   if(id === 'alert-form'){
     const fuel = $('al-fuel').value, p = parsePrice($('al-price').value);
     if(!(p > 0.5 && p < 5)){ alarmMsg = 'Bitte einen Höchstpreis pro Liter eingeben, z. B. 1,79.'; render(); return; }
@@ -691,9 +866,20 @@ document.addEventListener('keydown', e => { if(e.key === 'Escape' && !$('sheet')
 window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; if(tab === 'mehr') render(); });
 if('serviceWorker' in navigator && location.protocol === 'https:'){ navigator.serviceWorker.register('sw.js').catch(() => {}); }
 
-if(/^#(tanken|alarme|wunsch|mehr)$/.test(location.hash)) tab = location.hash.slice(1);
+if(/^#(tanken|alarme|angebote|mehr)$/.test(location.hash)) tab = location.hash.slice(1);
+if(location.hash === '#wunsch'){ tab = 'angebote'; seg = 'wunsch'; }
+if(S.premiumCache) premium = S.premiumCache;
+if(location.hash === '#premium'){
+  tab = 'angebote'; seg = 'offers';
+  if(isIOS && !isStandalone()) premiumMsg = 'Danke! Öffne FastUmsonst jetzt über das Symbol auf deinem Home-Bildschirm. Dort ist Premium in wenigen Sekunden freigeschaltet.';
+  else premiumMsg = 'Danke! Premium wird freigeschaltet …';
+  const poll = async () => { premiumPoll++; await refreshPremium(); if(isPremium()){ premiumMsg = 'Premium ist aktiv. Viel Spaß beim Sparen!'; render(); } else if(premiumPoll < 20) setTimeout(poll, 3000); else { premiumMsg = 'Die Freischaltung dauert länger als erwartet. Öffne die App gleich noch einmal oder schreib uns an ' + FEEDBACK_EMAIL + '.'; render(); } };
+  setTimeout(poll, 1500);
+  try{ history.replaceState(null, '', location.pathname + '#angebote'); }catch(e){}
+}
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible' && S.setup.done){ refreshPremium(); } });
 render();
-if(S.setup.done) loadStations();
+if(S.setup.done){ loadStations(); refreshPremium(); }
 })();
 </script>
 

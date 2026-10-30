@@ -1,5 +1,5 @@
 // Service Worker: macht die App schnell, auch ohne Netz startbar, und zeigt Benachrichtigungen an.
-const CACHE = 'fastumsonst-v3';
+const CACHE = 'fastumsonst-v4';
 const SHELL = ['/', '/index.html', '/impressum.html', '/datenschutz.html', '/manrope.woff2', '/supabase.js', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'];
 
 self.addEventListener('install', e => {
