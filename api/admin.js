@@ -41,6 +41,7 @@ function cleanOffer(o) {
   if (o.id && UUID.test(o.id)) out.id = o.id;
   if (!out.title || out.title.length < 2) return { error: 'Produkt fehlt.' };
   if (!out.store) return { error: `Laden fehlt bei „${out.title}“.` };
+  if (/^aldi$/i.test(out.store)) return { error: `Bitte „Aldi Nord“ oder „Aldi Süd“ angeben bei „${out.title}“.` };
   if (!(out.price > 0)) return { error: `Preis fehlt oder ist ungültig bei „${out.title}“.` };
   if (Number.isNaN(out.old_price)) return { error: `Statt-Preis ist ungültig bei „${out.title}“.` };
   if (!out.valid_until || out.valid_until === 'invalid') return { error: `„Gültig bis“ fehlt oder ist ungültig bei „${out.title}“ (z. B. 07.11.2026).` };
