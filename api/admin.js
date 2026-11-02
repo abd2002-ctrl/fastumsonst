@@ -64,7 +64,7 @@ function cleanRecipe(r) {
   const servings = Math.max(1, Math.min(20, parseInt(r.servings, 10) || 4));
   const minutes = parseInt(r.minutes, 10); 
   const total = Math.round(ingredients.reduce((a, i) => a + (i.price || 0), 0) * 100) / 100;
-  const out = { title, intro: str(r.intro, 300), servings, minutes: minutes > 0 && minutes <= 600 ? minutes : null, total_price: total, ingredients, steps, valid_until, is_teaser: !!r.is_teaser };
+  const out = { title, intro: str(r.intro, 300), video_url: https(r.video_url), servings, minutes: minutes > 0 && minutes <= 600 ? minutes : null, total_price: total, ingredients, steps, valid_until, is_teaser: !!r.is_teaser };
   if (r.id && UUID.test(r.id)) out.id = r.id;
   return { recipe: out };
 }
@@ -122,7 +122,13 @@ export default async function handler(req, res) {
         const clean = [];
         for (const r of rows) { const c = cleanRecipe(r || {}); if (c.error) return res.status(400).json({ ok: false, message: c.error }); clean.push(c.recipe); }
         if (!clean.length) return res.status(400).json({ ok: false, message: 'Keine Rezepte erkannt.' });
-        const { error } = await db.from('recipes').insert(clean);
+        // Gleiches Rezept (Titel + Woche) ersetzen statt doppelt anlegen
+        for (const c of clean) await db.from('recipes').delete().eq('title', c.title).eq('valid_until', c.valid_until);
+        let { error } = await db.from('recipes').insert(clean);
+        if (error && /video_url/.test(error.message || '')) {
+          ({ error } = await db.from('recipes').insert(clean.map(({ video_url, ...rest }) => rest)));
+          if (!error) return res.status(200).json({ ok: true, count: clean.length, note: 'Video-Links wurden nicht gespeichert: Bitte setup/datenbank-v4.sql in Supabase ausführen.' });
+        }
         if (error) throw error;
         return res.status(200).json({ ok: true, count: clean.length });
       }
