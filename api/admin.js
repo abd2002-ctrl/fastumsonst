@@ -49,6 +49,26 @@ function cleanOffer(o) {
   return { offer: out };
 }
 
+function cleanRecipe(r) {
+  const title = str(r.title, 120);
+  if (!title || title.length < 2) return { error: 'Rezept ohne Titel.' };
+  const valid_until = date(r.valid_until);
+  if (!valid_until || valid_until === 'invalid') return { error: `„valid_until“ fehlt oder ist ungültig bei „${title}“.` };
+  const ingredients = (Array.isArray(r.ingredients) ? r.ingredients : []).slice(0, 30).map(i => {
+    const price = num(i && i.price);
+    return { name: str(i && i.name, 80), qty: str(i && i.qty, 40), store: str(i && i.store, 40), price: Number.isNaN(price) ? null : price, keyword: str(i && i.keyword, 40) };
+  }).filter(i => i.name);
+  const steps = (Array.isArray(r.steps) ? r.steps : []).slice(0, 20).map(x => str(x, 500)).filter(Boolean);
+  if (!ingredients.length) return { error: `Keine Zutaten bei „${title}“.` };
+  if (!steps.length) return { error: `Keine Schritte bei „${title}“.` };
+  const servings = Math.max(1, Math.min(20, parseInt(r.servings, 10) || 4));
+  const minutes = parseInt(r.minutes, 10); 
+  const total = Math.round(ingredients.reduce((a, i) => a + (i.price || 0), 0) * 100) / 100;
+  const out = { title, intro: str(r.intro, 300), servings, minutes: minutes > 0 && minutes <= 600 ? minutes : null, total_price: total, ingredients, steps, valid_until, is_teaser: !!r.is_teaser };
+  if (r.id && UUID.test(r.id)) out.id = r.id;
+  return { recipe: out };
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
   if (!process.env.SUPABASE_SECRET_KEY) return res.status(500).json({ ok: false, message: 'SUPABASE_SECRET_KEY fehlt.' });
@@ -65,7 +85,8 @@ export default async function handler(req, res) {
         const { data, error } = await db.from('offers').select('*').order('valid_until', { ascending: false }).order('created_at', { ascending: false }).limit(300);
         if (error) throw error;
         const { count } = await db.from('profiles').select('user_id', { count: 'exact', head: true }).eq('plan', 'premium').gt('premium_until', new Date().toISOString());
-        return res.status(200).json({ ok: true, offers: data, premiumCount: count || 0 });
+        const rec = await db.from('recipes').select('*').order('valid_until', { ascending: false }).order('created_at', { ascending: false }).limit(100);
+        return res.status(200).json({ ok: true, offers: data, premiumCount: count || 0, recipes: rec.error ? [] : rec.data, recipesMissing: !!rec.error });
       }
       case 'save': {
         const c = cleanOffer(body.offer || {});
@@ -93,7 +114,29 @@ export default async function handler(req, res) {
         const before = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
         const { error, count } = await db.from('offers').delete({ count: 'exact' }).lt('valid_until', before);
         if (error) throw error;
+        await db.from('recipes').delete().lt('valid_until', before);
         return res.status(200).json({ ok: true, count: count || 0 });
+      }
+      case 'recipe-import': {
+        const rows = Array.isArray(body.recipes) ? body.recipes.slice(0, 30) : [];
+        const clean = [];
+        for (const r of rows) { const c = cleanRecipe(r || {}); if (c.error) return res.status(400).json({ ok: false, message: c.error }); clean.push(c.recipe); }
+        if (!clean.length) return res.status(400).json({ ok: false, message: 'Keine Rezepte erkannt.' });
+        const { error } = await db.from('recipes').insert(clean);
+        if (error) throw error;
+        return res.status(200).json({ ok: true, count: clean.length });
+      }
+      case 'recipe-teaser': {
+        if (!UUID.test(body.id || '')) return res.status(400).json({ ok: false, message: 'Ungültige ID.' });
+        const { error } = await db.from('recipes').update({ is_teaser: !!body.value }).eq('id', body.id);
+        if (error) throw error;
+        return res.status(200).json({ ok: true });
+      }
+      case 'recipe-delete': {
+        if (!UUID.test(body.id || '')) return res.status(400).json({ ok: false, message: 'Ungültige ID.' });
+        const { error } = await db.from('recipes').delete().eq('id', body.id);
+        if (error) throw error;
+        return res.status(200).json({ ok: true });
       }
       case 'grant': {
         const uid = String(body.userId || '').trim();
