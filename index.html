@@ -489,7 +489,7 @@ function viewMehr(){
   (S.uid ? '<div class="row" style="flex-wrap:wrap;margin-top:6px"><span class="small muted">Geräte-ID: <span class="mono" style="user-select:all;overflow-wrap:anywhere">' + esc(S.uid) + '</span></span><button class="btn small ghost" data-action="copy-id">Kopieren</button></div>' : '') + '</div>' +
   '<div class="card"><h2>Feedback</h2><p class="small muted">Was fehlt dir? Was nervt? Schreib uns, jede Nachricht hilft, die App besser zu machen.</p>' +
   '<div class="row" style="flex-wrap:wrap"><b style="user-select:all;overflow-wrap:anywhere">' + esc(FEEDBACK_EMAIL) + '</b><button class="btn small ghost" data-action="copy-mail">Adresse kopieren</button></div></div>' +
-  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Einstellungen, Tankfüllungen und deine Wunschliste bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Alle Angaben ohne Gewähr.</p></div>' +
+  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Einstellungen, Tankfüllungen und deine Wunschliste bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Erkennung Aldi Nord/Süd: Filialdaten © OpenStreetMap-Mitwirkende, Lizenz ODbL. Alle Angaben ohne Gewähr.</p></div>' +
   '<div class="card"><h2>Daten zurücksetzen</h2><p class="small muted">Löscht Tankfüllungen, Wunschliste und Einstellungen auf diesem Gerät.</p>' +
   (resetArmed ? '<div class="btns"><button class="btn danger" data-action="reset-yes">Ja, alles löschen</button><button class="btn ghost" data-action="reset-no">Abbrechen</button></div>' : '<button class="btn danger" data-action="reset">Zurücksetzen</button>') + '</div>' + LEGAL;
 }
@@ -567,6 +567,47 @@ async function loadOffers(force){
   offersLoading = false; render();
 }
 async function refreshPremium(){ await loadProfile(); offersLoaded = false; await loadOffers(true); }
+
+// Aldi Nord oder Aldi Süd: automatisch über den Standort (nächste Aldi-Filialen), jederzeit änderbar
+let aldiBusy = false;
+const aldiName = z => z === 'nord' ? 'Aldi Nord' : z === 'sued' ? 'Aldi Süd' : '';
+function aldiOk(o){
+  const z = S.aldi && S.aldi.zone; if(!z) return true;
+  const st = String(o.store || '').toLowerCase();
+  if(/aldi[\s-]*nord/.test(st)) return z === 'nord';
+  if(/aldi[\s-]*s(ü|ue|u)d/.test(st)) return z === 'sued';
+  return true;
+}
+async function geoGranted(){ try{ const p = await navigator.permissions.query({name:'geolocation'}); return p.state === 'granted'; }catch(e){ return false; } }
+async function detectAldi(ask){
+  if(aldiBusy) return; aldiBusy = true; if(ask) render();
+  try{
+    if(!ask && !(await geoGranted())) throw new Error('kein Standort');
+    const p = await getPos();
+    const r = await fetch('/api/aldi?lat=' + p.lat.toFixed(2) + '&lng=' + p.lng.toFixed(2));
+    const j = await r.json();
+    if(j.ok && j.zone){ S.aldi = {zone:j.zone, auto:true, at:Date.now()}; save(); }
+    else if(ask) toast('Konnte deinen Aldi nicht sicher erkennen. Bitte wähle selbst.');
+  }catch(e){ if(ask) toast('Standort nicht verfügbar. Bitte wähle deinen Aldi selbst.'); }
+  aldiBusy = false; render();
+}
+let aldiTried = false;
+function maybeDetectAldi(){
+  if(aldiTried) return;
+  const a = S.aldi;
+  if(!a || (a.auto && Date.now() - a.at > 30 * 864e5)){ aldiTried = true; detectAldi(false); }
+}
+function aldiBox(){
+  const z = S.aldi && S.aldi.zone;
+  const b = (v, label) => '<button class="chip" data-action="aldi" data-zone="' + v + '" aria-pressed="' + (z === v) + '">' + label + '</button>';
+  return '<div class="card" style="gap:8px"><div class="row" style="flex-wrap:wrap"><b>Dein Aldi</b><div class="chips" role="group" aria-label="Dein Aldi">' + b('nord','Aldi Nord') + b('sued','Aldi Süd') + '</div></div>' +
+    '<span class="small muted">' + (aldiBusy ? 'Erkenne deinen Aldi über deinen Standort …' : z ? (S.aldi.auto ? 'Automatisch über deinen Standort erkannt. ' : 'Von dir gewählt. ') + 'Du siehst nur Angebote von ' + aldiName(z) + '.' : 'Aldi Nord und Aldi Süd haben unterschiedliche Angebote.') + '</span>' +
+    (!z && !aldiBusy ? '<button class="btn small ghost" data-action="aldi-auto" style="align-self:flex-start">Mit meinem Standort erkennen</button>' : '') + '</div>';
+}
+function marketBox(){
+  return '<div class="card"><h2>Rewe und Edeka</h2><p class="small muted">Bei Rewe und Edeka macht fast jeder Markt eigene Angebote. Damit du sicher richtig liegst, siehst du hier direkt die Angebote deines eigenen Markts. Dort einmal deinen Markt auswählen.</p>' +
+    '<div class="btns"><a class="btn small ghost" href="https://www.rewe.de/angebote/" target="_blank" rel="noopener">Angebote deines Rewe</a><a class="btn small ghost" href="https://www.edeka.de/" target="_blank" rel="noopener">Angebote deines Edeka</a></div></div>';
+}
 async function startPremium(){
   busy = true; premiumMsg = ''; render();
   try{
@@ -635,7 +676,8 @@ function premiumBox(){
   return '<div class="hero"><span class="pill" style="background:var(--hero-bar);color:var(--hero);font-weight:800">7 TAGE KOSTENLOS</span>' +
     '<p style="font-size:20px;font-weight:800;line-height:1.3">Alle Top-Angebote der Woche in deiner Nähe</p>' +
     '<div class="stack" style="gap:6px;font-size:14px">' +
-    '<span>✓ Die besten Angebote von Aldi, Lidl, Rewe, Edeka und Co., jede Woche neu</span>' +
+    '<span>✓ Die besten Angebote von Lidl, Aldi, Kaufland, Penny und Netto, jede Woche neu und gültig in jeder Filiale</span>' +
+    '<span>✓ Für Rewe und Edeka: direkt die Angebote deines eigenen Markts</span>' +
     '<span>✓ Einkaufsliste mit Gesamtpreis, sortiert nach Laden</span>' +
     '<span>✓ Rezept-Ideen zu deinen Einkäufen</span></div>' +
     '<button class="btn" data-action="premium-start"' + (busy ? ' disabled' : '') + ' style="background:var(--hero-bar);color:var(--hero);font-weight:800">' + (busy ? 'Einen Moment …' : '7 Tage kostenlos testen') + '</button>' +
@@ -646,11 +688,13 @@ function viewOffersSeg(){
   let html = '';
   if(premiumMsg) html += '<div class="banner" role="alert"><span>' + esc(premiumMsg) + '</span><button data-action="pmsg-close">OK</button></div>';
   if(!offersLoaded) setTimeout(() => loadOffers(), 0);
-  const stores = ['Alle', ...[...new Set(offers.map(o => o.store))].sort()];
+  setTimeout(maybeDetectAldi, 0);
+  const mine = offers.filter(aldiOk);
+  const stores = ['Alle', ...[...new Set(mine.map(o => o.store))].sort()];
   if(storeFilter !== 'Alle' && stores.indexOf(storeFilter) < 0) storeFilter = 'Alle';
-  const shown = offers.filter(o => storeFilter === 'Alle' || o.store === storeFilter);
+  const shown = mine.filter(o => storeFilter === 'Alle' || o.store === storeFilter);
   if(!prem){
-    const teasers = offers.filter(o => o.is_teaser).slice(0, 3);
+    const teasers = mine.filter(o => o.is_teaser).slice(0, 3);
     html += premiumBox();
     if(teasers.length) html += '<h2>Vorschau aus dieser Woche</h2><div class="stack">' + teasers.map(o => offerCard(o, true)).join('') + '</div>';
     html += '<p class="small muted">Schon Premium auf einem anderen Gerät? Schreib uns an ' + esc(FEEDBACK_EMAIL) + ' und nenn deine Geräte-ID (unter „Mehr“), dann übertragen wir dein Abo.</p>';
@@ -658,11 +702,13 @@ function viewOffersSeg(){
   }
   html += premiumBox();
   html += '<div class="row"><h2>Top-Angebote der Woche</h2><button class="btn small ghost" data-action="offers-reload" aria-label="Angebote aktualisieren">' + I.refresh + '</button></div>';
+  if(offers.some(o => /aldi/i.test(o.store || ''))) html += aldiBox();
   if(stores.length > 2) html += '<div class="chips" role="group" aria-label="Laden">' + stores.map(s => '<button class="chip" data-action="store" data-store="' + esc(s) + '" aria-pressed="' + (s === storeFilter) + '">' + esc(s) + '</button>').join('') + '</div>';
   if(!offersLoaded || offersLoading) html += '<p class="empty">Lade die Angebote …</p>';
   else if(!shown.length) html += '<p class="empty">Die neuen Angebote kommen in Kürze. Schau bald wieder vorbei.</p>';
   else html += '<div class="stack">' + shown.map(o => offerCard(o, false)).join('') + '</div>';
-  html += '<p class="small muted">Alle Angaben ohne Gewähr. Es gelten Preis und Verfügbarkeit im jeweiligen Markt.</p>';
+  html += marketBox();
+  html += '<p class="small muted">Alle Angaben ohne Gewähr. Angebote gelten, solange der Vorrat reicht. Es gelten Preis und Verfügbarkeit im jeweiligen Markt.</p>';
   return html;
 }
 function viewListSeg(){
@@ -782,6 +828,8 @@ document.addEventListener('click', e => {
     case 'seg': seg = a.dataset.seg; premiumMsg = ''; render(); break;
     case 'store': storeFilter = a.dataset.store; render(); break;
     case 'offers-reload': refreshPremium(); break;
+    case 'aldi': S.aldi = {zone:a.dataset.zone, auto:false, at:Date.now()}; save(); render(); toast('Du siehst jetzt ' + aldiName(a.dataset.zone)); break;
+    case 'aldi-auto': detectAldi(true); break;
     case 'list-toggle': { const o = offers.find(x => x.id === a.dataset.id); if(o) toggleList(o); break; }
     case 'list-done': { const it = (S.list || []).find(x => x.id === a.dataset.id); if(it){ it.done = !it.done; save(); render(); } break; }
     case 'list-clear-done': S.list = (S.list || []).filter(x => !x.done); save(); render(); break;

@@ -158,7 +158,7 @@ function parseLines(text, region){
       recipe_links: c[7] ? [{title:'Rezept-Idee', url:c[7]}] : [], region: region || 'bundesweit'};
   });
 }
-const PROMPT = 'Wandle die folgenden Supermarkt-Angebote in eine Liste um. Eine Zeile pro Angebot, Felder mit Semikolon getrennt, ohne Überschrift und ohne weitere Erklärungen:\nProdukt; Laden; Preis; Statt-Preis; Menge; gültig bis; Stichwort\n- Preise mit Komma, ohne Euro-Zeichen (z. B. 3,99)\n- Statt-Preis leer lassen, wenn keiner angegeben ist\n- gültig bis im Format TT.MM.JJJJ\n- Stichwort = die Hauptzutat in einem Wort, z. B. Hackfleisch, Paprika, Lachs\n- Produktnamen in eigenen, kurzen Worten\n\nHier sind die Angebote:\n';
+const PROMPT = 'Wandle die folgenden Supermarkt-Angebote in eine Liste um. Eine Zeile pro Angebot, Felder mit Semikolon getrennt, ohne Überschrift und ohne weitere Erklärungen:\nProdukt; Laden; Preis; Statt-Preis; Menge; gültig bis; Stichwort\n- Preise mit Komma, ohne Euro-Zeichen (z. B. 3,99)\n- Statt-Preis leer lassen, wenn keiner angegeben ist\n- gültig bis im Format TT.MM.JJJJ\n- Stichwort = die Hauptzutat in einem Wort, z. B. Hackfleisch, Paprika, Lachs\n- Produktnamen in eigenen, kurzen Worten\n- Laden bei Aldi immer als „Aldi Nord“ oder „Aldi Süd“, nie nur „Aldi“\n- Angebote mit Hinweisen wie „nur regional“ oder „in ausgewählten Filialen“ weglassen\n\nHier sind die Angebote:\n';
 
 document.addEventListener('click', async e => {
   const ed = e.target.closest('[data-edit]'), del = e.target.closest('[data-del]');
