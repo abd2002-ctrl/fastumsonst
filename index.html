@@ -485,7 +485,7 @@ function viewMehr(){
   '<div class="card"><h2>Als App auf den Startbildschirm</h2>' +
   (installEvt ? '<button class="btn" data-action="install">App installieren</button>' : '') +
   '<p class="small muted">' + (ios ? 'iPhone: In Safari unten auf das Teilen-Symbol tippen und „Zum Home-Bildschirm“ wählen.' : 'Android: Im Chrome-Menü (drei Punkte) „App installieren“ oder „Zum Startbildschirm hinzufügen“ wählen. iPhone: In Safari auf Teilen und dann „Zum Home-Bildschirm“.') + '</p></div>' +
-  '<div class="card"><h2>Premium</h2>' + (isPremium() ? '<p class="small muted">Aktiv bis ' + new Date(premium.until).toLocaleDateString('de-DE') + '.</p><button class="btn small ghost" data-action="portal" style="align-self:flex-start">Abo verwalten oder hier kündigen</button>' : '<p class="small muted">Top-Angebote der Woche, Einkaufsliste und Rezept-Ideen. 7 Tage kostenlos, danach 4,99 € im Monat.</p><button class="btn small" data-action="go" data-go="angebote" data-seg="offers" style="align-self:flex-start">Premium ansehen</button>') +
+  '<div class="card"><h2>Premium</h2>' + (isPremium() ? '<p class="small muted">Aktiv bis ' + new Date(premium.until).toLocaleDateString('de-DE') + '.</p><button class="btn small ghost" data-action="portal" style="align-self:flex-start">Abo verwalten oder hier kündigen</button>' : '<p class="small muted">Top-Angebote der Woche, Rezepte der Woche und Einkaufsliste. 7 Tage kostenlos, danach 4,99 € im Monat.</p><button class="btn small" data-action="go" data-go="angebote" data-seg="offers" style="align-self:flex-start">Premium ansehen</button>') +
   (S.uid ? '<div class="row" style="flex-wrap:wrap;margin-top:6px"><span class="small muted">Geräte-ID: <span class="mono" style="user-select:all;overflow-wrap:anywhere">' + esc(S.uid) + '</span></span><button class="btn small ghost" data-action="copy-id">Kopieren</button></div>' : '') + '</div>' +
   '<div class="card"><h2>Feedback</h2><p class="small muted">Was fehlt dir? Was nervt? Schreib uns, jede Nachricht hilft, die App besser zu machen.</p>' +
   '<div class="row" style="flex-wrap:wrap"><b style="user-select:all;overflow-wrap:anywhere">' + esc(FEEDBACK_EMAIL) + '</b><button class="btn small ghost" data-action="copy-mail">Adresse kopieren</button></div></div>' +
@@ -538,7 +538,7 @@ function viewAlarme(){
 }
 
 // ===== Premium: Angebote der Woche, Einkaufsliste, Rezepte =====
-let offers = [], offersLoaded = false, offersLoading = false, storeFilter = 'Alle', seg = 'offers';
+let recipes = [], offers = [], offersLoaded = false, offersLoading = false, storeFilter = 'Alle', seg = 'offers';
 let premium = null, cfg = null, premiumMsg = '', premiumPoll = 0;
 const todayISO = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); };
 const deDate = iso => { if(!iso) return ''; const [y,m,d] = iso.split('-'); return d + '.' + m + '.'; };
@@ -563,6 +563,7 @@ async function loadOffers(force){
     const r = await c.from('offers').select('*').gte('valid_until', todayISO()).order('store').order('price');
     if(r.error) throw r.error;
     offers = r.data || []; offersLoaded = true;
+    try{ const rr = await c.from('recipes').select('*').gte('valid_until', todayISO()).order('total_price'); recipes = rr.error ? [] : (rr.data || []); }catch(e){ recipes = []; }
   }catch(e){ offersLoaded = true; }
   offersLoading = false; render();
 }
@@ -692,8 +693,41 @@ function offerCard(o, locked){
     (locked ? '' : '<div class="btns">' +
       '<button class="btn small ' + (onList(o) ? '' : 'ghost') + '" data-action="list-toggle" data-id="' + esc(o.id) + '">' + (onList(o) ? '✓ Auf der Liste' : '+ Einkaufsliste') + '</button>' +
       links.map(l => '<a class="btn small ghost" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.title || 'Rezept-Idee') + '</a>').join('') +
+      (o.keyword ? '<a class="btn small ghost" href="https://www.tiktok.com/search?q=' + encodeURIComponent('Rezept ' + o.keyword) + '" target="_blank" rel="noopener">Rezepte mit ' + esc(o.keyword) + '</a>' : '') +
       (o.source_url ? '<a class="btn small ghost" href="' + esc(o.source_url) + '" target="_blank" rel="noopener">Zum Angebot</a>' : '') + '</div>') +
     '</div>';
+}
+function recipeOk(r){ return (r.ingredients || []).every(i => !i.store || aldiOk({store:i.store})); }
+function recipeCard(r){
+  const per = r.total_price && r.servings ? r.total_price / r.servings : 0;
+  const stores = [...new Set((r.ingredients || []).map(i => i.store).filter(Boolean))];
+  return '<button class="card" data-action="recipe" data-id="' + esc(r.id) + '" style="text-align:left;font:inherit;color:inherit;cursor:pointer;gap:6px">' +
+    '<div class="row" style="align-items:flex-start;gap:12px"><span aria-hidden="true" style="flex-shrink:0;width:52px;height:52px;border-radius:14px;background:rgba(11,110,79,.10);display:flex;align-items:center;justify-content:center;font-size:30px">🍳</span>' +
+    '<span class="stack" style="gap:4px;min-width:0;flex:1"><b style="font-size:16px;overflow-wrap:anywhere">' + esc(r.title) + '</b>' +
+    '<span class="small muted">' + r.servings + ' Portionen' + (r.minutes ? ' · ' + r.minutes + ' Min.' : '') + (stores.length ? ' · ' + esc(stores.join(', ')) : '') + '</span></span>' +
+    '<span class="stack" style="gap:2px;align-items:flex-end;flex-shrink:0"><span class="price" style="font-size:20px">' + eur(+r.total_price || 0) + '</span>' + (per ? '<span class="small muted">' + eur(per) + ' p. P.</span>' : '') + '</span></div></button>';
+}
+function recipeSheet(id){
+  const r = recipes.find(x => x.id === id); if(!r) return;
+  const ing = r.ingredients || [];
+  openSheet('<div class="row"><h2 style="margin:0">' + esc(r.title) + '</h2><button class="btn small ghost" data-action="sheet-close" aria-label="Schließen">✕</button></div>' +
+    (r.intro ? '<p class="small muted">' + esc(r.intro) + '</p>' : '') +
+    '<p class="small"><b>' + r.servings + ' Portionen</b>' + (r.minutes ? ' · ' + r.minutes + ' Minuten' : '') + ' · Einkauf ca. <b>' + eur(+r.total_price || 0) + '</b></p>' +
+    '<h2 style="font-size:16px;margin:8px 0 4px">Zutaten</h2><div class="stack" style="gap:6px">' + ing.map(i =>
+      '<div class="row" style="gap:8px"><span style="min-width:0;overflow-wrap:anywhere">' + esc((i.qty ? i.qty + ' ' : '') + i.name) + (i.store ? ' <span class="pill neutral">' + esc(i.store) + '</span>' : ' <span class="small muted">(Vorrat)</span>') + '</span>' + (i.price ? '<b class="mono" style="white-space:nowrap">' + eur(+i.price) + '</b>' : '') + '</div>').join('') + '</div>' +
+    '<button class="btn" data-action="recipe-list" data-id="' + esc(r.id) + '" style="margin-top:10px">Alle Zutaten auf die Einkaufsliste</button>' +
+    '<h2 style="font-size:16px;margin:12px 0 4px">So geht\'s</h2><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">' + (r.steps || []).map(st => '<li>' + esc(st) + '</li>').join('') + '</ol>' +
+    '<p class="small muted" style="margin-top:10px">Preise laut Angeboten dieser Woche, ohne Gewähr. Zutaten aus dem Vorrat sind nicht eingerechnet.</p>');
+}
+function recipeToList(id){
+  const r = recipes.find(x => x.id === id); if(!r) return;
+  S.list = S.list || []; let n = 0;
+  (r.ingredients || []).filter(i => i.store).forEach((i, k) => {
+    const lid = 'rz-' + r.id + '-' + k;
+    if(S.list.some(x => x.id === lid)) return;
+    S.list.push({id:lid, title:i.name, store:i.store, price:+i.price || 0, unit:i.qty || '', keyword:i.keyword || i.name, done:false}); n++;
+  });
+  save(); closeSheet(); seg = 'list'; render(); window.scrollTo(0,0); toast(n ? n + ' Zutaten auf der Einkaufsliste' : 'Steht schon auf deiner Liste');
 }
 function segTabs(){
   const n = (S.list || []).filter(i => !i.done).length;
@@ -711,7 +745,7 @@ function premiumBox(){
     '<span>✓ Die besten Angebote von Lidl, Aldi, Kaufland, Penny und Netto, jede Woche neu und gültig in jeder Filiale</span>' +
     '<span>✓ Für Rewe und Edeka: direkt die Angebote deines eigenen Markts</span>' +
     '<span>✓ Einkaufsliste mit Gesamtpreis, sortiert nach Laden</span>' +
-    '<span>✓ Rezept-Ideen zu deinen Einkäufen</span></div>' +
+    '<span>✓ Rezepte der Woche: gekocht mit den Angeboten, mit Gesamtpreis</span></div>' +
     '<button class="btn" data-action="premium-start"' + (busy ? ' disabled' : '') + ' style="background:var(--hero-bar);color:var(--hero);font-weight:800">' + (busy ? 'Einen Moment …' : '7 Tage kostenlos testen') + '</button>' +
     '<p class="small muted">Danach 4,99 € pro Monat inkl. MwSt. Jederzeit kündbar, in der Testwoche kostenlos. Bezahlung sicher über Stripe.</p></div>';
 }
@@ -728,11 +762,15 @@ function viewOffersSeg(){
   if(!prem){
     const teasers = mine.filter(o => o.is_teaser).slice(0, 3);
     html += premiumBox();
+    const rt = recipes.filter(r => r.is_teaser && recipeOk(r)).slice(0, 1);
+    if(rt.length) html += '<h2>Rezept der Woche, gratis zum Testen</h2><div class="stack">' + rt.map(recipeCard).join('') + '</div>';
     if(teasers.length) html += '<h2>Vorschau aus dieser Woche</h2><div class="stack">' + teasers.map(o => offerCard(o, true)).join('') + '</div>';
     html += '<p class="small muted">Schon Premium auf einem anderen Gerät? Schreib uns an ' + esc(FEEDBACK_EMAIL) + ' und nenn deine Geräte-ID (unter „Mehr“), dann übertragen wir dein Abo.</p>';
     return html;
   }
   html += premiumBox();
+  const myRecipes = recipes.filter(recipeOk);
+  if(myRecipes.length) html += '<h2>Rezepte der Woche</h2><p class="small muted" style="margin-top:-6px">Gekocht mit den Angeboten dieser Woche. Tippe auf ein Rezept.</p><div class="stack">' + myRecipes.map(recipeCard).join('') + '</div>';
   html += '<div class="row"><h2>Top-Angebote der Woche</h2><button class="btn small ghost" data-action="offers-reload" aria-label="Angebote aktualisieren">' + I.refresh + '</button></div>';
   if(offers.some(o => /aldi/i.test(o.store || ''))) html += aldiBox();
   if(stores.length > 2) html += '<div class="chips" role="group" aria-label="Laden">' + stores.map(s => '<button class="chip" data-action="store" data-store="' + esc(s) + '" aria-pressed="' + (s === storeFilter) + '">' + esc(s) + '</button>').join('') + '</div>';
@@ -862,6 +900,8 @@ document.addEventListener('click', e => {
     case 'offers-reload': refreshPremium(); break;
     case 'aldi': S.aldi = {zone:a.dataset.zone, auto:false, at:Date.now()}; save(); render(); toast('Du siehst jetzt ' + aldiName(a.dataset.zone)); break;
     case 'aldi-auto': detectAldi(true); break;
+    case 'recipe': recipeSheet(a.dataset.id); break;
+    case 'recipe-list': recipeToList(a.dataset.id); break;
     case 'list-toggle': { const o = offers.find(x => x.id === a.dataset.id); if(o) toggleList(o); break; }
     case 'list-done': { const it = (S.list || []).find(x => x.id === a.dataset.id); if(it){ it.done = !it.done; save(); render(); } break; }
     case 'list-clear-done': S.list = (S.list || []).filter(x => !x.done); save(); render(); break;

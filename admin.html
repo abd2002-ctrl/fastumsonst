@@ -97,6 +97,15 @@ th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4p
       <div class="tbl"><table><thead><tr><th>Produkt</th><th>Laden</th><th>Preis</th><th>Gültig bis</th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
     </div>
 
+    <form class="card" id="recipe-form" novalidate>
+      <h2>Rezepte der Woche</h2>
+      <p class="small muted">Hier den Rezept-Block einfügen, den du von Claude bekommst (beginnt mit <span style="font-family:ui-monospace,Menlo,monospace">[</span> und endet mit <span style="font-family:ui-monospace,Menlo,monospace">]</span>), dann „Rezepte importieren“.</p>
+      <p class="msg err" id="recipes-missing" hidden>Die Tabelle für Rezepte fehlt noch. Bitte einmal den Befehl aus setup/datenbank-v3.sql im Supabase SQL Editor ausführen.</p>
+      <textarea id="recipe-text" placeholder='[{"title":"…","servings":4,"minutes":30,"valid_until":"2026-11-07","ingredients":[…],"steps":[…]}]'></textarea>
+      <div class="btns"><button class="btn" type="submit">Rezepte importieren</button></div>
+      <div class="tbl"><table><thead><tr><th>Rezept</th><th>Preis</th><th>Gültig bis</th><th></th></tr></thead><tbody id="recipe-rows"></tbody></table></div>
+    </form>
+
     <form class="card" id="grant-form" novalidate>
       <h2>Premium manuell freischalten</h2>
       <p class="small muted">Für Gerätewechsel, Tests oder als Geschenk. Die Geräte-ID steht in der App unter „Mehr“ (sie erscheint, sobald dort Alarme oder Premium genutzt wurden).</p>
@@ -113,7 +122,7 @@ th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4p
 const $ = id => document.getElementById(id);
 const KEY = 'fastumsonst-admin';
 let pw = ''; try{ pw = localStorage.getItem(KEY) || ''; }catch(e){}
-let offers = [];
+let offers = [], recipes = [];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const eur = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR'}).format(+n || 0);
 const de = iso => iso ? iso.split('-').reverse().join('.') : '';
@@ -129,7 +138,9 @@ async function api(action, data){
 function showApp(on){ $('login').hidden = on; $('app').hidden = !on; $('logout').hidden = !on; }
 async function load(){
   const j = await api('list');
-  offers = j.offers || [];
+  offers = j.offers || []; recipes = j.recipes || [];
+  $('recipes-missing').hidden = !j.recipesMissing;
+  $('recipe-rows').innerHTML = recipes.length ? recipes.map(r => '<tr><td>' + esc(r.title) + (r.is_teaser ? ' <span class="pill">Vorschau</span>' : '') + (r.valid_until < today() ? ' <span class="pill old">abgelaufen</span>' : '') + '<div class="small muted">' + r.servings + ' Portionen · ' + (r.ingredients || []).length + ' Zutaten</div></td><td class="num">' + eur(r.total_price) + '</td><td class="num">' + de(r.valid_until) + '</td><td><div class="btns"><button type="button" class="btn small ghost" data-rteaser="' + r.id + '" data-val="' + (r.is_teaser ? '0' : '1') + '">' + (r.is_teaser ? 'Keine Vorschau' : 'Als Vorschau') + '</button><button type="button" class="btn small danger" data-rdel="' + r.id + '">Löschen</button></div></td></tr>').join('') : '<tr><td colspan="4" class="muted">Noch keine Rezepte.</td></tr>';
   $('stat-prem').textContent = j.premiumCount;
   $('stat-offers').textContent = offers.filter(o => o.valid_until >= today()).length;
   $('rows').innerHTML = offers.length ? offers.map(o => '<tr><td>' + esc(o.title) + (o.is_teaser ? ' <span class="pill">Vorschau</span>' : '') + (o.valid_until < today() ? ' <span class="pill old">abgelaufen</span>' : '') + '<div class="small muted">' + esc([o.unit, o.region].filter(Boolean).join(' · ')) + '</div></td><td>' + esc(o.store) + '</td><td class="num">' + eur(o.price) + '</td><td class="num">' + de(o.valid_until) + '</td><td><div class="btns"><button class="btn small ghost" data-edit="' + o.id + '">Bearbeiten</button><button class="btn small danger" data-del="' + o.id + '">Löschen</button></div></td></tr>').join('') : '<tr><td colspan="5" class="muted">Noch keine Angebote.</td></tr>';
@@ -161,6 +172,12 @@ function parseLines(text, region){
 const PROMPT = 'Wandle die folgenden Supermarkt-Angebote in eine Liste um. Eine Zeile pro Angebot, Felder mit Semikolon getrennt, ohne Überschrift und ohne weitere Erklärungen:\nProdukt; Laden; Preis; Statt-Preis; Menge; gültig bis; Stichwort\n- Preise mit Komma, ohne Euro-Zeichen (z. B. 3,99)\n- Statt-Preis leer lassen, wenn keiner angegeben ist\n- gültig bis im Format TT.MM.JJJJ\n- Stichwort = die Hauptzutat in einem Wort, z. B. Hackfleisch, Paprika, Lachs\n- Produktnamen in eigenen, kurzen Worten\n- Laden bei Aldi immer als „Aldi Nord“ oder „Aldi Süd“, nie nur „Aldi“\n- Angebote mit Hinweisen wie „nur regional“ oder „in ausgewählten Filialen“ weglassen\n\nHier sind die Angebote:\n';
 
 document.addEventListener('click', async e => {
+  const rt = e.target.closest('[data-rteaser]'), rd = e.target.closest('[data-rdel]');
+  if(rt){ try{ await api('recipe-teaser', {id:rt.dataset.rteaser, value:rt.dataset.val === '1'}); load(); }catch(err){ msg(err.message); } return; }
+  if(rd){
+    if(rd.dataset.armed !== '1'){ rd.dataset.armed = '1'; rd.textContent = 'Wirklich löschen?'; setTimeout(() => { rd.dataset.armed = ''; rd.textContent = 'Löschen'; }, 4000); return; }
+    try{ await api('recipe-delete', {id:rd.dataset.rdel}); msg('Rezept gelöscht.', true); load(); }catch(err){ msg(err.message); } return;
+  }
   const ed = e.target.closest('[data-edit]'), del = e.target.closest('[data-del]');
   if(ed){ const o = offers.find(x => x.id === ed.dataset.edit); if(o) fillForm(o); }
   if(del){
@@ -200,6 +217,14 @@ $('copy-prompt').addEventListener('click', () => {
   const done = () => msg('Anleitung kopiert. Füg sie in einen KI-Chat ein und schreib deine Angebote darunter.', true);
   if(navigator.clipboard) navigator.clipboard.writeText(PROMPT).then(done, () => { $('import-text').value = PROMPT; msg('Kopieren ging nicht, die Anleitung steht jetzt im Textfeld.'); });
   else { $('import-text').value = PROMPT; msg('Die Anleitung steht jetzt im Textfeld.'); }
+});
+$('recipe-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  let list;
+  try{ list = JSON.parse($('recipe-text').value.trim()); if(!Array.isArray(list)) list = [list]; }
+  catch(err){ msg('Der Rezept-Block ist nicht vollständig. Bitte den ganzen Block von [ bis ] kopieren.'); return; }
+  try{ const j = await api('recipe-import', {recipes:list}); msg(j.count + ' Rezepte importiert.', true); $('recipe-text').value = ''; load(); }
+  catch(err){ msg(err.message); }
 });
 $('grant-form').addEventListener('submit', async e => {
   e.preventDefault();
