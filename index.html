@@ -665,11 +665,26 @@ function recipeSearchUrl(items){
   const uniq = [...new Set(words)].slice(0, 5);
   return 'https://www.tiktok.com/search?q=' + encodeURIComponent('Rezept ' + uniq.join(' '));
 }
+const FOOD_ICONS = [
+  [/garnele|shrimp|scampi/i,'🦐'],[/lachs|fisch|forelle|hering|makrele|kabeljau|thunfisch|dorade|barsch|matjes/i,'🐟'],
+  [/hähnchen|haehnchen|huhn|chicken|wings|pute|geflügel|ente|gans/i,'🍗'],[/frikadell|cevapcici|burger/i,'🍔'],[/hack/i,'🥩'],
+  [/wurst|würstchen|bratwurst|salami|schinken|kasseler|leberkäs/i,'🥓'],[/rind|schwein|gulasch|kotelett|steak|braten|roulade|schnitzel|filet|wild|hirsch|lamm|fleisch|minuten/i,'🥩'],
+  [/tomate|passiert/i,'🍅'],[/kartoffel|knödel|rösti|pommes/i,'🥔'],[/zwiebel|knoblauch/i,'🧅'],[/möhre|karotte/i,'🥕'],
+  [/paprika|chili|pfefferon/i,'🫑'],[/brokkoli|broccoli|romanesco|blumenkohl/i,'🥦'],[/kohl|wirsing/i,'🥬'],[/salat|spinat|feldsalat/i,'🥬'],
+  [/champignon|pilz|pfifferling/i,'🍄'],[/kürbis/i,'🎃'],[/gurke|zucchini/i,'🥒'],[/aubergine/i,'🍆'],[/mais/i,'🌽'],
+  [/nudel|pasta|spaghetti|spätzle|maultasche|ravioli|lasagne/i,'🍝'],[/reis/i,'🍚'],[/mehl|brot|toast|baguette|brötchen/i,'🍞'],
+  [/käse|gouda|feta|mozzarella|emmentaler|parmesan|grana|mascarpone|camembert/i,'🧀'],[/ei(er)?\b/i,'🥚'],
+  [/sahne|milch|crème|creme|quark|joghurt|schmand|butter|kefir/i,'🥛'],
+  [/apfel|äpfel/i,'🍎'],[/birne/i,'🍐'],[/zitrone|limette/i,'🍋'],[/orange|clementine|mandarine/i,'🍊'],[/banane/i,'🍌'],[/traube/i,'🍇'],[/beere/i,'🫐'],
+  [/kapern|olive/i,'🫒'],[/marone|kastanie/i,'🌰'],[/öl\b|oel/i,'🫗']
+];
+function foodIcon(o){ const t = (o.keyword || '') + ' ' + (o.title || ''); for(const [re, e] of FOOD_ICONS) if(re.test(t)) return e; return '🛒'; }
 function offerCard(o, locked){
   const pct = o.old_price && +o.old_price > +o.price ? Math.round((1 - o.price / o.old_price) * 100) : 0;
   const links = (Array.isArray(o.recipe_links) ? o.recipe_links : []).filter(l => l && /^https:\/\//.test(l.url));
-  return '<div class="card offer"><div class="row" style="align-items:flex-start">' +
-    '<div class="stack" style="gap:4px;min-width:0"><span class="pill neutral">' + esc(o.store) + '</span><b style="font-size:16px;overflow-wrap:anywhere">' + esc(o.title) + '</b>' +
+  return '<div class="card offer"><div class="row" style="align-items:flex-start;gap:12px">' +
+    '<span aria-hidden="true" style="flex-shrink:0;width:52px;height:52px;border-radius:14px;background:var(--soft, rgba(11,110,79,.10));display:flex;align-items:center;justify-content:center;font-size:30px;line-height:1">' + foodIcon(o) + '</span>' +
+    '<div class="stack" style="gap:4px;min-width:0;flex:1"><span class="pill neutral">' + esc(o.store) + '</span><b style="font-size:16px;overflow-wrap:anywhere">' + esc(o.title) + '</b>' +
     '<span class="small muted">' + (o.unit ? esc(o.unit) + ' · ' : '') + 'gültig bis ' + deDate(o.valid_until) + (o.region && o.region !== 'bundesweit' ? ' · ' + esc(o.region) : '') + '</span></div>' +
     '<div class="stack" style="gap:2px;align-items:flex-end;flex-shrink:0"><span class="price" style="font-size:22px">' + eur(+o.price) + '</span>' +
     (o.old_price ? '<span class="small muted" style="text-decoration:line-through">' + eur(+o.old_price) + '</span>' : '') +
