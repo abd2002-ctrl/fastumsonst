@@ -661,10 +661,11 @@ function toggleList(o){
   else S.list.push({id:o.id, title:o.title, store:o.store, price:+o.price, unit:o.unit || '', keyword:o.keyword || '', valid_until:o.valid_until, done:false});
   save(); render(); toast(onList(o) ? 'Auf der Einkaufsliste' : 'Von der Liste entfernt');
 }
+function chefkochUrl(q){ return 'https://www.chefkoch.de/rs/s0/' + String(q).trim().toLowerCase().split(/\s+/).filter(Boolean).map(encodeURIComponent).join('+') + '/Rezepte.html'; }
 function recipeSearchUrl(items){
   const words = items.map(i => i.keyword || i.title.split(/[,(]/)[0]).map(w => w.trim()).filter(Boolean);
-  const uniq = [...new Set(words)].slice(0, 5);
-  return 'https://www.tiktok.com/search?q=' + encodeURIComponent('Rezept ' + uniq.join(' '));
+  const uniq = [...new Set(words)].slice(0, 3);
+  return chefkochUrl(uniq.join(' '));
 }
 const FOOD_ICONS = [
   [/garnele|shrimp|scampi/i,'🦐'],[/lachs|fisch|forelle|hering|makrele|kabeljau|thunfisch|dorade|barsch|matjes/i,'🐟'],
@@ -693,7 +694,7 @@ function offerCard(o, locked){
     (locked ? '' : '<div class="btns">' +
       '<button class="btn small ' + (onList(o) ? '' : 'ghost') + '" data-action="list-toggle" data-id="' + esc(o.id) + '">' + (onList(o) ? '✓ Auf der Liste' : '+ Einkaufsliste') + '</button>' +
       links.map(l => '<a class="btn small ghost" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.title || 'Rezept-Idee') + '</a>').join('') +
-      (o.keyword ? '<a class="btn small ghost" href="https://www.tiktok.com/search?q=' + encodeURIComponent('Rezept ' + o.keyword) + '" target="_blank" rel="noopener">Rezepte mit ' + esc(o.keyword) + '</a>' : '') +
+      (o.keyword ? '<a class="btn small ghost" href="' + esc(chefkochUrl(o.keyword)) + '" target="_blank" rel="noopener">Rezepte mit ' + esc(o.keyword) + '</a>' : '') +
       (o.source_url ? '<a class="btn small ghost" href="' + esc(o.source_url) + '" target="_blank" rel="noopener">Zum Angebot</a>' : '') + '</div>') +
     '</div>';
 }
@@ -704,7 +705,7 @@ function recipeCard(r){
   return '<button class="card" data-action="recipe" data-id="' + esc(r.id) + '" style="text-align:left;font:inherit;color:inherit;cursor:pointer;gap:6px">' +
     '<div class="row" style="align-items:flex-start;gap:12px"><span aria-hidden="true" style="flex-shrink:0;width:52px;height:52px;border-radius:14px;background:rgba(11,110,79,.10);display:flex;align-items:center;justify-content:center;font-size:30px">🍳</span>' +
     '<span class="stack" style="gap:4px;min-width:0;flex:1"><b style="font-size:16px;overflow-wrap:anywhere">' + esc(r.title) + '</b>' +
-    '<span class="small muted">' + r.servings + ' Portionen' + (r.minutes ? ' · ' + r.minutes + ' Min.' : '') + (stores.length ? ' · ' + esc(stores.join(', ')) : '') + '</span></span>' +
+    '<span class="small muted">' + (r.video_url ? '▶ Video · ' : '') + r.servings + ' Portionen' + (r.minutes ? ' · ' + r.minutes + ' Min.' : '') + (stores.length ? ' · ' + esc(stores.join(', ')) : '') + '</span></span>' +
     '<span class="stack" style="gap:2px;align-items:flex-end;flex-shrink:0"><span class="price" style="font-size:20px">' + eur(+r.total_price || 0) + '</span>' + (per ? '<span class="small muted">' + eur(per) + ' p. P.</span>' : '') + '</span></div></button>';
 }
 function recipeSheet(id){
@@ -715,6 +716,7 @@ function recipeSheet(id){
     '<p class="small"><b>' + r.servings + ' Portionen</b>' + (r.minutes ? ' · ' + r.minutes + ' Minuten' : '') + ' · Einkauf ca. <b>' + eur(+r.total_price || 0) + '</b></p>' +
     '<h2 style="font-size:16px;margin:8px 0 4px">Zutaten</h2><div class="stack" style="gap:6px">' + ing.map(i =>
       '<div class="row" style="gap:8px"><span style="min-width:0;overflow-wrap:anywhere">' + esc((i.qty ? i.qty + ' ' : '') + i.name) + (i.store ? ' <span class="pill neutral">' + esc(i.store) + '</span>' : ' <span class="small muted">(Vorrat)</span>') + '</span>' + (i.price ? '<b class="mono" style="white-space:nowrap">' + eur(+i.price) + '</b>' : '') + '</div>').join('') + '</div>' +
+    (r.video_url && /^https:\/\//.test(r.video_url) ? '<a class="btn ghost" href="' + esc(r.video_url) + '" target="_blank" rel="noopener" style="margin-top:10px">▶ Video ansehen auf TikTok</a>' : '') +
     '<button class="btn" data-action="recipe-list" data-id="' + esc(r.id) + '" style="margin-top:10px">Alle Zutaten auf die Einkaufsliste</button>' +
     '<h2 style="font-size:16px;margin:12px 0 4px">So geht\'s</h2><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">' + (r.steps || []).map(st => '<li>' + esc(st) + '</li>').join('') + '</ol>' +
     '<p class="small muted" style="margin-top:10px">Preise laut Angeboten dieser Woche, ohne Gewähr. Zutaten aus dem Vorrat sind nicht eingerechnet.</p>');
@@ -797,7 +799,7 @@ function viewListSeg(){
   });
   const recipeItems = bought.length ? bought : list;
   html += '<div class="card"><div class="row"><b>Noch offen</b><b class="price" style="font-size:20px">' + eur(sum) + '</b></div>' +
-    '<a class="btn" href="' + recipeSearchUrl(recipeItems) + '" target="_blank" rel="noopener">Was koche ich damit? Rezept-Ideen auf TikTok</a>' +
+    '<a class="btn" href="' + recipeSearchUrl(recipeItems) + '" target="_blank" rel="noopener">Was koche ich damit? Passende Rezepte</a>' +
     '<p class="small muted">' + (bought.length ? 'Wir suchen Rezepte mit deinen gekauften Sachen.' : 'Hake ab, was du gekauft hast. Dann suchen wir Rezepte genau damit.') + '</p>' +
     '<div class="btns"><button class="btn small ghost" data-action="list-clear-done">Gekaufte entfernen</button><button class="btn small danger" data-action="list-clear">Liste leeren</button></div></div>';
   return html;

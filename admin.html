@@ -223,7 +223,7 @@ $('recipe-form').addEventListener('submit', async e => {
   let list;
   try{ list = JSON.parse($('recipe-text').value.trim()); if(!Array.isArray(list)) list = [list]; }
   catch(err){ msg('Der Rezept-Block ist nicht vollständig. Bitte den ganzen Block von [ bis ] kopieren.'); return; }
-  try{ const j = await api('recipe-import', {recipes:list}); msg(j.count + ' Rezepte importiert.', true); $('recipe-text').value = ''; load(); }
+  try{ const j = await api('recipe-import', {recipes:list}); msg(j.count + ' Rezepte importiert.' + (j.note ? ' ' + j.note : ''), !j.note); $('recipe-text').value = ''; load(); }
   catch(err){ msg(err.message); }
 });
 $('grant-form').addEventListener('submit', async e => {
