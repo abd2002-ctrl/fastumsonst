@@ -122,8 +122,8 @@ export default async function handler(req, res) {
         const clean = [];
         for (const r of rows) { const c = cleanRecipe(r || {}); if (c.error) return res.status(400).json({ ok: false, message: c.error }); clean.push(c.recipe); }
         if (!clean.length) return res.status(400).json({ ok: false, message: 'Keine Rezepte erkannt.' });
-        // Gleiches Rezept (Titel + Woche) ersetzen statt doppelt anlegen
-        for (const c of clean) await db.from('recipes').delete().eq('title', c.title).eq('valid_until', c.valid_until);
+        // Die Rezepte derselben Woche komplett ersetzen (neuer Import = neue Wochenliste)
+        for (const d of [...new Set(clean.map(c => c.valid_until))]) await db.from('recipes').delete().eq('valid_until', d);
         let { error } = await db.from('recipes').insert(clean);
         if (error && /video_url/.test(error.message || '')) {
           ({ error } = await db.from('recipes').insert(clean.map(({ video_url, ...rest }) => rest)));
