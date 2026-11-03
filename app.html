@@ -356,6 +356,19 @@ function fuelList(){
   const avg = list.length ? list.reduce((a,s) => a + s[f], 0) / list.length : null;
   return {list, avg, f};
 }
+// Sortierung der Tankstellen-Liste: Preis, Entfernung oder „lohnt sich“ (Preis inkl. Hin- und Rückfahrt)
+const SORTS = {price:'↕ Preis', dist:'↕ Nähe', worth:'↕ Lohnt sich'};
+function tripCost(s, f){
+  const t = tankNow(); const fillL = t ? Math.max(10, S.setup.tankL - t.liters) : S.setup.tankL * 0.6;
+  return s[f] * fillL + (s.dist * 2) * S.setup.cons / 100 * s[f];
+}
+function sortedStations(list, f){
+  const k = S.stationSort || 'price';
+  const L = list.slice();
+  if(k === 'dist') L.sort((a, b) => a.dist - b.dist);
+  else if(k === 'worth') L.sort((a, b) => tripCost(a, f) - tripCost(b, f));
+  return L;
+}
 function timeHint(){
   const h = new Date().getHours();
   if(h >= 18 && h < 22) return {good:true, title:'Jetzt ist eine gute Zeit', text:'Am frühen Abend sind die Spritpreise meist am niedrigsten.'};
@@ -466,7 +479,7 @@ function viewTanken(){
       '<p class="small muted">' + (S.setup.learnN ? 'Die App hat dein Fahrverhalten schon ' + S.setup.learnN + '× dazugelernt.' : 'Die Anzeige wird genauer, sobald du zweimal vollgetankt einträgst.') + '</p></div>';
   }
   const need = t && (t.pct < 30 || t.reach < 150);
-  const best = list[0];
+  const best = list.length ? list.slice().sort((a, b) => tripCost(a, f) - tripCost(b, f))[0] : null;
   let rec = '';
   if(best){
     const save50 = avg ? (avg - best[f]) * Math.min(50, S.setup.tankL) : 0;
@@ -477,12 +490,13 @@ function viewTanken(){
       (best.lat ? '<div class="btns">' + routeBtn(best.name, best.addr, best.lat, best.lng, '📍 Route starten', best.id) + '</div>' : '') +
       '<div class="tip"><span class="ico ' + (th.good ? 'ok' : 'neutral') + '">' + I.clock + '</span><span class="stack" style="gap:2px"><b>' + th.title + '</b><span class="small muted">' + th.text + '</span></span></div></div>';
   }
-  const chips = '<div class="chips" role="group" aria-label="Sprit">' + Object.keys(FUELS).map(k => '<button class="chip" data-action="fuel" data-fuel="' + k + '" aria-pressed="' + (k === f) + '">' + FUELS[k].replace('Super ','') + '</button>').join('') + '</div>';
+  const sortSel = '<select id="st-sort" aria-label="Sortieren nach" style="width:auto;min-width:0;flex:0 0 auto;min-height:40px;height:40px;padding:0 14px;font-size:16px;border-radius:999px;background:var(--card);cursor:pointer">' + Object.keys(SORTS).map(k => '<option value="' + k + '"' + ((S.stationSort || 'price') === k ? ' selected' : '') + '>' + SORTS[k] + '</option>').join('') + '</select>';
+  const chips = '<div style="display:flex;gap:6px;align-items:center;justify-content:space-between;flex-wrap:nowrap"><div class="chips" role="group" aria-label="Sprit" style="flex-wrap:nowrap;gap:6px;min-width:0">' + Object.keys(FUELS).map(k => '<button class="chip" data-action="fuel" data-fuel="' + k + '" aria-pressed="' + (k === f) + '">' + FUELS[k].replace('Super ','') + '</button>').join('') + '</div>' + sortSel + '</div>';
   let rows;
   if(loading) rows = '<p class="empty">Suche Tankstellen in deiner Nähe …</p>';
   else if(!list.length) rows = '<p class="empty">Keine geöffneten Tankstellen gefunden.</p>';
-  else rows = list.map((s,i) => '<div class="card ' + (i === 0 ? 'best' : '') + '"><div class="station"><div class="stack" style="gap:2px;min-width:0">' +
-      (i === 0 ? '<span class="pill ok">AM GÜNSTIGSTEN</span>' : '') +
+  else rows = sortedStations(list, f).map((s,i) => '<div class="card ' + (s === list[0] ? 'best' : '') + '"><div class="station"><div class="stack" style="gap:2px;min-width:0">' +
+      (s === list[0] ? '<span class="pill ok">AM GÜNSTIGSTEN</span>' : '') + (i === 0 && S.stationSort === 'worth' && s !== list[0] ? '<span class="pill ok">LOHNT SICH AM MEISTEN</span>' : '') + (i === 0 && S.stationSort === 'dist' && s !== list[0] ? '<span class="pill neutral">AM NÄCHSTEN</span>' : '') +
       '<span class="name">' + esc(s.name) + '</span><span class="small muted">' + num(s.dist,1) + ' km · ' + esc(s.addr) + '</span></div>' +
       '<div class="price">' + priceHtml(s[f]) + '</div></div>' +
       '<div class="btns"><button class="btn small ghost" data-action="fill" data-station="' + esc(s.id) + '">Hier getankt</button>' + routeBtn(s.name, s.addr, s.lat, s.lng, '', s.id) + '</div></div>').join('');
@@ -491,7 +505,7 @@ function viewTanken(){
     : 'Beispieldaten · Echte Preise erscheinen, sobald die App online ist und du den Standort erlaubst.';
   return demoBanner() + header('Tanken', 'Dein Tank und die günstigsten Preise in der Nähe') + tankCard + rec +
     '<div class="row"><h2>Tankstellen in der Nähe</h2><button class="btn small ghost" data-action="reload" aria-label="Preise aktualisieren">' + I.refresh + '</button></div>' +
-    chips + '<p class="small muted">' + src + '</p><div class="stack">' + rows + '</div>';
+    chips + (S.stationSort === 'worth' ? '<p class="small muted">„Lohnt sich“ rechnet die Anfahrt mit ein: Eine billige Tankstelle weit weg kann teurer sein als eine nahe.</p>' : '') + '<p class="small muted">' + src + '</p><div class="stack">' + rows + '</div>';
 }
 function viewWunsch(embedded){
   const open = S.wishes.filter(w => !w.bought), done = S.wishes.filter(w => w.bought);
@@ -1041,6 +1055,7 @@ function render(){
   if(!S.setup.done){ app.innerHTML = viewSetup(); $('tabs').hidden = true; return; }
   $('tabs').hidden = false;
   app.innerHTML = tab === 'home' ? viewHome() : tab === 'tanken' ? viewTanken() : tab === 'angebote' ? viewAngebote() : tab === 'alarme' ? viewAlarme() : viewMehr();
+  const so = $('st-sort'); if(so) so.addEventListener('change', () => { S.stationSort = so.value; save(); render(); });
   const at = $('a-tank'); if(at) at.addEventListener('change', () => { S.cloud.tankAlarm = at.checked; save(); toast(at.checked ? 'Tank-Alarm an' : 'Tank-Alarm aus'); });
   document.querySelectorAll('#tabs button').forEach(b => { if(b.dataset.tab === tab) b.setAttribute('aria-current','page'); else b.removeAttribute('aria-current'); });
   const r = $('t-init'); if(r) r.addEventListener('input', () => $('t-init-out').textContent = r.value + ' %');
