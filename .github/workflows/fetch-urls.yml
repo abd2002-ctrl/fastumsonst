@@ -1,0 +1,22 @@
+name: fetch-urls
+on:
+  push:
+    branches: [video-assets]
+    paths: [voices/urls.txt]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cd voices
+          while read n u; do [ -n "$n" ] && curl -fsSL -o "$n" "$u" || echo "fail $n"; done < urls.txt
+          ls -la
+      - run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add voices
+          git commit -m "Stimmen geladen" || true
+          git push
