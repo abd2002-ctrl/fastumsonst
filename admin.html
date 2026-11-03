@@ -102,7 +102,8 @@ th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4p
       <p class="small muted">Hier den Rezept-Block einfügen, den du von Claude bekommst (beginnt mit <span style="font-family:ui-monospace,Menlo,monospace">[</span> und endet mit <span style="font-family:ui-monospace,Menlo,monospace">]</span>), dann „Rezepte importieren“.</p>
       <p class="msg err" id="recipes-missing" hidden>Die Tabelle für Rezepte fehlt noch. Bitte einmal den Befehl aus setup/datenbank-v3.sql im Supabase SQL Editor ausführen.</p>
       <textarea id="recipe-text" placeholder='[{"title":"…","servings":4,"minutes":30,"valid_until":"2026-11-07","ingredients":[…],"steps":[…]}]'></textarea>
-      <div class="btns"><button class="btn" type="submit">Rezepte importieren</button></div>
+      <div class="btns"><button class="btn" type="submit">Rezepte importieren</button><label class="btn ghost" style="display:inline-flex;align-items:center;cursor:pointer">Aus Datei laden<input type="file" id="recipe-file" accept=".txt,.json,text/plain,application/json" hidden></label></div>
+      <p class="small muted">Einfacher: „Aus Datei laden“ antippen und die Datei <b>Rezepte-diese-Woche.txt</b> auswählen. Dann wird nichts kopiert und nichts kann kaputtgehen.</p>
       <div class="tbl"><table><thead><tr><th>Rezept</th><th>Preis</th><th>Gültig bis</th><th></th></tr></thead><tbody id="recipe-rows"></tbody></table></div>
     </form>
 
@@ -218,11 +219,29 @@ $('copy-prompt').addEventListener('click', () => {
   if(navigator.clipboard) navigator.clipboard.writeText(PROMPT).then(done, () => { $('import-text').value = PROMPT; msg('Kopieren ging nicht, die Anleitung steht jetzt im Textfeld.'); });
   else { $('import-text').value = PROMPT; msg('Die Anleitung steht jetzt im Textfeld.'); }
 });
+function parseRecipes(raw){
+  // Text reparieren, den der Mac beim Kopieren verändert: schräge Anführungszeichen, unsichtbare Zeichen
+  let t = String(raw || '').replace(/[\u201C\u201D\u201E\u201F\u2033\u00AB\u00BB]/g, '"').replace(/[\u2018\u2019\u201A\u201B]/g, "'")
+    .replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\u00A0/g, ' ');
+  const a = t.indexOf('['), b = t.lastIndexOf(']');
+  if(a < 0 || b < a){ msg('Im Feld steht kein Rezept-Block. Er muss mit [ beginnen und mit ] enden.'); return null; }
+  t = t.slice(a, b + 1);
+  try{ const l = JSON.parse(t); return Array.isArray(l) ? l : [l]; }
+  catch(err){ msg('Der Rezept-Block ließ sich nicht lesen (' + err.message + '). Nimm am besten den Knopf „Aus Datei laden“.'); return null; }
+}
+async function importRecipes(list){
+  try{ const j = await api('recipe-import', {recipes:list}); msg(j.count + ' Rezepte importiert.' + (j.note ? ' ' + j.note : ''), !j.note); $('recipe-text').value = ''; load(); }
+  catch(err){ msg(err.message); }
+}
+$('recipe-file').addEventListener('change', async e => {
+  const f = e.target.files && e.target.files[0]; if(!f) return;
+  const list = parseRecipes(await f.text()); e.target.value = '';
+  if(list) importRecipes(list);
+});
 $('recipe-form').addEventListener('submit', async e => {
   e.preventDefault();
-  let list;
-  try{ list = JSON.parse($('recipe-text').value.trim()); if(!Array.isArray(list)) list = [list]; }
-  catch(err){ msg('Der Rezept-Block ist nicht vollständig. Bitte den ganzen Block von [ bis ] kopieren.'); return; }
+  const list = parseRecipes($('recipe-text').value);
+  if(!list) return;
   try{ const j = await api('recipe-import', {recipes:list}); msg(j.count + ' Rezepte importiert.' + (j.note ? ' ' + j.note : ''), !j.note); $('recipe-text').value = ''; load(); }
   catch(err){ msg(err.message); }
 });
