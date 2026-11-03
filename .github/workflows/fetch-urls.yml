@@ -13,6 +13,7 @@ jobs:
       - run: |
           cd voices
           while read n u; do [ -n "$n" ] && curl -fsSL -o "$n" "$u" || echo "fail $n"; done < urls.txt
+          for f in *.onnx; do split -b 45M "$f" "$f.part-" && rm "$f"; done
           ls -la
       - run: |
           git config user.name "github-actions"

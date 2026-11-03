@@ -2,3 +2,4 @@ thorsten-high.onnx https://huggingface.co/rhasspy/piper-voices/resolve/main/de/d
 thorsten-high.onnx.json https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten/high/de_DE-thorsten-high.onnx.json
 thorsten_emotional.onnx https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx
 thorsten_emotional.onnx.json https://huggingface.co/rhasspy/piper-voices/resolve/main/de/de_DE/thorsten_emotional/medium/de_DE-thorsten_emotional-medium.onnx.json
+# neu
