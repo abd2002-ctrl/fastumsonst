@@ -716,7 +716,7 @@ function recipeSheet(id){
     '<p class="small"><b>' + r.servings + ' Portionen</b>' + (r.minutes ? ' · ' + r.minutes + ' Minuten' : '') + ' · Einkauf ca. <b>' + eur(+r.total_price || 0) + '</b></p>' +
     '<h2 style="font-size:16px;margin:8px 0 4px">Zutaten</h2><div class="stack" style="gap:6px">' + ing.map(i =>
       '<div class="row" style="gap:8px"><span style="min-width:0;overflow-wrap:anywhere">' + esc((i.qty ? i.qty + ' ' : '') + i.name) + (i.store ? ' <span class="pill neutral">' + esc(i.store) + '</span>' : ' <span class="small muted">(Vorrat)</span>') + '</span>' + (i.price ? '<b class="mono" style="white-space:nowrap">' + eur(+i.price) + '</b>' : '') + '</div>').join('') + '</div>' +
-    (r.video_url && /^https:\/\//.test(r.video_url) ? '<a class="btn ghost" href="' + esc(r.video_url) + '" target="_blank" rel="noopener" style="margin-top:10px">▶ Video ansehen auf TikTok</a>' : '') +
+    (r.video_url && /^https:\/\//.test(r.video_url) ? '<a class="btn ghost" href="' + esc(r.video_url) + '" target="_blank" rel="noopener" style="margin-top:10px">▶ Video zum Rezept ansehen</a>' : '') +
     '<button class="btn" data-action="recipe-list" data-id="' + esc(r.id) + '" style="margin-top:10px">Alle Zutaten auf die Einkaufsliste</button>' +
     '<h2 style="font-size:16px;margin:12px 0 4px">So geht\'s</h2><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">' + (r.steps || []).map(st => '<li>' + esc(st) + '</li>').join('') + '</ol>' +
     '<p class="small muted" style="margin-top:10px">Preise laut Angeboten dieser Woche, ohne Gewähr. Zutaten aus dem Vorrat sind nicht eingerechnet.</p>');
