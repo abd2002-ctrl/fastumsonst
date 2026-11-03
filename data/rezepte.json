@@ -1,0 +1,2678 @@
+{
+"version": 1,
+"recipes": [
+{
+"id": "bolognese",
+"title": "Schnelle Spaghetti Bolognese",
+"by": "chefkoch",
+"video_url": "https://www.tiktok.com/@chefkoch/video/7482738839878978838",
+"servings": 4,
+"minutes": 35,
+"intro": "Der Klassiker nach dem Rezept von Chefkoch, für 4 Portionen hochgerechnet.",
+"ingredients": [
+{
+"name": "Rinderhackfleisch",
+"qty": "500 g",
+"match": [
+"Rinderhack",
+"Rinder-Hack",
+"Rinderhackfleisch"
+]
+},
+{
+"name": "Spaghetti",
+"qty": "400 g",
+"match": [
+"Pasta",
+"Spaghetti",
+"Nudeln",
+"Penne",
+"Fusilli"
+]
+},
+{
+"name": "Pizzatomaten oder passierte Tomaten",
+"qty": "800 g",
+"match": [
+"Passierte Tomaten",
+"Tomatensauce",
+"Pizzatomaten",
+"Gehackte Tomaten",
+"stückige Tomaten"
+]
+},
+{
+"name": "Parmesan oder Grana Padano",
+"qty": "etwas",
+"match": [
+"Parmesan",
+"Grana Padano"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "2",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Tomatenmark",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Rotwein (optional)",
+"qty": "1 Schuss",
+"match": null
+},
+{
+"name": "Olivenöl, Oregano, Majoran, Basilikum, Paprikapulver, Zucker, Brühe, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Olivenöl in einem Topf erhitzen und das Hackfleisch krümelig braten.",
+"Zwiebeln und Knoblauch klein würfeln und kurz mitbraten.",
+"Tomatenmark kurz anrösten, nach Wunsch mit Rotwein ablöschen und einkochen lassen.",
+"Tomaten, je 1 TL Kräuter, Paprikapulver und etwas Zucker dazugeben, mit Salz, Pfeffer und Brühe abschmecken.",
+"Zugedeckt etwa 20 Minuten bei schwacher Hitze köcheln lassen.",
+"Spaghetti nach Packungsangabe kochen, Käse reiben und alles zusammen servieren."
+]
+},
+{
+"id": "hack-spitzkohl",
+"title": "Hack-Spitzkohl-Pfanne asiatisch",
+"by": "einfachtasty",
+"video_url": "https://www.tiktok.com/@einfachtasty/video/7464284737008356630",
+"servings": 4,
+"minutes": 35,
+"intro": "Würzig mit Sojasoße und Chili, alles in einem Topf.",
+"ingredients": [
+{
+"name": "Rinderhackfleisch",
+"qty": "500 g",
+"match": [
+"Rinderhack",
+"Rinder-Hack",
+"Rinderhackfleisch"
+]
+},
+{
+"name": "Spitzkohl",
+"qty": "500 g",
+"match": [
+"Spitzkohl"
+]
+},
+{
+"name": "Möhren",
+"qty": "200 g",
+"match": [
+"Möhren",
+"Karotten"
+]
+},
+{
+"name": "Paprika",
+"qty": "200 g",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "150 g",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Tomatenmark",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Sojasoße",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Chilisoße",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Frühlingszwiebeln (optional)",
+"qty": "",
+"match": null
+},
+{
+"name": "Öl, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Spitzkohl in Streifen, Möhren in Scheiben schneiden, Paprika und Zwiebeln würfeln.",
+"Hack in 2 EL Öl krümelig braten, Zwiebeln mitbraten, mit 1,5 TL Salz und 1 TL Pfeffer würzen.",
+"Tomatenmark kurz mitrösten.",
+"Spitzkohl, Möhren und Paprika dazugeben und kurz anbraten.",
+"400 ml Wasser, Sojasoße und Chilisoße dazugeben und etwa 15 Minuten köcheln lassen.",
+"Mit Frühlingszwiebeln bestreut servieren."
+]
+},
+{
+"id": "haehnchen-paprika-mais",
+"title": "Cremige Hähnchenpfanne mit Paprika und Mais",
+"by": "azu1_",
+"video_url": "https://www.tiktok.com/@azu1_/video/7322769991827311905",
+"servings": 3,
+"minutes": 35,
+"intro": "Hähnchen und Gemüse in cremiger Curry-Sahnesoße. Dazu passt Reis.",
+"ingredients": [
+{
+"name": "Hähnchenbrust",
+"qty": "500 g",
+"match": [
+"Hähnchenbrust",
+"Hähnchen-Brust",
+"Hähnchenbrustfilet",
+"Hähnchen-Innenfilet",
+"Hähnchenbrust-Innenfilet",
+"Hähnchen-Brustfilet",
+"Hähnchen-Brustfilets"
+]
+},
+{
+"name": "Sahne",
+"qty": "500 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Paprika",
+"qty": "1",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Möhre",
+"qty": "1",
+"match": [
+"Möhren",
+"Karotten"
+]
+},
+{
+"name": "Mais",
+"qty": "1 kleine Dose",
+"match": [
+"Mais",
+"Goldmais"
+]
+},
+{
+"name": "Knoblauchzehe",
+"qty": "1",
+"match": null
+},
+{
+"name": "Curry (z. B. Vadouvan)",
+"qty": "1–1,5 TL",
+"match": null
+},
+{
+"name": "Speisestärke",
+"qty": "½ TL",
+"match": null
+},
+{
+"name": "Öl, Salz, Pfeffer, Paprika edelsüß, Brühe-Gewürz, Chili",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Hähnchen in Stücke schneiden und würzen, Gemüse klein schneiden, Knoblauch hacken.",
+"Hähnchen in Öl goldbraun braten und herausnehmen.",
+"Knoblauch kurz anbraten, Paprika und Möhre 3 Minuten braten, dann Mais 2 Minuten mitbraten.",
+"Curry, Salz, Brühe-Gewürz, Pfeffer und Paprika dazugeben.",
+"Sahne und angerührte Stärke dazugeben, aufkochen und 5–10 Minuten köcheln.",
+"Hähnchen zurück in die Pfanne geben, 5–10 Minuten ziehen lassen und mit Reis servieren."
+]
+},
+{
+"id": "haehnchen-ofen-kartoffeln",
+"title": "Hähnchen-Ofengericht mit Kartoffeln und Paprika",
+"by": "mi.strk",
+"video_url": "https://www.tiktok.com/@mi.strk/video/7346993903901412640",
+"servings": 5,
+"minutes": 70,
+"intro": "Alles auf ein Blech, mit würziger Joghurt-Marinade.",
+"ingredients": [
+{
+"name": "Hähnchenschenkel",
+"qty": "5 Stück",
+"match": [
+"Hähnchen-Schenkel",
+"Hähnchenschenkel",
+"Unterkeulen",
+"Hähnchenkeulen"
+]
+},
+{
+"name": "Kartoffeln",
+"qty": "6 große",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Spitzpaprika (rot und grün)",
+"qty": "4–6",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Kleine Tomaten",
+"qty": "6",
+"match": [
+"Romatomaten",
+"Cocktailtomaten",
+"Rispentomaten",
+"Strauchtomaten",
+"Datteltomaten",
+"Tomaten XXL"
+]
+},
+{
+"name": "Kleine Zwiebeln",
+"qty": "5",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "5",
+"match": null
+},
+{
+"name": "Joghurt",
+"qty": "5 EL",
+"match": [
+"Joghurt"
+]
+},
+{
+"name": "Tomatenmark",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Öl",
+"qty": "100 ml",
+"match": null
+},
+{
+"name": "Brühe-Gewürz, Salz, Paprikapulver, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Ofen auf 200 °C Ober-/Unterhitze vorheizen.",
+"Joghurt, Tomatenmark, Öl und Gewürze zur Marinade verrühren und die Schenkel damit einreiben.",
+"Kartoffeln in Spalten, Paprika in Stücke schneiden, mit Tomaten, Zwiebeln und Knoblauch aufs Blech geben.",
+"Hähnchen darauflegen und 50–60 Minuten backen."
+]
+},
+{
+"id": "zwiebelfleisch",
+"title": "Zwiebelfleisch wie bei Oma",
+"by": "einfachtasty",
+"video_url": "https://www.tiktok.com/@einfachtasty/video/7497190336515640598",
+"servings": 4,
+"minutes": 120,
+"intro": "Schweinenacken mit viel Zwiebeln, Bier und Brühe geschmort.",
+"ingredients": [
+{
+"name": "Schweinenacken",
+"qty": "1 kg",
+"match": [
+"Nacken",
+"Schweinenacken",
+"Nackenbraten",
+"Kamm"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "1 kg",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Bier",
+"qty": "300 ml",
+"match": null
+},
+{
+"name": "Brühe",
+"qty": "300 ml",
+"match": null
+},
+{
+"name": "Öl",
+"qty": "150 ml",
+"match": null
+},
+{
+"name": "Geräuchertes Paprikapulver",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Salz, Pfeffer, Muskat, Petersilie",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Fleisch würfeln, Zwiebeln in Ringe schneiden.",
+"Fleisch in heißem Öl kräftig anbraten.",
+"Zwiebeln dazugeben und weich braten.",
+"Mit Salz, Pfeffer, Paprikapulver und Muskat würzen.",
+"Mit Bier und Brühe ablöschen und zugedeckt etwa 1,5 Stunden schmoren.",
+"Mit Petersilie servieren, dazu Kartoffeln, Knödel oder Brot."
+]
+},
+{
+"id": "paprika-hack-reispfanne",
+"title": "Paprika-Hack-Reispfanne",
+"by": "silvia.keck",
+"video_url": "https://www.tiktok.com/@silvia.keck/video/7311339590080613664",
+"servings": 4,
+"minutes": 40,
+"intro": "Alles in einer Pfanne: Hack, Paprika und Reis in Tomatensoße.",
+"ingredients": [
+{
+"name": "Hackfleisch",
+"qty": "500 g",
+"match": [
+"Hackfleisch",
+"Hack"
+]
+},
+{
+"name": "Reis",
+"qty": "1½ Tassen",
+"match": [
+"Reis",
+"Basmati",
+"Langkornreis"
+]
+},
+{
+"name": "Paprika",
+"qty": "3",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "2",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Passierte Tomaten",
+"qty": "200 ml",
+"match": [
+"Passierte Tomaten",
+"Tomatensauce",
+"Pizzatomaten",
+"Gehackte Tomaten",
+"stückige Tomaten"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Tomatenmark",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Fleischbrühe",
+"qty": "500 ml",
+"match": null
+},
+{
+"name": "Butterschmalz, Salz, Pfeffer, Paprika edelsüß, italienische Kräuter",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Zwiebeln würfeln und in Butterschmalz glasig anbraten, Hack mitbraten.",
+"In der Mitte eine Mulde machen, gehackten Knoblauch kurz anrösten.",
+"Mit Salz, Pfeffer, Paprika und Tomatenmark würzen und verrühren.",
+"Paprikastücke und den ungekochten Reis dazugeben und kurz anbraten.",
+"Mit Brühe aufgießen, passierte Tomaten und Kräuter dazugeben.",
+"20–30 Minuten köcheln, bis der Reis gar ist, dabei öfter umrühren."
+]
+},
+{
+"id": "hack-reis-cremig",
+"title": "Cremige Hackfleisch-Reis-Pfanne",
+"by": "kochenmitvince",
+"video_url": "https://www.tiktok.com/@kochenmitvince/video/7443788813933104406",
+"servings": 3,
+"minutes": 30,
+"intro": "Hack, Reis und Paprika in cremiger Tomaten-Sahnesoße.",
+"ingredients": [
+{
+"name": "Hackfleisch",
+"qty": "350 g",
+"match": [
+"Hackfleisch",
+"Hack"
+]
+},
+{
+"name": "Gekochter Reis",
+"qty": "350 g",
+"match": [
+"Reis",
+"Basmati",
+"Langkornreis"
+]
+},
+{
+"name": "Paprika",
+"qty": "1",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Passierte Tomaten",
+"qty": "500 g",
+"match": [
+"Passierte Tomaten",
+"Tomatensauce",
+"Pizzatomaten",
+"Gehackte Tomaten",
+"stückige Tomaten"
+]
+},
+{
+"name": "Sahne",
+"qty": "200 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Crème fraîche",
+"qty": "1 EL",
+"match": [
+"Crème fraîche",
+"Creme fraiche",
+"Crème Fraîche"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Tomatenmark",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Salz, Pfeffer, Paprika, Gemüsebrühe",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Zwiebel, Knoblauch und Paprika klein schneiden.",
+"Hack in einer großen Pfanne krümelig braten, Zwiebel, Knoblauch und Paprika mitbraten.",
+"Tomatenmark kurz mitrösten.",
+"Passierte Tomaten und Sahne dazugeben, mit Salz, Pfeffer, Paprika und Brühe würzen und 10 Minuten köcheln.",
+"Reis und Crème fraîche unterrühren und kurz erhitzen."
+]
+},
+{
+"id": "hack-risoni",
+"title": "Cremige Hackfleisch-Risoni-Pfanne",
+"by": "yourfoodsister",
+"video_url": "https://www.tiktok.com/@yourfoodsister/video/7509482044129545474",
+"servings": 4,
+"minutes": 25,
+"intro": "Nudeln direkt in der Soße gegart, cremig mit Crème fraîche.",
+"ingredients": [
+{
+"name": "Hackfleisch",
+"qty": "500 g",
+"match": [
+"Hackfleisch",
+"Hack"
+]
+},
+{
+"name": "Risoni-Nudeln",
+"qty": "500 g",
+"match": [
+"Risoni"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Crème fraîche",
+"qty": "2 EL",
+"match": [
+"Crème fraîche",
+"Creme fraiche",
+"Crème Fraîche"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Tomatenmark",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Paprikamark",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Gemüsebrühe",
+"qty": "1 l",
+"match": null
+},
+{
+"name": "Salz, Paprikapulver, Pfeffer, Kreuzkümmel, Petersilie",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Zwiebel und Knoblauch hacken und in Öl glasig anbraten.",
+"Hack dazugeben und krümelig braten.",
+"Tomatenmark, Paprikamark und Gewürze kurz mitrösten.",
+"Risoni 1 Minute mitrösten.",
+"Mit Brühe ablöschen und 10–12 Minuten köcheln, dabei öfter umrühren.",
+"Crème fraîche unterrühren und mit Petersilie servieren."
+]
+},
+{
+"id": "haehnchen-hackbaellchen",
+"title": "Hähnchen-Hackbällchen aus dem Ofen",
+"by": "geniesser_lounge",
+"video_url": "https://www.tiktok.com/@geniesser_lounge/video/7371504363895885089",
+"servings": 4,
+"minutes": 60,
+"intro": "Saftige Bällchen mit Reis, gebacken in Tomaten-Sahnesoße.",
+"ingredients": [
+{
+"name": "Hähnchen-Hackfleisch",
+"qty": "500 g",
+"match": [
+"Hähnchen-Hack",
+"Hähnchenhack",
+"Geflügelhack",
+"Hähnchen-Hackfleisch"
+]
+},
+{
+"name": "Reis",
+"qty": "100 g",
+"match": [
+"Reis",
+"Basmati",
+"Langkornreis"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Möhre",
+"qty": "1",
+"match": [
+"Möhren",
+"Karotten"
+]
+},
+{
+"name": "Saure Sahne",
+"qty": "4 EL",
+"match": [
+"Saure Sahne",
+"Schmand"
+]
+},
+{
+"name": "Mayonnaise",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Hühnerbrühe",
+"qty": "500 ml",
+"match": null
+},
+{
+"name": "Tomatenmark",
+"qty": "4 EL",
+"match": null
+},
+{
+"name": "Reismehl oder Mehl",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Butter, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Reis kochen. Zwiebel fein hacken, Möhre reiben und beides in Butter anbraten.",
+"Hack mit Reis, Gemüse, Mayonnaise, Salz und Pfeffer vermengen und mit nassen Händen Bällchen formen.",
+"Bällchen in eine Auflaufform legen.",
+"Brühe, Tomatenmark, saure Sahne und Mehl verrühren und darübergießen.",
+"Bei 180 °C Umluft etwa 40 Minuten backen."
+]
+},
+{
+"id": "reispfanne-haehnchen-ei",
+"title": "Schnelle Reispfanne mit Hähnchen und Ei",
+"by": "janiniditahiti",
+"video_url": "https://www.tiktok.com/@janiniditahiti/video/7420539353497177376",
+"servings": 3,
+"minutes": 20,
+"intro": "Ein schnelles Familienrezept, auch super zum Vorkochen.",
+"ingredients": [
+{
+"name": "Hähnchenfilet",
+"qty": "400 g",
+"match": [
+"Hähnchenbrust",
+"Hähnchen-Brust",
+"Hähnchenbrustfilet",
+"Hähnchen-Innenfilet",
+"Hähnchenbrust-Innenfilet",
+"Hähnchen-Brustfilet",
+"Hähnchen-Brustfilets"
+]
+},
+{
+"name": "Express-Reis",
+"qty": "200 g",
+"match": [
+"Reis",
+"Basmati",
+"Langkornreis"
+]
+},
+{
+"name": "Eier",
+"qty": "3",
+"match": [
+"Eier"
+]
+},
+{
+"name": "TK-Buttergemüse",
+"qty": "250 g",
+"match": [
+"Buttergemüse",
+"Gemüsemischung",
+"Rahmgemüse",
+"Wintergemüse"
+]
+},
+{
+"name": "Öl, Hähnchengewürz, Sojasoße",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Reis kochen.",
+"Hähnchen in Öl anbraten und würzen.",
+"TK-Gemüse dazugeben und zugedeckt 5 Minuten mitbraten.",
+"Reis und verquirlte Eier dazugeben und braten, bis das Ei gestockt ist.",
+"Nach Wunsch mit Sojasoße abschmecken."
+]
+},
+{
+"id": "haehnchen-brokkoli-reis",
+"title": "Hähnchen-Brokkoli-Reis-Pfanne",
+"by": "_fanni.food",
+"video_url": "https://www.tiktok.com/@_fanni.food/video/7272785056605768992",
+"servings": 2,
+"minutes": 20,
+"intro": "Leicht und schnell mit Soße Hollandaise.",
+"ingredients": [
+{
+"name": "Hähnchen",
+"qty": "250 g",
+"match": [
+"Hähnchenbrust",
+"Hähnchen-Brust",
+"Hähnchenbrustfilet",
+"Hähnchen-Innenfilet",
+"Hähnchenbrust-Innenfilet",
+"Hähnchen-Brustfilet",
+"Hähnchen-Brustfilets"
+]
+},
+{
+"name": "Express-Reis",
+"qty": "250 g",
+"match": [
+"Reis",
+"Basmati",
+"Langkornreis"
+]
+},
+{
+"name": "TK-Brokkoli",
+"qty": "400 g",
+"match": [
+"Brokkoli"
+]
+},
+{
+"name": "Soße Hollandaise",
+"qty": "250 ml",
+"match": [
+"Hollandaise"
+]
+},
+{
+"name": "Rote Zwiebel",
+"qty": "40 g",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Salz, Pfeffer, Gewürze nach Wahl",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Brokkoli kochen.",
+"Zwiebel in Ringe schneiden und mit dem Hähnchen in der Pfanne anbraten, würzen.",
+"Reis, Brokkoli und Soße Hollandaise dazugeben und verrühren."
+]
+},
+{
+"id": "haehnchen-reis-auflauf",
+"title": "Cremiger Hähnchen-Reis-Auflauf",
+"by": "yourfoodsister",
+"video_url": "https://www.tiktok.com/@yourfoodsister/video/7472753120255249686",
+"servings": 4,
+"minutes": 50,
+"intro": "Hähnchen und Champignons in Sahnesoße auf Reis, mit Käse überbacken.",
+"ingredients": [
+{
+"name": "Hähnchenbrust",
+"qty": "600 g",
+"match": [
+"Hähnchenbrust",
+"Hähnchen-Brust",
+"Hähnchenbrustfilet",
+"Hähnchen-Innenfilet",
+"Hähnchenbrust-Innenfilet",
+"Hähnchen-Brustfilet",
+"Hähnchen-Brustfilets"
+]
+},
+{
+"name": "Champignons",
+"qty": "400 g",
+"match": [
+"Champignons",
+"Kulturchampignons"
+]
+},
+{
+"name": "Sahne",
+"qty": "500 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Reis",
+"qty": "2 Tassen",
+"match": [
+"Reis",
+"Basmati",
+"Langkornreis"
+]
+},
+{
+"name": "Geriebener Mozzarella",
+"qty": "150 g",
+"match": [
+"Mozzarella"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Gemüsebrühe",
+"qty": "100 ml",
+"match": null
+},
+{
+"name": "Butter, Speisestärke, Öl, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Reis in Butter anschwitzen, mit 4 Tassen Wasser und Salz garen.",
+"Hähnchen salzen, pfeffern und in Öl goldbraun braten, herausnehmen.",
+"In Butter Zwiebel und Knoblauch anbraten, Champignons in Scheiben dazugeben und bräunen.",
+"Sahne und Brühe dazugeben, aufkochen und mit Stärke binden, abschmecken.",
+"Reis in eine Form geben, Hähnchen darauf, Soße darüber und mit Käse bestreuen.",
+"Bei 200 °C Ober-/Unterhitze 20 Minuten backen."
+]
+},
+{
+"id": "kartoffel-brokkoli-auflauf",
+"title": "Kartoffel-Brokkoli-Auflauf",
+"by": "einfachtasty",
+"video_url": "https://www.tiktok.com/@einfachtasty/video/7332813433060019488",
+"servings": 4,
+"minutes": 60,
+"intro": "Der Klassiker mit cremiger Soße und Käsekruste.",
+"ingredients": [
+{
+"name": "Kartoffeln",
+"qty": "1 kg",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Brokkoli",
+"qty": "800 g",
+"match": [
+"Brokkoli"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "100 g",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Sahne",
+"qty": "200 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Reibekäse",
+"qty": "150 g",
+"match": [
+"Gratin",
+"Pizzakäse",
+"Reibekäse",
+"gerieben",
+"Gouda",
+"Emmentaler"
+]
+},
+{
+"name": "Butter",
+"qty": "3 EL",
+"match": [
+"Butter"
+]
+},
+{
+"name": "Mehl",
+"qty": "3 EL",
+"match": null
+},
+{
+"name": "Gemüsebrühepulver, Salz, Pfeffer, Muskat, Paprika",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Ofen auf 200 °C vorheizen. Kartoffeln schälen, in Scheiben schneiden und 10 Minuten vorkochen. Brokkoli in Röschen kurz mitgaren.",
+"Zwiebeln würfeln und in der Butter anschwitzen, Mehl einrühren.",
+"Nach und nach Sahne und etwas Kochwasser einrühren, mit Brühe, Salz, Pfeffer, Muskat und Paprika würzen.",
+"Kartoffeln und Brokkoli in eine Form geben und die Soße darübergießen.",
+"Mit Käse bestreuen und etwa 25 Minuten goldbraun backen."
+]
+},
+{
+"id": "kartoffel-spinat-feta",
+"title": "Kartoffelauflauf mit Spinat und Feta",
+"by": "einfach.mal.kochen",
+"video_url": "https://www.tiktok.com/@einfach.mal.kochen/video/7495461423582170390",
+"servings": 3,
+"minutes": 40,
+"intro": "Schnell gemacht, besonders mit Kartoffeln vom Vortag.",
+"ingredients": [
+{
+"name": "Kartoffeln",
+"qty": "1 kg",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Frischer Spinat",
+"qty": "400 g",
+"match": [
+"Spinat"
+]
+},
+{
+"name": "Feta",
+"qty": "150 g",
+"match": [
+"Feta",
+"Schafskäse",
+"Hirtenkäse"
+]
+},
+{
+"name": "Kochsahne",
+"qty": "350 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Streukäse",
+"qty": "50 g",
+"match": [
+"Gratin",
+"Pizzakäse",
+"Reibekäse",
+"gerieben",
+"Gouda",
+"Emmentaler"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "½",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Olivenöl, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Kartoffeln kochen (oder vom Vortag nehmen).",
+"Zwiebel und Knoblauch in Olivenöl glasig anbraten, Spinat dazugeben und zusammenfallen lassen.",
+"Sahne dazugeben, aufkochen, 100 g Feta einrühren und einkochen lassen.",
+"Kartoffeln in Scheiben in eine Form legen, restlichen Feta darüber verteilen und die Soße darübergießen.",
+"Mit Käse bestreuen und bei 180 °C Umluft etwa 20 Minuten backen."
+]
+},
+{
+"id": "gemuese-kartoffel-auflauf",
+"title": "Bunter Gemüse-Kartoffel-Auflauf",
+"by": "sandraskochblog",
+"video_url": "https://www.tiktok.com/@sandraskochblog/video/7336887217824091424",
+"servings": 3,
+"minutes": 55,
+"intro": "Ohne Fix-Tüte, mit Kaisergemüse und Frischkäse.",
+"ingredients": [
+{
+"name": "Kartoffeln",
+"qty": "600 g",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "TK-Kaisergemüse",
+"qty": "450 g",
+"match": [
+"Kaisergemüse",
+"Brokkoli",
+"Blumenkohl",
+"Röschentrilogie",
+"Gemüsemischung"
+]
+},
+{
+"name": "Sahne",
+"qty": "200 g",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Frischkäse natur",
+"qty": "100 g",
+"match": [
+"Frischkäse"
+]
+},
+{
+"name": "Reibekäse",
+"qty": "150 g",
+"match": [
+"Gratin",
+"Pizzakäse",
+"Reibekäse",
+"gerieben",
+"Gouda",
+"Emmentaler"
+]
+},
+{
+"name": "Salz, Knoblauchpulver, Kräuter",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Ofen auf 190 °C Umluft vorheizen. Kartoffeln schälen und würfeln.",
+"Kartoffeln mit Sahne, 200 ml Wasser, Frischkäse und Gewürzen aufkochen und 15 Minuten köcheln.",
+"Gemüse dazugeben und weitere 5 Minuten köcheln.",
+"In eine Form füllen, mit Käse bestreuen und 30–35 Minuten überbacken."
+]
+},
+{
+"id": "kartoffel-hack-auflauf",
+"title": "Kartoffel-Hackfleisch-Auflauf",
+"by": "su_ice_",
+"video_url": "https://www.tiktok.com/@su_ice_/video/7416391813310713121",
+"servings": 2,
+"minutes": 45,
+"intro": "Einfach und deftig mit Tomaten-Hack und Sahne.",
+"ingredients": [
+{
+"name": "Drillinge (kleine Kartoffeln)",
+"qty": "5",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Hackfleisch",
+"qty": "200 g",
+"match": [
+"Hackfleisch",
+"Hack"
+]
+},
+{
+"name": "Gehackte Tomaten",
+"qty": "200 g",
+"match": [
+"Passierte Tomaten",
+"Tomatensauce",
+"Pizzatomaten",
+"Gehackte Tomaten",
+"stückige Tomaten"
+]
+},
+{
+"name": "Sahne",
+"qty": "200 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Tomatenmark",
+"qty": "1 TL",
+"match": null
+},
+{
+"name": "Salz, Pfeffer, Vegeta, Oregano",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Kartoffeln in Scheiben schneiden und in eine Auflaufform legen.",
+"Hack mit Zwiebel und Knoblauch anbraten, Tomatenmark und Tomaten dazugeben und würzen.",
+"Hack auf die Kartoffeln geben.",
+"Sahne mit Salz, Pfeffer und Vegeta würzen und darübergießen.",
+"Bei 180 °C 20–30 Minuten backen."
+]
+},
+{
+"id": "lachs-backblech",
+"title": "Lachs-Backblech mit Kartoffeln und Gemüse",
+"by": "foodwerk.de",
+"video_url": "https://www.tiktok.com/@foodwerk.de/video/7268385092689612064",
+"servings": 4,
+"minutes": 50,
+"intro": "Ein Blech für die ganze Familie, mit Schmand.",
+"ingredients": [
+{
+"name": "Lachsfilets (TK)",
+"qty": "4",
+"match": [
+"Lachs"
+]
+},
+{
+"name": "Festkochende Kartoffeln",
+"qty": "1 kg",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Paprika",
+"qty": "2",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Rote Zwiebeln",
+"qty": "3",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "TK-Brokkoli",
+"qty": "200 g",
+"match": [
+"Brokkoli"
+]
+},
+{
+"name": "Schmand",
+"qty": "100 g",
+"match": [
+"Schmand"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "3",
+"match": null
+},
+{
+"name": "Olivenöl",
+"qty": "12 EL",
+"match": null
+},
+{
+"name": "Paprika edelsüß, Curry, Chiliflocken, Salz",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Ofen auf 200 °C Ober-/Unterhitze vorheizen.",
+"Zwiebeln in Streifen, Paprika in Stücke, Kartoffeln in Scheiben schneiden.",
+"Gemüse mit Knoblauch, 6 EL Öl, 1 TL Paprika, 1 TL Curry und 1 TL Salz mischen und 30 Minuten backen.",
+"Lachs mit 4 EL Öl, Paprika, Chili und Salz bestreichen.",
+"Lachs und Brokkoli aufs Blech geben und etwa 15 Minuten weiterbacken.",
+"Gesalzenen Schmand darauf verteilen."
+]
+},
+{
+"id": "ofen-lachs-kartoffeln",
+"title": "Ofen-Lachs mit Rosmarinkartoffeln",
+"by": "yourfoodsister",
+"video_url": "https://www.tiktok.com/@yourfoodsister/video/7546237314163313942",
+"servings": 4,
+"minutes": 40,
+"intro": "Nur zwei Hauptzutaten und ein Blech.",
+"ingredients": [
+{
+"name": "Lachsfilet",
+"qty": "1 kg",
+"match": [
+"Lachs"
+]
+},
+{
+"name": "Kartoffeln (Drillinge)",
+"qty": "1 kg",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Öl",
+"qty": "4 EL",
+"match": null
+},
+{
+"name": "Rosmarin, Paprikapulver, Knoblauchpulver, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Ofen auf 200 °C Ober-/Unterhitze vorheizen.",
+"Kartoffeln vierteln und mit Öl und Gewürzen mischen.",
+"Kartoffeln aufs Blech geben, Lachs dazulegen und mit der Öl-Gewürzmischung bestreichen.",
+"Alles 30–35 Minuten backen."
+]
+},
+{
+"id": "lachs-sahne-gratin",
+"title": "Lachs-Sahne-Gratin mit Fächerkartoffeln",
+"by": "naniscookingskill",
+"video_url": "https://www.tiktok.com/@naniscookingskill/video/7350675309202591009",
+"servings": 2,
+"minutes": 65,
+"intro": "Mit Buttermöhren als Beilage.",
+"ingredients": [
+{
+"name": "Lachsfilet",
+"qty": "250 g",
+"match": [
+"Lachs"
+]
+},
+{
+"name": "Kartoffeln",
+"qty": "200 g",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Möhren",
+"qty": "3",
+"match": [
+"Möhren",
+"Karotten"
+]
+},
+{
+"name": "Sahne",
+"qty": "250 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Schalotte",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Butter",
+"qty": "1 EL",
+"match": [
+"Butter"
+]
+},
+{
+"name": "Tomatenmark",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Gemüsebrühe",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Olivenöl, Thymian, Dill, Knoblauchpulver, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Kartoffeln fächerartig einschneiden, mit Öl, Salz und Thymian 40 Minuten bei 220 °C backen.",
+"Möhren in Streifen in Butter mit Dill und Salz schwenken.",
+"Schalotte hacken, mit Tomatenmark, Brühe, Knoblauchpulver, Pfeffer und Sahne verrühren.",
+"Lachs in eine Form legen, Soße darübergeben und 25 Minuten bei 200 °C backen.",
+"Mit Kartoffeln und Möhren servieren."
+]
+},
+{
+"id": "tomaten-sahne-pasta",
+"title": "5-Minuten-Tomaten-Sahne-Pasta",
+"by": "stefano_zarrella",
+"video_url": "https://www.tiktok.com/@stefano_zarrella/video/7285066925472861473",
+"servings": 1,
+"minutes": 15,
+"intro": "Wenige Zutaten, schnell gemacht.",
+"ingredients": [
+{
+"name": "Pasta",
+"qty": "130 g",
+"match": [
+"Pasta",
+"Spaghetti",
+"Nudeln",
+"Penne",
+"Fusilli"
+]
+},
+{
+"name": "Sahne",
+"qty": "180 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Käse",
+"qty": "2 Hände",
+"match": [
+"Gratin",
+"Pizzakäse",
+"Reibekäse",
+"gerieben",
+"Gouda",
+"Emmentaler"
+]
+},
+{
+"name": "Tomatenmark",
+"qty": "4 EL",
+"match": null
+},
+{
+"name": "Olivenöl, italienische Kräuter, Salz, Pfeffer, Paprika",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Pasta kochen.",
+"Tomatenmark in Olivenöl anbraten.",
+"Nudeln dazugeben und mit der Sahne vermischen.",
+"Kräuter und Käse unterrühren und würzen.",
+"Mit etwas Nudelwasser cremig rühren."
+]
+},
+{
+"id": "champignon-rahm-pasta",
+"title": "Champignon-Rahm-Pasta",
+"by": "salimasrezepte_s",
+"video_url": "https://www.tiktok.com/@salimasrezepte_s/video/7356572376726850849",
+"servings": 2,
+"minutes": 20,
+"intro": "Cremige Pilzsoße zu Nudeln.",
+"ingredients": [
+{
+"name": "Nudeln",
+"qty": "200 g",
+"match": [
+"Pasta",
+"Spaghetti",
+"Nudeln",
+"Penne",
+"Fusilli"
+]
+},
+{
+"name": "Champignons",
+"qty": "200 g",
+"match": [
+"Champignons",
+"Kulturchampignons"
+]
+},
+{
+"name": "Sahne",
+"qty": "200 g",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Käse",
+"qty": "etwas",
+"match": [
+"Gratin",
+"Pizzakäse",
+"Reibekäse",
+"gerieben",
+"Gouda",
+"Emmentaler"
+]
+},
+{
+"name": "Speisestärke",
+"qty": "1 TL",
+"match": null
+},
+{
+"name": "Salz, Pfeffer, Paprika edelsüß, Knoblauchpulver",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Nudeln kochen. Zwiebel in Öl goldbraun anbraten.",
+"Champignons in dünnen Scheiben dazugeben und kräftig anbraten.",
+"Stärke darüberstreuen und kurz mitbraten.",
+"Sahne, 100 ml Wasser und Gewürze dazugeben und 5 Minuten köcheln.",
+"Käse und Nudeln unterheben."
+]
+},
+{
+"id": "hack-nudelauflauf",
+"title": "Hackfleisch-Nudelauflauf",
+"by": "herfood_story",
+"video_url": "https://www.tiktok.com/@herfood_story/video/7648728083415207201",
+"servings": 4,
+"minutes": 45,
+"intro": "Penne mit Tomaten-Hack und Käsekruste.",
+"ingredients": [
+{
+"name": "Penne",
+"qty": "500 g",
+"match": [
+"Pasta",
+"Spaghetti",
+"Nudeln",
+"Penne",
+"Fusilli"
+]
+},
+{
+"name": "Hackfleisch",
+"qty": "500 g",
+"match": [
+"Hackfleisch",
+"Hack"
+]
+},
+{
+"name": "Gehackte Tomaten",
+"qty": "1 Dose",
+"match": [
+"Passierte Tomaten",
+"Tomatensauce",
+"Pizzatomaten",
+"Gehackte Tomaten",
+"stückige Tomaten"
+]
+},
+{
+"name": "Mozzarella und Gouda",
+"qty": "zum Bestreuen",
+"match": [
+"Gratin",
+"Pizzakäse",
+"Reibekäse",
+"gerieben",
+"Gouda",
+"Emmentaler",
+"Mozzarella"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "3",
+"match": null
+},
+{
+"name": "Tomaten- und Paprikamark",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Salz, Pfeffer, Paprika, Oregano, Basilikum, Rinderbrühe",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Nudeln kochen. Hack anbraten, Zwiebel und Knoblauch mitbraten.",
+"Tomaten- und Paprikamark und Gewürze einrühren.",
+"Tomaten und etwas Wasser dazugeben und einige Minuten köcheln.",
+"Soße mit den Nudeln mischen, in eine Form füllen und mit Käse bestreuen.",
+"Bei 200 °C backen, bis der Käse goldbraun ist."
+]
+},
+{
+"id": "rotkohl-knoedel-auflauf",
+"title": "Rotkohl-Knödel-Auflauf mit Schmandsoße",
+"by": "kochmitliebe_",
+"video_url": "https://www.tiktok.com/@kochmitliebe_/video/7300654334621060384",
+"servings": 3,
+"minutes": 35,
+"intro": "Herbstlich und vegetarisch.",
+"ingredients": [
+{
+"name": "Knödelteig (halb und halb)",
+"qty": "500 g",
+"match": [
+"Knödel",
+"Kloßteig"
+]
+},
+{
+"name": "Rotkohl",
+"qty": "1 Glas",
+"match": [
+"Rotkohl",
+"Apfelrotkohl"
+]
+},
+{
+"name": "Schmand",
+"qty": "300 g",
+"match": [
+"Schmand"
+]
+},
+{
+"name": "Milch",
+"qty": "1 großer Schuss",
+"match": null
+},
+{
+"name": "Petersilie, Schnittlauch, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Aus dem Knödelteig kleine Knödel formen und nach Packung garen.",
+"Rotkohl in eine Auflaufform geben, Knödel halbieren und darauf verteilen.",
+"Schmand mit Milch, Kräutern, Salz und Pfeffer verrühren und darübergeben.",
+"Bei 180 °C Umluft 20–25 Minuten überbacken."
+]
+},
+{
+"id": "schichtkohl",
+"title": "Schichtkohl mit Hackfleisch",
+"by": "foodboom",
+"video_url": "https://www.tiktok.com/@foodboom/video/7628610237699820822",
+"servings": 6,
+"minutes": 90,
+"intro": "Kohl, Hack, Kartoffeln und fertig.",
+"ingredients": [
+{
+"name": "Weißkohl",
+"qty": "2 kg",
+"match": [
+"Weißkohl"
+]
+},
+{
+"name": "Hackfleisch",
+"qty": "800 g",
+"match": [
+"Hackfleisch",
+"Hack"
+]
+},
+{
+"name": "Kartoffeln",
+"qty": "400 g",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "2",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Schmand",
+"qty": "200 g",
+"match": [
+"Schmand"
+]
+},
+{
+"name": "Butterschmalz",
+"qty": "3 Flocken",
+"match": null
+},
+{
+"name": "Speisestärke",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Majoran, Paprika, Muskat, Zucker, Kümmel, Salz, Pfeffer, Schnittlauch",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Kohl in Streifen, Kartoffeln in Scheiben schneiden, Zwiebeln würfeln.",
+"Hack mit Zwiebeln in Butterschmalz anbraten und mit Majoran, Paprika, Salz und Pfeffer würzen.",
+"Kohl, Kartoffeln und Hack in einem großen Topf schichten, Kohl mit Kümmel, Zucker und Muskat würzen.",
+"500 ml Wasser angießen und zugedeckt etwa 45–60 Minuten schmoren.",
+"Mit angerührter Stärke binden, Schmand unterrühren und mit Schnittlauch servieren."
+]
+},
+{
+"id": "nudel-haehnchen-brokkoli",
+"title": "Nudel-Hähnchen-Brokkoli-Auflauf",
+"by": "chriskroemer",
+"video_url": "https://www.tiktok.com/@chriskroemer/video/7188077773657754885",
+"servings": 4,
+"minutes": 50,
+"intro": "Perfekt zum Vorkochen für mehrere Tage.",
+"ingredients": [
+{
+"name": "Nudeln",
+"qty": "300–350 g",
+"match": [
+"Pasta",
+"Spaghetti",
+"Nudeln",
+"Penne",
+"Fusilli"
+]
+},
+{
+"name": "Hähnchenbrust",
+"qty": "400 g",
+"match": [
+"Hähnchenbrust",
+"Hähnchen-Brust",
+"Hähnchenbrustfilet",
+"Hähnchen-Innenfilet",
+"Hähnchenbrust-Innenfilet",
+"Hähnchen-Brustfilet",
+"Hähnchen-Brustfilets"
+]
+},
+{
+"name": "TK-Brokkoli",
+"qty": "600 g",
+"match": [
+"Brokkoli"
+]
+},
+{
+"name": "Sahne",
+"qty": "200 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Geriebener Käse",
+"qty": "zum Bestreuen",
+"match": [
+"Gratin",
+"Pizzakäse",
+"Reibekäse",
+"gerieben",
+"Gouda",
+"Emmentaler",
+"Mozzarella"
+]
+},
+{
+"name": "Tomaten",
+"qty": "ein paar",
+"match": [
+"Romatomaten",
+"Cocktailtomaten",
+"Rispentomaten",
+"Strauchtomaten",
+"Datteltomaten",
+"Tomaten XXL"
+]
+},
+{
+"name": "Butter, Mehl, Milch",
+"qty": "",
+"match": null
+},
+{
+"name": "Salz, Pfeffer, Chili",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Ofen auf 200 °C vorheizen. Hähnchen würzen, in Stücke schneiden und 5–7 Minuten braten.",
+"Nudeln kochen.",
+"Aus Butter, Mehl und Milch eine weiße Soße rühren, mit etwas Wasser verdünnen.",
+"Nudeln, Soße, Sahne, Brokkoli, Hähnchen und Tomaten in eine Form geben.",
+"Mit Käse bestreuen und 30 Minuten überbacken."
+]
+},
+{
+"id": "haehnchen-stirfry",
+"title": "Hähnchen-Stir-Fry mit Brokkoli und Champignons",
+"by": "urban.kitchen",
+"video_url": "https://www.tiktok.com/@urban.kitchen/video/7163290635171007749",
+"servings": 4,
+"minutes": 30,
+"intro": "Wie vom Asiaten, ohne Geschmacksverstärker.",
+"ingredients": [
+{
+"name": "Hähnchenbrust",
+"qty": "450 g",
+"match": [
+"Hähnchenbrust",
+"Hähnchen-Brust",
+"Hähnchenbrustfilet",
+"Hähnchen-Innenfilet",
+"Hähnchenbrust-Innenfilet",
+"Hähnchen-Brustfilet",
+"Hähnchen-Brustfilets"
+]
+},
+{
+"name": "Brokkoli",
+"qty": "500 g",
+"match": [
+"Brokkoli"
+]
+},
+{
+"name": "Champignons",
+"qty": "250 g",
+"match": [
+"Champignons",
+"Kulturchampignons"
+]
+},
+{
+"name": "Spitzpaprika",
+"qty": "1",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Rote Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Sojasoße",
+"qty": "4 EL",
+"match": null
+},
+{
+"name": "Hühnerbrühe",
+"qty": "240 ml",
+"match": null
+},
+{
+"name": "Sesamöl, brauner Zucker, Speisestärke, Backpulver, Knoblauch, Ingwer, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Hähnchen würfeln und mit 1 EL Sojasoße, 1 TL Sesamöl, etwas Backpulver und 2 EL Zucker marinieren.",
+"Für die Soße Brühe, 3 EL Sojasoße, Stärke, Sesamöl, Knoblauch, Ingwer und Pfeffer verrühren.",
+"Hähnchen in sehr heißem Öl unter Rühren braten und herausnehmen.",
+"Brokkoli, Champignons, Paprika und Zwiebel unter Rühren kurz braten.",
+"Hähnchen und Soße dazugeben und rühren, bis die Soße andickt. Mit Reis servieren."
+]
+},
+{
+"id": "chili-con-carne",
+"title": "Chili con carne",
+"by": "letseat_uk",
+"video_url": "https://www.tiktok.com/@letseat_uk/video/7401125926756519201",
+"servings": 4,
+"minutes": 50,
+"intro": "Würzig mit Kidneybohnen. (Video auf Englisch)",
+"ingredients": [
+{
+"name": "Rinderhackfleisch",
+"qty": "500 g",
+"match": [
+"Rinderhack",
+"Rinder-Hack",
+"Rinderhackfleisch"
+]
+},
+{
+"name": "Gehackte Tomaten",
+"qty": "1 Dose",
+"match": [
+"Passierte Tomaten",
+"Tomatensauce",
+"Pizzatomaten",
+"Gehackte Tomaten",
+"stückige Tomaten"
+]
+},
+{
+"name": "Kidneybohnen",
+"qty": "1 Dose",
+"match": [
+"Kidneybohnen",
+"Bohnen"
+]
+},
+{
+"name": "Große Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Rote Paprika",
+"qty": "1",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Chilischote",
+"qty": "1",
+"match": null
+},
+{
+"name": "Knoblauchzehen",
+"qty": "3",
+"match": null
+},
+{
+"name": "Tomatenmark",
+"qty": "2 EL",
+"match": null
+},
+{
+"name": "Rinderbrühe",
+"qty": "300 ml",
+"match": null
+},
+{
+"name": "Paprikapulver, Kreuzkümmel, Chilipulver, Majoran, Zucker oder Schokolade",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Zwiebel, Paprika, Chili und Knoblauch klein schneiden und in Öl anbraten.",
+"Hack dazugeben und krümelig braten.",
+"Paprikapulver, Kreuzkümmel und Chilipulver kurz mitrösten.",
+"Tomaten, Tomatenmark, Brühe, Majoran und Zucker dazugeben und 30 Minuten köcheln.",
+"Kidneybohnen dazugeben und nochmal 10 Minuten köcheln."
+]
+},
+{
+"id": "kuerbissuppe",
+"title": "Cremige Kürbissuppe",
+"by": "kikiskitchen",
+"video_url": "https://www.tiktok.com/@kikiskitchen/video/7423505670550375713",
+"servings": 5,
+"minutes": 40,
+"intro": "Mit Kartoffeln für extra Cremigkeit und karamellisierten Pekannüssen.",
+"ingredients": [
+{
+"name": "Hokkaido-Kürbis",
+"qty": "1",
+"match": [
+"Kürbis",
+"Hokkaido"
+]
+},
+{
+"name": "Kartoffeln",
+"qty": "3–4 kleine",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "2",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Sahne (optional)",
+"qty": "zum Servieren",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Pekannüsse",
+"qty": "80 g",
+"match": null
+},
+{
+"name": "Olivenöl, frischer Ingwer und Kurkuma, Gemüsebrühepulver, Butter, Honig, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Kürbis waschen, entkernen und grob schneiden.",
+"Zwiebeln in Olivenöl glasig dünsten, Ingwer und Kurkuma kurz mitrösten.",
+"Kürbis, Kartoffeln und Gewürze dazugeben, mit kochendem Wasser knapp bedecken.",
+"25 Minuten köcheln und fein pürieren.",
+"Pekannüsse mit Butter und Honig in der Pfanne karamellisieren und auf die Suppe geben."
+]
+},
+{
+"id": "frikadellen-zwiebelsosse",
+"title": "Frikadellen mit Zwiebelsoße",
+"by": "chateau.briand",
+"video_url": "https://www.tiktok.com/@chateau.briand/video/7535723644195015938",
+"servings": 3,
+"minutes": 45,
+"intro": "Der Klassiker mit cremiger Zwiebelsoße.",
+"ingredients": [
+{
+"name": "Hackfleisch gemischt",
+"qty": "500 g",
+"match": [
+"Hackfleisch",
+"Hack"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "3",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Ei",
+"qty": "1",
+"match": [
+"Eier"
+]
+},
+{
+"name": "Sahne",
+"qty": "100 ml",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Altes Brötchen",
+"qty": "1",
+"match": null
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Rinderfond",
+"qty": "400 ml",
+"match": null
+},
+{
+"name": "Senf, Majoran, Paprika, Thymian, Zucker, Balsamico, Mehl, Semmelbrösel, Butterschmalz, Butter, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"1 Zwiebel würfeln und in Butter anschwitzen. Brötchen einweichen und ausdrücken.",
+"Hack mit Zwiebel, Ei, Brötchen, Senf, Majoran, Paprika, Salz und viel Pfeffer verkneten.",
+"Frikadellen formen, in Semmelbröseln wenden und in Butterschmalz braten.",
+"Für die Soße 2 Zwiebeln in Streifen mit Knoblauch in Butter braten, Thymian und Zucker dazu, mit Balsamico ablöschen.",
+"Mehl einrühren, mit Fond und Sahne aufgießen, mit Paprika, Salz und Pfeffer abschmecken."
+]
+},
+{
+"id": "koefte-zaziki",
+"title": "Köfte mit Zaziki",
+"by": "neris.kitchen_",
+"video_url": "https://www.tiktok.com/@neris.kitchen_/video/7259634623599217946",
+"servings": 4,
+"minutes": 40,
+"intro": "Türkische Hack-Frikadellen mit selbstgemachtem Zaziki.",
+"ingredients": [
+{
+"name": "Hackfleisch",
+"qty": "500 g",
+"match": [
+"Hackfleisch",
+"Hack"
+]
+},
+{
+"name": "Griechischer Joghurt",
+"qty": "300–400 g",
+"match": [
+"Joghurt",
+"griech"
+]
+},
+{
+"name": "Gurke",
+"qty": "1",
+"match": [
+"Gurke"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "2",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Tomate",
+"qty": "1",
+"match": [
+"Romatomaten",
+"Cocktailtomaten",
+"Rispentomaten",
+"Strauchtomaten",
+"Datteltomaten",
+"Tomaten XXL"
+]
+},
+{
+"name": "Ei",
+"qty": "1",
+"match": [
+"Eier"
+]
+},
+{
+"name": "Paniermehl",
+"qty": "80–90 g",
+"match": null
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2",
+"match": null
+},
+{
+"name": "Tomatenmark, Petersilie, Backpulver, Dill, Salz, Pfeffer, Paprika, Knoblauchpulver",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Zwiebeln, Tomate und Petersilie fein hacken.",
+"Mit Hack, Ei, Paniermehl, Tomatenmark, Backpulver und Gewürzen vermengen.",
+"Köfte formen und in der Pfanne mit etwas Öl braten.",
+"Gurke reiben und gut ausdrücken, mit Joghurt, Knoblauch, Salz und Dill verrühren."
+]
+},
+{
+"id": "brokkoli-haehnchen-curry",
+"title": "Brokkoli-Hähnchen-Curry",
+"by": "naniscookingskill",
+"video_url": "https://www.tiktok.com/@naniscookingskill/video/7368510514978196768",
+"servings": 3,
+"minutes": 35,
+"intro": "Mit Kokosmilch und Reis.",
+"ingredients": [
+{
+"name": "Hähnchenbrust",
+"qty": "400 g",
+"match": [
+"Hähnchenbrust",
+"Hähnchen-Brust",
+"Hähnchenbrustfilet",
+"Hähnchen-Innenfilet",
+"Hähnchenbrust-Innenfilet",
+"Hähnchen-Brustfilet",
+"Hähnchen-Brustfilets"
+]
+},
+{
+"name": "Brokkoli",
+"qty": "1",
+"match": [
+"Brokkoli"
+]
+},
+{
+"name": "Paprika",
+"qty": "1",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Kokosmilch",
+"qty": "400 ml",
+"match": [
+"Kokosmilch"
+]
+},
+{
+"name": "Basmatireis",
+"qty": "150 g",
+"match": [
+"Reis",
+"Basmati",
+"Langkornreis"
+]
+},
+{
+"name": "Rote Currypaste",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Knoblauchzehen",
+"qty": "3",
+"match": null
+},
+{
+"name": "Ingwer, Lauchzwiebel, Limette, Sesam, Sesamöl, Curry, Paprika, Kurkuma, Salz",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Gemüse klein schneiden, Hähnchen mit Öl und Gewürz marinieren.",
+"Hähnchen in Sesamöl anbraten und beiseitestellen. Reis kochen.",
+"Zwiebel und Brokkoli anbraten, dann Paprika, Knoblauch und Ingwer.",
+"Currypaste dazugeben und mit Kokosmilch ablöschen.",
+"Würzen, Limettensaft dazu und ca. 15 Minuten köcheln.",
+"Mit Reis, Lauchzwiebeln und Sesam servieren."
+]
+},
+{
+"id": "mango-curry",
+"title": "Mango-Hähnchen-Curry",
+"by": "melissatee._",
+"video_url": "https://www.tiktok.com/@melissatee._/video/7379653129727413536",
+"servings": 2,
+"minutes": 30,
+"intro": "Fruchtig-cremig mit frischer Mango.",
+"ingredients": [
+{
+"name": "Hähnchenbrust",
+"qty": "300 g",
+"match": [
+"Hähnchenbrust",
+"Hähnchen-Brust",
+"Hähnchenbrustfilet",
+"Hähnchen-Innenfilet",
+"Hähnchenbrust-Innenfilet",
+"Hähnchen-Brustfilet",
+"Hähnchen-Brustfilets"
+]
+},
+{
+"name": "Kokosmilch",
+"qty": "400 ml",
+"match": [
+"Kokosmilch"
+]
+},
+{
+"name": "Frische Mango",
+"qty": "1",
+"match": [
+"Mango"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "1",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "1–2",
+"match": null
+},
+{
+"name": "Gelbe Currypaste",
+"qty": "1 EL",
+"match": null
+},
+{
+"name": "Ingwer, Currypulver, Paprika, Salz, Pfeffer, Reis",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Zwiebeln, Knoblauch und Ingwer in Öl anbraten.",
+"Gewürze und Currypaste kurz mitbraten, mit Kokosmilch ablöschen.",
+"Mango würfeln, einen Teil dazugeben, aufkochen und pürieren.",
+"Hähnchenwürfel dazugeben und garen.",
+"Restliche Mango dazugeben und mit Reis servieren."
+]
+},
+{
+"id": "kartoffelsuppe-wuerstchen",
+"title": "Omas Kartoffelsuppe mit Würstchen",
+"by": "foodwerk.de",
+"video_url": "https://www.tiktok.com/@foodwerk.de/video/7409606052477439264",
+"servings": 4,
+"minutes": 40,
+"intro": "Cremiges Herbst-Soulfood.",
+"ingredients": [
+{
+"name": "Mehligkochende Kartoffeln",
+"qty": "1 kg",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Möhren",
+"qty": "2",
+"match": [
+"Möhren",
+"Karotten"
+]
+},
+{
+"name": "Lauch",
+"qty": "½",
+"match": [
+"Lauch",
+"Porree"
+]
+},
+{
+"name": "Zwiebeln",
+"qty": "2",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Sahne",
+"qty": "200 g",
+"match": [
+"Sahne",
+"Schlagsahne",
+"Kochsahne"
+]
+},
+{
+"name": "Wiener Würstchen",
+"qty": "4",
+"match": [
+"Wiener",
+"Würstchen"
+]
+},
+{
+"name": "Gemüsebrühe",
+"qty": "1 l",
+"match": null
+},
+{
+"name": "Butter, Lorbeer, Muskat, Petersilie, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Zwiebeln würfeln, Möhren in Scheiben, Kartoffeln in Stücke, Lauch in Ringe schneiden.",
+"Zwiebeln in Butter anbraten, Gemüse kurz mitbraten.",
+"Mit Brühe ablöschen, Lorbeer dazu und 20 Minuten köcheln.",
+"Lorbeer entfernen und pürieren.",
+"Sahne dazugeben und kräftig mit Salz, Pfeffer und Muskat würzen.",
+"Würstchen in Scheiben dazugeben, erhitzen und mit Petersilie servieren."
+]
+},
+{
+"id": "ofengemuese",
+"title": "Würziges Ofengemüse",
+"by": "heba0307",
+"video_url": "https://www.tiktok.com/@heba0307/video/7474186473500200214",
+"servings": 4,
+"minutes": 50,
+"intro": "Vegan, als Hauptgericht oder Beilage.",
+"ingredients": [
+{
+"name": "Brokkoli",
+"qty": "1",
+"match": [
+"Brokkoli"
+]
+},
+{
+"name": "Blumenkohl",
+"qty": "1",
+"match": [
+"Blumenkohl"
+]
+},
+{
+"name": "Kartoffeln",
+"qty": "3–4",
+"match": [
+"Kartoffeln"
+]
+},
+{
+"name": "Möhren",
+"qty": "3",
+"match": [
+"Möhren",
+"Karotten"
+]
+},
+{
+"name": "Rote Paprika",
+"qty": "1",
+"match": [
+"Paprika"
+]
+},
+{
+"name": "Knoblauchzehen",
+"qty": "2–3",
+"match": null
+},
+{
+"name": "Olivenöl",
+"qty": "70–100 ml",
+"match": null
+},
+{
+"name": "Pfeffer, Paprika, Curry, Harissa, Kräuter der Provence, Salz",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Brokkoli und Blumenkohl kurz bissfest vorgaren.",
+"Kartoffeln, Möhren und Paprika klein schneiden.",
+"Alles mit Öl, Knoblauch und Gewürzen vermengen.",
+"Auf einem Blech bei 200 °C etwa 40 Minuten backen. Dazu passt Joghurt-Dip."
+]
+},
+{
+"id": "feta-gemuese-ofen",
+"title": "Feta mit Gemüse aus dem Ofen",
+"by": "essenohnekohlenhydrate",
+"video_url": "https://www.tiktok.com/@essenohnekohlenhydrate/video/7611103212334009622",
+"servings": 2,
+"minutes": 35,
+"intro": "Low Carb: Feta und Tomaten werden zur Soße.",
+"ingredients": [
+{
+"name": "Feta",
+"qty": "2 × 150 g",
+"match": [
+"Feta",
+"Schafskäse",
+"Hirtenkäse"
+]
+},
+{
+"name": "Datteltomaten",
+"qty": "300 g",
+"match": [
+"Romatomaten",
+"Cocktailtomaten",
+"Rispentomaten",
+"Strauchtomaten",
+"Datteltomaten",
+"Tomaten XXL"
+]
+},
+{
+"name": "Brokkoli",
+"qty": "200 g",
+"match": [
+"Brokkoli"
+]
+},
+{
+"name": "Blumenkohl",
+"qty": "200 g",
+"match": [
+"Blumenkohl"
+]
+},
+{
+"name": "Olivenöl, Salz, Pfeffer, Petersilie",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Brokkoli und Blumenkohl dämpfen. Ofen auf 180 °C Umluft vorheizen.",
+"Feta in die Mitte einer Form legen, Tomaten drumherum verteilen.",
+"Würzen, mit Olivenöl beträufeln und 20–30 Minuten backen.",
+"Alles mit einer Gabel zu einer Soße zerdrücken, Gemüse unterheben und mit Petersilie servieren."
+]
+},
+{
+"id": "linsen-bolognese",
+"title": "Linsen-Bolognese",
+"by": "tobiasseitle",
+"video_url": "https://www.tiktok.com/@tobiasseitle/video/7255700753145187610",
+"servings": 2,
+"minutes": 30,
+"intro": "Vegan und eiweißreich.",
+"ingredients": [
+{
+"name": "Vollkornspaghetti",
+"qty": "200 g",
+"match": [
+"Pasta",
+"Spaghetti",
+"Nudeln",
+"Penne",
+"Fusilli"
+]
+},
+{
+"name": "Rote Linsen",
+"qty": "100 g",
+"match": [
+"Linsen"
+]
+},
+{
+"name": "Möhren",
+"qty": "2",
+"match": [
+"Möhren",
+"Karotten"
+]
+},
+{
+"name": "Passierte Tomaten",
+"qty": "400 ml",
+"match": [
+"Passierte Tomaten",
+"Tomatensauce",
+"Pizzatomaten",
+"Gehackte Tomaten",
+"stückige Tomaten"
+]
+},
+{
+"name": "Zwiebel",
+"qty": "½",
+"match": [
+"Zwiebeln"
+]
+},
+{
+"name": "Knoblauchzehe",
+"qty": "1",
+"match": null
+},
+{
+"name": "Tomatenmark",
+"qty": "4 EL",
+"match": null
+},
+{
+"name": "Gemüsebrühe",
+"qty": "250 ml",
+"match": null
+},
+{
+"name": "Sojasoße, Apfelessig, Kokos- oder Sojajoghurt, Ahornsirup, Oregano, Paprika, Kurkuma, Zimt, Salz, Pfeffer",
+"qty": "",
+"match": null
+}
+],
+"steps": [
+"Linsen waschen. Zwiebel und Möhren würfeln, Knoblauch hacken.",
+"Zwiebel in Olivenöl glasig dünsten, Knoblauch und Möhren kurz mitdünsten.",
+"Linsen dazugeben, mit Brühe ablöschen, Tomatenmark, Oregano und Kurkuma dazu und 8 Minuten köcheln.",
+"Spaghetti kochen.",
+"Passierte Tomaten, Sojasoße, Essig, Joghurt, Sirup und Paprika dazugeben, aufkochen und abschmecken."
+]
+}
+]
+}

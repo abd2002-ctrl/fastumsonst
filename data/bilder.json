@@ -1,0 +1,585 @@
+{
+"recipes": {
+"bolognese": "hf_20261103_083811_808a96d7-29d1-4d6b-b325-faff201d1878_min.webp",
+"hack-spitzkohl": "hf_20261103_084730_3d1b5424-b2cc-4f1d-ae14-6a87328ec074_min.webp",
+"haehnchen-paprika-mais": "hf_20261103_084729_6a0b0719-7a89-41c7-a366-2afa5a3a5222_min.webp",
+"haehnchen-ofen-kartoffeln": "hf_20261103_084730_2d560f71-4c87-48c4-8d72-e35d3e4e50b5_min.webp",
+"zwiebelfleisch": "hf_20261103_084732_2ebef4b6-9d12-4914-9823-c52e06d2833e_min.webp",
+"paprika-hack-reispfanne": "hf_20261103_084727_058c647c-7f64-48e1-a8eb-9d8020c4e6c8_min.webp",
+"hack-reis-cremig": "hf_20261103_084728_d2329c9d-d6f2-440b-8438-b3ece8578fa7_min.webp",
+"hack-risoni": "hf_20261103_084728_5df6c812-e6e1-4f75-a3bb-6cba79379b86_min.webp",
+"haehnchen-hackbaellchen": "hf_20261103_084729_b9f70242-f5f4-4914-9281-fb0f063f680c_min.webp",
+"reispfanne-haehnchen-ei": "hf_20261103_084731_96fb061b-9b30-4382-b548-2afc00300197_min.webp",
+"haehnchen-brokkoli-reis": "hf_20261103_084731_5e3b492a-a047-405b-ad45-3d6563a48dea_min.webp",
+"haehnchen-reis-auflauf": "hf_20261103_084733_4202a673-a007-488b-bd55-e44e06311610_min.webp",
+"kartoffel-brokkoli-auflauf": "hf_20261103_084730_d064591a-3dc1-408e-8626-ecb1660a6dda_min.webp",
+"kartoffel-spinat-feta": "hf_20261103_084740_3e05853e-9623-4fe3-8525-7407704d81bb_min.webp",
+"gemuese-kartoffel-auflauf": "hf_20261103_084742_29f5fad9-70b9-4a51-b257-941b239dea6d_min.webp",
+"kartoffel-hack-auflauf": "hf_20261103_084742_037656ba-3d8f-419e-9065-bac0e35b6ead_min.webp",
+"lachs-backblech": "hf_20261103_084739_551d8591-650e-4ad4-9cbf-c5f8c5f1cb26_min.webp",
+"ofen-lachs-kartoffeln": "hf_20261103_084741_ae3fa73c-d3c9-42d4-aab0-3de6e7f6ec2f_min.webp",
+"lachs-sahne-gratin": "hf_20261103_084741_af55b62e-3965-44b7-93ef-f3f987a9e2da_min.webp",
+"tomaten-sahne-pasta": "hf_20261103_084740_9dd54dfe-5c84-47c5-b7cf-0ecc95dc3e09_min.webp",
+"champignon-rahm-pasta": "hf_20261103_084741_271e523d-53df-4427-ab26-8397e9c63b53_min.webp",
+"hack-nudelauflauf": "hf_20261103_084742_de5f4fb5-2c0f-47aa-a585-cc9fe968efd7_min.webp",
+"rotkohl-knoedel-auflauf": "hf_20261103_084742_dc24ae0b-dbfe-4feb-b0dc-199feedcb8ba_min.webp",
+"schichtkohl": "hf_20261103_084742_7cd7398e-2be6-458e-9a1b-e625dff0529a_min.webp",
+"nudel-haehnchen-brokkoli": "hf_20261103_084741_378bf9ba-485f-4392-a9bd-e84e02ed81ac_min.webp",
+"haehnchen-stirfry": "hf_20261103_084753_6af5c9a6-e175-42e7-bce7-7a1bfc12faa3_min.webp",
+"chili-con-carne": "hf_20261103_085234_646ca160-c960-4baa-82af-0efad408eedd_min.webp",
+"kuerbissuppe": "hf_20261103_084751_9ae66fa9-f6c3-4663-a205-3b557ff044b1_min.webp",
+"frikadellen-zwiebelsosse": "hf_20261103_084753_727cca53-94b2-4e1e-b52f-8843599c504e_min.webp",
+"koefte-zaziki": "hf_20261103_084750_d5205bc8-3823-47d1-a9f9-7663cdb1a4ad_min.webp",
+"brokkoli-haehnchen-curry": "hf_20261103_084753_4b9d2293-fac1-457e-b40e-14f85c9e7ed4_min.webp",
+"mango-curry": "hf_20261103_084750_3f879326-50fd-48a7-8f91-c712e385b242_min.webp",
+"kartoffelsuppe-wuerstchen": "hf_20261103_084751_eddbde28-68ae-428e-8161-b817f3032e43_min.webp",
+"ofengemuese": "hf_20261103_084752_6f4ef804-c7b5-43cd-a641-af0e854fa0f4_min.webp",
+"feta-gemuese-ofen": "hf_20261103_084754_e7b8106d-c7e5-4b83-8b69-1c2b5c2b605d_min.webp",
+"linsen-bolognese": "hf_20261103_084752_984d9806-d71c-45fe-90f4-85182ed133b8_min.webp"
+},
+"products": [
+{
+"key": "hackfleisch",
+"words": [
+"hackfleisch",
+"hack",
+"gehacktes"
+],
+"file": "hf_20261103_084901_da7e87ab-5b6f-4837-995b-d0218e9e2575_min.webp"
+},
+{
+"key": "lachs",
+"words": [
+"lachs"
+],
+"file": "hf_20261103_084859_3d260246-c82f-4417-a86f-5a684d308613_min.webp"
+},
+{
+"key": "fisch",
+"words": [
+"fisch",
+"kabeljau",
+"barsch",
+"dorade",
+"makrele",
+"hering",
+"matjes",
+"thunfisch",
+"forelle",
+"seelachs"
+],
+"file": "hf_20261103_084858_485b5aa0-9c26-4f80-9218-5118e749f704_min.webp"
+},
+{
+"key": "garnelen",
+"words": [
+"garnelen",
+"shrimps",
+"scampi",
+"meeresfrüchte"
+],
+"file": "hf_20261103_084900_a4422ef2-5533-43e5-9b8f-ec4770a654aa_min.webp"
+},
+{
+"key": "pute",
+"words": [
+"pute",
+"puten",
+"truthahn",
+"geschnetzeltes"
+],
+"file": "hf_20261103_084902_a7bcd3ed-92a1-426d-a0e5-8a66fedd5cee_min.webp"
+},
+{
+"key": "haehnchen-brust",
+"words": [
+"hähnchenbrust",
+"hähnchen-brust",
+"hähnchenbrustfilet",
+"brustfilet",
+"innenfilet",
+"hähnchenfilet",
+"hähnchen-innenfilet"
+],
+"file": "hf_20261103_084901_e4d6602b-886f-42d9-beca-65eb5d103afc_min.webp"
+},
+{
+"key": "haehnchen-keulen",
+"words": [
+"schenkel",
+"keule",
+"unterkeulen",
+"wings",
+"flügel",
+"hähnchen"
+],
+"file": "hf_20261103_084859_01546c0a-90d4-4359-b18c-b9e0e37fe98e_min.webp"
+},
+{
+"key": "ente-gans",
+"words": [
+"ente",
+"gans"
+],
+"file": "hf_20261103_084941_57f7c224-4eef-4373-98bf-99c1e2e1132a_min.webp"
+},
+{
+"key": "wurst",
+"words": [
+"wurst",
+"würstchen",
+"wiener",
+"bockwurst",
+"bratwurst",
+"krakauer",
+"cevapcici",
+"frikadellen"
+],
+"file": "hf_20261103_084900_bf609eea-3681-4522-ad82-b334119e61d3_min.webp"
+},
+{
+"key": "aufschnitt",
+"words": [
+"schinken",
+"salami",
+"aufschnitt",
+"mortadella",
+"lyoner",
+"leberkäse"
+],
+"file": "hf_20261103_084859_8c7bdecb-a072-4e3d-8e1e-614a7ecdc232_min.webp"
+},
+{
+"key": "schwein",
+"words": [
+"schwein",
+"kotelett",
+"nacken",
+"minutensteak",
+"schnitzel",
+"bauch",
+"kasseler",
+"rollbraten",
+"schweinefilet"
+],
+"file": "hf_20261103_084900_3a25419f-260f-4ecd-96c0-e54638364373_min.webp"
+},
+{
+"key": "rind",
+"words": [
+"rind",
+"rouladen",
+"steak",
+"entrecôte",
+"gulasch",
+"tafelspitz",
+"hirsch",
+"wild",
+"reh"
+],
+"file": "hf_20261103_084858_4bb6e9a5-35f4-48fe-8eb1-aa8508bf9943_min.webp"
+},
+{
+"key": "knoedel",
+"words": [
+"knödel",
+"kloß",
+"klöße",
+"rösti",
+"pommes",
+"kroketten",
+"püree"
+],
+"file": "hf_20261103_084934_409fff5a-bbbd-4ee2-8408-2cfd1720ebb5_min.webp"
+},
+{
+"key": "kartoffeln",
+"words": [
+"kartoffel",
+"drillinge"
+],
+"file": "hf_20261103_084859_ad5f646b-95b9-4d32-998b-58025a2e5820_min.webp"
+},
+{
+"key": "zwiebeln",
+"words": [
+"zwiebel",
+"schalotte"
+],
+"file": "hf_20261103_084914_1737b471-721a-4438-9a3f-6fbcb4f1743c_min.webp"
+},
+{
+"key": "knoblauch",
+"words": [
+"knoblauch"
+],
+"file": "hf_20261103_084911_b78ce5fd-dd9a-41c6-afcf-5260dd915ce1_min.webp"
+},
+{
+"key": "moehren",
+"words": [
+"möhre",
+"karotte"
+],
+"file": "hf_20261103_084913_6aad2a09-f7c0-4831-935d-ef17d4b5bbad_min.webp"
+},
+{
+"key": "tomaten",
+"words": [
+"romatomaten",
+"cocktailtomaten",
+"rispentomaten",
+"strauchtomaten",
+"datteltomaten",
+"kirschtomaten"
+],
+"file": "hf_20261103_084910_a7409726-def7-44e9-92ff-cd001bd8cc06_min.webp"
+},
+{
+"key": "passierte-tomaten",
+"words": [
+"passierte",
+"tomatensauce",
+"pizzatomaten",
+"gehackte tomaten",
+"stückige tomaten",
+"tomatenmark",
+"tomate"
+],
+"file": "hf_20261103_084911_42f40fa9-a1d3-40d3-9b33-0ad461c3f19f_min.webp"
+},
+{
+"key": "paprika",
+"words": [
+"paprika",
+"spitzpaprika"
+],
+"file": "hf_20261103_084914_e3df99e5-3e07-40ae-8ed0-62bb33387e95_min.webp"
+},
+{
+"key": "brokkoli",
+"words": [
+"brokkoli",
+"romanesco",
+"röschen"
+],
+"file": "hf_20261103_084910_dbd42fe4-906e-44f4-a263-073b8f54fbae_min.webp"
+},
+{
+"key": "blumenkohl",
+"words": [
+"blumenkohl"
+],
+"file": "hf_20261103_084912_33228a8f-9baf-44e9-9554-bc3131e26b9a_min.webp"
+},
+{
+"key": "rosenkohl",
+"words": [
+"rosenkohl"
+],
+"file": "hf_20261103_084913_23874c31-f462-4891-b202-25654771ee1a_min.webp"
+},
+{
+"key": "rotkohl",
+"words": [
+"rotkohl",
+"apfelrotkohl"
+],
+"file": "hf_20261103_084914_f8671411-8615-49c8-abe8-b28e460a4d95_min.webp"
+},
+{
+"key": "kohl",
+"words": [
+"spitzkohl",
+"weißkohl",
+"wirsing",
+"kohl",
+"sarmakraut",
+"sauerkraut"
+],
+"file": "hf_20261103_084912_d53fe452-836b-48e3-82e4-bfd6a7202d91_min.webp"
+},
+{
+"key": "champignons",
+"words": [
+"champignon",
+"pilz",
+"pfifferling"
+],
+"file": "hf_20261103_084913_f3a3f2d2-764c-4880-b75f-5c4a99e22fd2_min.webp"
+},
+{
+"key": "kuerbis",
+"words": [
+"kürbis",
+"hokkaido",
+"butternut"
+],
+"file": "hf_20261103_084924_7b7de774-f3de-4730-94a9-cdcebdb06060_min.webp"
+},
+{
+"key": "zucchini",
+"words": [
+"zucchini",
+"aubergine",
+"gurke"
+],
+"file": "hf_20261103_084926_b160bb04-2140-4865-af35-5025683f1c0d_min.webp"
+},
+{
+"key": "salat",
+"words": [
+"salat",
+"spinat",
+"feldsalat",
+"rucola",
+"eisberg",
+"chicorée"
+],
+"file": "hf_20261103_084924_66844cc5-93fb-4960-b70c-10b01faa05bd_min.webp"
+},
+{
+"key": "lauch",
+"words": [
+"lauch",
+"porree",
+"frühlingszwiebel"
+],
+"file": "hf_20261103_084925_89516a07-6de3-4099-8748-96395ec248ad_min.webp"
+},
+{
+"key": "mais-bohnen",
+"words": [
+"mais",
+"bohnen",
+"erbsen",
+"kidney",
+"linsen",
+"kichererbsen"
+],
+"file": "hf_20261103_084922_816966f6-93a9-4eeb-bf1c-7ee495bda1a4_min.webp"
+},
+{
+"key": "aepfel",
+"words": [
+"apfel",
+"äpfel"
+],
+"file": "hf_20261103_084925_96f3b464-a031-439f-a285-606de73149db_min.webp"
+},
+{
+"key": "birnen",
+"words": [
+"birne"
+],
+"file": "hf_20261103_084923_1cee9a5a-bdfe-4c0a-9dce-b9ed9037e68c_min.webp"
+},
+{
+"key": "zitrusfruechte",
+"words": [
+"orange",
+"clementine",
+"mandarine",
+"zitrone",
+"limette"
+],
+"file": "hf_20261103_084926_e88f3afc-382f-47dd-975c-f6bb7ac01b26_min.webp"
+},
+{
+"key": "bananen",
+"words": [
+"banane"
+],
+"file": "hf_20261103_085329_b2279cd5-cc05-4c3d-9a68-edd658d3b008_min.webp"
+},
+{
+"key": "trauben",
+"words": [
+"traube",
+"beere",
+"himbeere",
+"heidelbeere",
+"erdbeere"
+],
+"file": "hf_20261103_084924_3878b869-0c46-46cd-996d-ff4cbacdd9fc_min.webp"
+},
+{
+"key": "nudeln",
+"words": [
+"nudel",
+"pasta",
+"spaghetti",
+"penne",
+"fusilli",
+"risoni",
+"spätzle",
+"maultaschen",
+"ravioli",
+"schupfnudeln"
+],
+"file": "hf_20261103_084922_b7eb17b1-9c0c-41bb-b3a1-4ba878b71966_min.webp"
+},
+{
+"key": "reis",
+"words": [
+"reis",
+"basmati"
+],
+"file": "hf_20261103_084924_a292a7b3-a9d1-4497-8d90-d768e9a1e790_min.webp"
+},
+{
+"key": "mehl",
+"words": [
+"mehl"
+],
+"file": "hf_20261103_084936_91355187-e05f-400b-be7b-a573b8de6748_min.webp"
+},
+{
+"key": "brot",
+"words": [
+"brot",
+"toast",
+"baguette",
+"brötchen",
+"semmel"
+],
+"file": "hf_20261103_084934_b23c98a5-3b03-4646-a4a8-a0e06f0e9dfd_min.webp"
+},
+{
+"key": "sahne",
+"words": [
+"sahne",
+"schlagsahne",
+"crème",
+"creme",
+"schmand",
+"saure sahne",
+"mascarpone"
+],
+"file": "hf_20261103_084937_1672edf3-1c06-4842-b78c-2d2fe8687457_min.webp"
+},
+{
+"key": "milch",
+"words": [
+"milch",
+"buttermilch",
+"kefir",
+"drink"
+],
+"file": "hf_20261103_084936_1b3afe34-825b-4559-9802-8f5bcc76102e_min.webp"
+},
+{
+"key": "joghurt",
+"words": [
+"joghurt",
+"skyr",
+"quark",
+"topfen"
+],
+"file": "hf_20261103_084938_eaa16f47-88e9-4369-9c13-a2d2dc9fb8b3_min.webp"
+},
+{
+"key": "butter",
+"words": [
+"butter",
+"margarine",
+"streichfett",
+"butterschmalz"
+],
+"file": "hf_20261103_084935_20284cf8-8411-4e69-a529-2634eeafc4b6_min.webp"
+},
+{
+"key": "eier",
+"words": [
+"eier"
+],
+"file": "hf_20261103_084937_cd0aa97d-0c5f-456c-92a6-f435e064c54b_min.webp"
+},
+{
+"key": "frischkaese",
+"words": [
+"frischkäse"
+],
+"file": "hf_20261103_084938_4aae18d1-b773-4cba-877c-03e9606aa480_min.webp"
+},
+{
+"key": "feta",
+"words": [
+"feta",
+"schafskäse",
+"hirtenkäse",
+"halloumi"
+],
+"file": "hf_20261103_084937_d5cc0353-be78-46cd-bc2c-27d4cb107e59_min.webp"
+},
+{
+"key": "mozzarella",
+"words": [
+"mozzarella",
+"burrata"
+],
+"file": "hf_20261103_084937_bb0b11e2-c0c0-4b97-a8ee-c8d69e68b0d6_min.webp"
+},
+{
+"key": "kaese",
+"words": [
+"käse",
+"gouda",
+"emmentaler",
+"maasdamer",
+"tilsiter",
+"bergkäse",
+"camembert",
+"grana",
+"parmesan",
+"scheiben"
+],
+"file": "hf_20261103_084938_18613f1a-e55d-401d-817f-8ae5469b3e56_min.webp"
+},
+{
+"key": "kapern-oliven",
+"words": [
+"kapern",
+"oliven ",
+"gurken",
+"pfefferonen",
+"cornichons"
+],
+"file": "hf_20261103_084940_c7d0200b-8143-41b1-bc44-a1790881608a_min.webp"
+},
+{
+"key": "oel",
+"words": [
+"öl",
+"olivenöl",
+"rapsöl"
+],
+"file": "hf_20261103_084941_68b5e60e-99e0-4bf3-8eca-e7f3a68a8e29_min.webp"
+},
+{
+"key": "maronen",
+"words": [
+"maronen",
+"kastanien"
+],
+"file": "hf_20261103_084940_958cbe6f-785f-4de4-bdcf-e9ece12041f5_min.webp"
+},
+{
+"key": "nuesse",
+"words": [
+"nüsse",
+"mandeln",
+"haselnüsse",
+"cashew"
+],
+"file": "hf_20261103_084941_722e9ef2-555a-47c9-b0d3-2f8452a39888_min.webp"
+},
+{
+"key": "kokosmilch",
+"words": [
+"kokosmilch"
+],
+"file": "hf_20261103_084941_083581ce-22fb-495a-ae17-814f8202bc07_min.webp"
+}
+]
+}
