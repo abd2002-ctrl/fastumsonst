@@ -75,7 +75,7 @@ export default async function handler(req, res) {
       const body = best
         ? `Noch ca. ${Math.round(reach)} km im Tank. Am günstigsten gerade: ${stationName(best)}, ${price(best[r.fuel])} €/l (${best.dist.toFixed(1).replace('.', ',')} km). Abends ist es meist am billigsten.`
         : `Noch ca. ${Math.round(reach)} km im Tank. Tank am besten heute Abend, dann sind die Preise meist am niedrigsten.`;
-      if (await send(r.user_id, { title: 'Zeit zum Tanken', body, url: '/#tanken', tag: 'tank' })) {
+      if (await send(r.user_id, { title: 'Zeit zum Tanken', body: body + ' Stimmt nicht? Tippe hier zum Anpassen.', url: '/#tankcheck', tag: 'tank' })) {
         await db.from('settings').update({ tank_notified_at: new Date().toISOString() }).eq('user_id', r.user_id);
         stats.tank++;
       }

@@ -278,6 +278,49 @@ function tankNow(){
   const liters = Math.max(0, S.tank.liters - km * S.setup.cons / 100);
   return {liters, pct: Math.min(100, liters / S.setup.tankL * 100), reach: liters / S.setup.cons * 100};
 }
+// Lernt, wie viel Liter pro Tag verbraucht werden (gespeichert als km pro Woche, damit auch der Server-Alarm passt)
+function learnRate(rate, weight){
+  if(!(rate > 0)) return;
+  const wk = rate * 700 / S.setup.cons;
+  if(wk < 5 || wk > 5000) return;
+  S.setup.weekKm = Math.round(S.setup.weekKm * (1 - weight) + wk * weight);
+  S.setup.learnN = (S.setup.learnN || 0) + 1;
+}
+function learnFromFill(liters, full){
+  if(!full) return;
+  const i = S.fills.map(x => !!x.full).lastIndexOf(true);
+  if(i < 0) return;
+  const prev = S.fills[i];
+  const days = (Date.now() - prev.at) / 864e5;
+  if(days < 1 || days > 60) return;
+  const used = S.fills.slice(i + 1).reduce((a, x) => a + (+x.liters || 0), 0) + liters;
+  learnRate(used / days, S.setup.learnN ? 0.4 : 0.7);
+}
+function learnFromCorrection(newLiters){
+  if(!S.tank) return;
+  const days = (Date.now() - S.tank.at) / 864e5;
+  if(days < 1) return;
+  const used = S.tank.liters - newLiters;
+  if(used > 0) learnRate(used / days, 0.3);
+}
+function tankCheckSheet(){
+  const t = tankNow(); const v = t ? Math.round(t.pct / 5) * 5 : 50;
+  openSheet('<h2>Wo steht deine Tanknadel?</h2><p class="small muted">Schieb den Regler dahin, wo die Nadel im Auto steht. Die App lernt daraus und schätzt danach genauer.</p>' +
+    '<input type="range" id="tc-v" min="0" max="100" step="5" value="' + v + '" aria-label="Füllstand in Prozent"><p class="price" id="tc-out" style="text-align:center">' + v + ' %</p>' +
+    '<div class="btns"><button class="btn" data-action="tank-check-save">Speichern</button><button class="btn ghost" data-action="sheet-close">Abbrechen</button></div>');
+  const r = $('tc-v'); if(r) r.addEventListener('input', () => $('tc-out').textContent = r.value + ' %');
+}
+// Nach „Route“ zu einer Tankstelle: beim nächsten Öffnen fragen, ob getankt wurde
+let pendingAsked = false;
+function checkPendingFill(){
+  const pf = S.pendingFill; if(!pf || pendingAsked || !S.setup.done) return;
+  const age = Date.now() - pf.at;
+  if(age > 864e5){ delete S.pendingFill; save(); return; }
+  if(age < 8 * 60e3 || !$('sheet').hidden) return;
+  pendingAsked = true;
+  openSheet('<h2>Hast du bei ' + esc(pf.name) + ' getankt?</h2><p class="small muted">Dann tragen wir es für dich ein. So bleibt deine Tankanzeige genau.</p>' +
+    '<div class="stack" style="gap:10px"><button class="btn" data-action="pf-yes" data-full="1">Ja, vollgetankt</button><button class="btn ghost" data-action="pf-yes" data-full="0">Ja, aber nicht voll</button><button class="btn ghost" data-action="pf-no">Nein, nicht getankt</button></div>');
+}
 function learnWeekKm(newOdo){
   if(!S.tank || !S.tank.odo || !(newOdo > S.tank.odo)) return;
   const days = (Date.now() - S.tank.at) / 864e5;
@@ -412,9 +455,9 @@ function tip(cls, icon, title, text, go, sg){
     '<span class="ico ' + cls + '">' + icon + '</span><span class="stack" style="gap:2px"><b style="font-size:15px">' + title + '</b><span class="small muted">' + text + '</span></span></button>';
 }
 // ===== Navigation: ein Tipp öffnet Apple Karten oder Google Maps mit dem Ziel =====
-function routeBtn(name, addr, lat, lng, label){
-  if(!isFinite(+lat) || !isFinite(+lng)) return '';
-  return '<button class="btn small ghost" data-action="route" data-name="' + esc(name) + '" data-addr="' + esc(addr || '') + '" data-lat="' + (+lat) + '" data-lng="' + (+lng) + '">' + (label || '📍 Route') + '</button>';
+function routeBtn(name, addr, lat, lng, label, stationId){
+  if(lat == null || lng == null || !isFinite(+lat) || !isFinite(+lng)) return '';
+  return '<button class="btn small ghost" data-action="route" data-name="' + esc(name) + '" data-addr="' + esc(addr || '') + '" data-lat="' + (+lat) + '" data-lng="' + (+lng) + '"' + (stationId ? ' data-station="' + esc(stationId) + '"' : '') + '>' + (label || '📍 Route') + '</button>';
 }
 function routeSheet(d){
   const lat = +d.lat, lng = +d.lng, q = encodeURIComponent(d.name + (d.addr ? ', ' + d.addr : ''));
@@ -436,7 +479,8 @@ function viewTanken(){
     tankCard = '<div class="card"><div class="row" style="align-items:baseline"><h2>Dein Tank</h2><span class="price" style="color:' + (low ? 'var(--warn)' : 'var(--accent)') + '">' + num(t.pct) + ' %</span></div>' +
       '<div class="gauge" role="img" aria-label="Füllstand ' + num(t.pct) + ' Prozent"><i style="width:' + t.pct + '%;background:' + (low ? 'var(--warn-bar)' : 'var(--accent)') + '"></i></div>' +
       '<p class="small muted">Reichweite ca. <b style="color:var(--ink)">' + num(t.reach) + ' km</b> · geschätzt mit ' + num(S.setup.cons,1) + ' l/100 km und ca. ' + num(S.setup.weekKm) + ' km pro Woche.</p>' +
-      '<div class="btns"><button class="btn small" data-action="fill">Getankt</button><button class="btn small ghost" data-action="odo">Kilometerstand eintragen</button></div></div>';
+      '<div class="btns"><button class="btn small" data-action="fill">Getankt</button><button class="btn small ghost" data-action="tank-check">Stimmt nicht? Anpassen</button></div>' +
+      '<p class="small muted">' + (S.setup.learnN ? 'Die App hat dein Fahrverhalten schon ' + S.setup.learnN + '× dazugelernt.' : 'Die Anzeige wird genauer, sobald du zweimal vollgetankt einträgst.') + '</p></div>';
   }
   const need = t && (t.pct < 30 || t.reach < 150);
   const best = list[0];
@@ -447,7 +491,7 @@ function viewTanken(){
       '<span class="pill ' + (need ? 'ok' : 'neutral') + '">' + (need ? 'BESTE WAHL JETZT' : 'NOCH KEIN TANKEN NÖTIG') + '</span>' +
       '<b style="font-size:18px">' + esc(best.name) + '</b>' +
       '<p class="small muted">' + num(best.dist,1) + ' km entfernt · ' + esc(best.addr) + ' · ' + num(best[f],3) + ' €/l' + (save50 > 0.5 ? ' · ca. ' + eur(save50) + ' günstiger als der Durchschnitt pro Tankfüllung' : '') + '</p>' +
-      (best.lat ? '<div class="btns">' + routeBtn(best.name, best.addr, best.lat, best.lng, '📍 Route starten') + '</div>' : '') +
+      (best.lat ? '<div class="btns">' + routeBtn(best.name, best.addr, best.lat, best.lng, '📍 Route starten', best.id) + '</div>' : '') +
       '<div class="tip"><span class="ico ' + (th.good ? 'ok' : 'neutral') + '">' + I.clock + '</span><span class="stack" style="gap:2px"><b>' + th.title + '</b><span class="small muted">' + th.text + '</span></span></div></div>';
   }
   const chips = '<div class="chips" role="group" aria-label="Sprit">' + Object.keys(FUELS).map(k => '<button class="chip" data-action="fuel" data-fuel="' + k + '" aria-pressed="' + (k === f) + '">' + FUELS[k].replace('Super ','') + '</button>').join('') + '</div>';
@@ -458,7 +502,7 @@ function viewTanken(){
       (i === 0 ? '<span class="pill ok">AM GÜNSTIGSTEN</span>' : '') +
       '<span class="name">' + esc(s.name) + '</span><span class="small muted">' + num(s.dist,1) + ' km · ' + esc(s.addr) + '</span></div>' +
       '<div class="price">' + priceHtml(s[f]) + '</div></div>' +
-      '<div class="btns"><button class="btn small ghost" data-action="fill" data-station="' + esc(s.id) + '">Hier getankt</button>' + routeBtn(s.name, s.addr, s.lat, s.lng) + '</div></div>').join('');
+      '<div class="btns"><button class="btn small ghost" data-action="fill" data-station="' + esc(s.id) + '">Hier getankt</button>' + routeBtn(s.name, s.addr, s.lat, s.lng, '', s.id) + '</div></div>').join('');
   const src = source === 'live'
     ? 'Live-Preise · Quelle: MTS-K über Tankerkönig.de (CC BY 4.0)'
     : 'Beispieldaten · Echte Preise erscheinen, sobald die App online ist und du den Standort erlaubst.';
@@ -964,17 +1008,18 @@ function viewAngebote(){
 let sheetCtx = null;
 function openSheet(html, ctx){ sheetCtx = ctx || null; const el = $('sheet'); el.innerHTML = '<div class="sheet-bg" data-action="sheet-bg"><div class="sheet" role="dialog" aria-modal="true">' + html + '</div></div>'; el.hidden = false; const f = el.querySelector('input'); if(f) setTimeout(() => f.focus(), 50); }
 function closeSheet(){ $('sheet').hidden = true; $('sheet').innerHTML = ''; sheetCtx = null; }
-function fillSheet(stationId){
+function fillSheet(stationId, opt){
+  opt = opt || {};
   const {list, avg, f} = fuelList();
-  const st = stations.find(s => s.id === stationId);
+  const st = stations.find(s => s.id === stationId) || (opt.name ? {name: opt.name, [f]: opt.price} : null);
   const t = tankNow();
   const gap = t ? Math.max(0, S.setup.tankL - t.liters) : '';
   openSheet('<h2>' + (st ? 'Getankt bei ' + esc(st.name) : 'Tankfüllung eintragen') + '</h2>' +
     '<form id="fill-form" class="stack" novalidate><div class="fields">' +
     '<div class="field"><label for="f-l">Liter getankt</label><input id="f-l" inputmode="decimal" value="' + (gap !== '' ? num(gap,1) : '') + '"></div>' +
-    '<div class="field"><label for="f-p">Preis pro Liter (€)</label><input id="f-p" inputmode="decimal" value="' + (st ? num(st[f],3) : '') + '" placeholder="1,689"></div>' +
+    '<div class="field"><label for="f-p">Preis pro Liter (€)</label><input id="f-p" inputmode="decimal" value="' + (st && st[f] ? num(st[f],3) : '') + '" placeholder="1,689"></div>' +
     '<div class="field" style="grid-column:1/-1"><label for="f-o">Kilometerstand (optional)</label><input id="f-o" inputmode="numeric" placeholder="z. B. 84.250"></div></div>' +
-    '<label class="check"><input type="checkbox" id="f-full" checked> Vollgetankt</label>' +
+    '<label class="check"><input type="checkbox" id="f-full"' + (opt.full === false ? '' : ' checked') + '> Vollgetankt</label>' +
     '<p class="small muted">Mit dem Kilometerstand lernt die App deinen echten Verbrauch.</p>' +
     '<p class="err" id="fill-err" hidden></p>' +
     '<div class="btns"><button class="btn" type="submit">Speichern</button><button class="btn ghost" type="button" data-action="sheet-close">Abbrechen</button></div></form>',
@@ -1052,7 +1097,13 @@ document.addEventListener('click', e => {
     case 'offers-reload': refreshPremium(); break;
     case 'aldi': S.aldi = {zone:a.dataset.zone, auto:false, at:Date.now()}; save(); render(); toast('Du siehst jetzt ' + aldiName(a.dataset.zone)); break;
     case 'aldi-auto': detectAldi(true); break;
-    case 'route': routeSheet(a.dataset); break;
+    case 'route':
+      if(a.dataset.station){ const st = stations.find(x => x.id === a.dataset.station); S.pendingFill = {id:a.dataset.station, name:a.dataset.name, price: st ? st[S.setup.fuel] : null, at:Date.now()}; save(); }
+      routeSheet(a.dataset); break;
+    case 'tank-check': tankCheckSheet(); break;
+    case 'tank-check-save': { const v = +$('tc-v').value; const L = S.setup.tankL * v / 100; learnFromCorrection(L); S.tank = {liters:L, at:Date.now(), odo:(S.tank && S.tank.odo) || null}; save(); closeSheet(); render(); toast('Tankstand angepasst'); break; }
+    case 'pf-yes': { const pf = S.pendingFill || {}; closeSheet(); tab = 'tanken'; render(); fillSheet(pf.id, {name: pf.name, price: pf.price, full: a.dataset.full === '1'}); break; }
+    case 'pf-no': delete S.pendingFill; save(); closeSheet(); break;
     case 'near-ask': if(!nearBusy) loadNear(true); break;
     case 'recipe': recipeSheet(a.dataset.id); break;
     case 'recipe-list': recipeToList(a.dataset.id); break;
@@ -1106,6 +1157,8 @@ document.addEventListener('submit', e => {
       if(last && odo > last.odo + 50){ const c = liters / (odo - last.odo) * 100; if(c > 2 && c < 25) S.setup.cons = Math.round((S.setup.cons * 0.5 + c * 0.5) * 10) / 10; }
     }
     if(odo) learnWeekKm(odo);
+    learnFromFill(liters, full);
+    delete S.pendingFill;
     const before = tankNow();
     const newL = full ? S.setup.tankL : Math.min(S.setup.tankL, (before ? before.liters : 0) + liters);
     S.tank = {liters:newL, at:Date.now(), odo: odo || (S.tank && S.tank.odo) || null};
@@ -1156,7 +1209,9 @@ document.addEventListener('input', e => {
   if(e.target.id === 'q-recipes'){ recipeQ = e.target.value; const box = $('recipe-results'); if(box) box.innerHTML = recipeResultsHtml(); }
   if(e.target.id === 'q-offers'){ offerQ = e.target.value; const box = $('offer-results'); if(box) box.innerHTML = offerResultsHtml(currentShown()); }
 });
-document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible' && S.setup.done){ refreshPremium(); } });
+document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible' && S.setup.done){ refreshPremium(); pendingAsked = false; setTimeout(checkPendingFill, 600); } });
+setTimeout(checkPendingFill, 1200);
+if(location.hash === '#tankcheck'){ tab = 'tanken'; setTimeout(() => { render(); if(S.tank) tankCheckSheet(); }, 300); }
 render();
 if(S.setup.done){ loadStations(); refreshPremium(); }
 })();
