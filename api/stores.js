@@ -20,7 +20,9 @@ function km(a, b, c, d) {
 
 async function nearest(chain, lat, lng) {
   const c = CHAINS[chain];
-  const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(c.q)}&lat=${lat}&lon=${lng}&limit=15&osm_tag=shop:supermarket&lang=de`;
+  // Nur Treffer im Umkreis von ca. 20 km (bbox), stark nach Nähe gewichtet; danach selbst nach Entfernung sortiert
+  const bbox = [lng - 0.3, lat - 0.2, lng + 0.3, lat + 0.2].map(v => v.toFixed(3)).join(',');
+  const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(c.q)}&lat=${lat}&lon=${lng}&limit=30&osm_tag=shop:supermarket&lang=de&zoom=14&location_bias_scale=0.1&bbox=${bbox}`;
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), 8000);
   try {
