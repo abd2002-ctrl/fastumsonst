@@ -49,9 +49,20 @@ export default async function handler(req, res) {
   const wanted = String(req.query.chains || '').split(',').map(s => s.trim()).filter(s => CHAINS[s]).slice(0, 10);
   if (!wanted.length) return res.status(400).json({ ok: false, message: 'Keine Kette angegeben.' });
   const out = {}; const errors = [];
-  await Promise.all(wanted.map(async ch => {
-    try { out[ch] = await nearest(ch, la, ln); } catch (e) { errors.push(ch + ': ' + (e.name === 'AbortError' ? 'Zeitüberschreitung' : e.message)); }
-  }));
+  // Höchstens 3 Anfragen gleichzeitig, bei Fehler einmal kurz warten und neu versuchen
+  const queue = wanted.slice();
+  const work = async () => {
+    while (queue.length) {
+      const ch = queue.shift();
+      try { out[ch] = await nearest(ch, la, ln); }
+      catch (e) {
+        await new Promise(r => setTimeout(r, 700));
+        try { out[ch] = await nearest(ch, la, ln); }
+        catch (e2) { errors.push(ch + ': ' + (e2.name === 'AbortError' ? 'Zeitüberschreitung' : e2.message)); }
+      }
+    }
+  };
+  await Promise.all([work(), work(), work()]);
   res.setHeader('Cache-Control', errors.length ? 'no-store' : 's-maxage=604800, stale-while-revalidate=86400');
   return res.status(200).json({ ok: true, stores: out, info: errors.join('; ') || undefined });
 }

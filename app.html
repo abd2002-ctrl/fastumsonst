@@ -632,7 +632,7 @@ async function loadNear(ask){
     const chains = [...new Set(offers.map(o => storeKey(o.store)).filter(Boolean).concat(['Rewe', 'Edeka']))];
     const r = await fetch('/api/stores?lat=' + pos.lat.toFixed(2) + '&lng=' + pos.lng.toFixed(2) + '&chains=' + encodeURIComponent(chains.join(',')));
     const j = await r.json();
-    if(j.ok){ near = j.stores || {}; try{ localStorage.setItem('fastumsonst-near', JSON.stringify({at: Date.now(), stores: near})); }catch(e){} }
+    if(j.ok){ near = j.stores || {}; if(!j.info){ try{ localStorage.setItem('fastumsonst-near', JSON.stringify({at: Date.now(), stores: near})); }catch(e){} } }
   }catch(e){ if(ask) toast('Standort nicht verfügbar. Bitte erlaube den Standort in den Einstellungen.'); }
   nearBusy = false; render();
 }
