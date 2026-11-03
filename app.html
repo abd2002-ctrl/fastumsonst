@@ -717,17 +717,34 @@ function offerFor(ing){
   c.sort((x, y) => x.price - y.price);
   return c[0] || null;
 }
+// Packungsgröße eines Angebots in g/ml, z. B. "500 g", "3 kg", "je kg", "2 × 500 g"
+function packGrams(o){
+  const t = norm((o.unit || '') + ' ' + o.title).replace(',', '.');
+  let m = t.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*(kg|g|ml|l)\b/);
+  if(m) return (+m[1]) * (+m[2]) * (/^(kg|l)$/.test(m[3]) ? 1000 : 1);
+  m = t.match(/(\d+(?:\.\d+)?)\s*(kg|g|ml|l)\b/);
+  if(m) return (+m[1]) * (/^(kg|l)$/.test(m[2]) ? 1000 : 1);
+  if(/je\s*kg|\bkg\b/.test(t)) return 1000;
+  return 0;
+}
+// Kosten der benötigten Menge: Angebotspreis (anteilig), sonst üblicher Discounter-Preis (anteilig)
+function ingCost(i, o){
+  if(o){ const g = packGrams(o); return (+o.price || 0) * (i.a && g ? Math.min(i.a / g, 4) : 1); }
+  return (+i.p || 0) * (i.a && i.s ? i.a / i.s : 1);
+}
 function recipeInfo(r){
+  const prem = isPremium();
   const main = r.ingredients.filter(i => i.match);
-  const hits = main.map(i => ({i, o: offerFor(i)}));
+  const hits = main.map(i => ({i, o: prem ? offerFor(i) : null}));
   const on = hits.filter(h => h.o);
-  return {total: main.length, on: on.length, sum: on.reduce((a, h) => a + (+h.o.price || 0), 0), hits};
+  const cost = hits.reduce((a, h) => a + ingCost(h.i, h.o), 0);
+  return {total: main.length, on: on.length, sum: on.reduce((a, h) => a + (+h.o.price || 0), 0), cost, per: cost / (r.servings || 1), hits};
 }
 function recipeList(){
   if(!lib) return [];
   const prem = isPremium();
-  const L = lib.recipes.map(r => Object.assign({}, r, {info: prem ? recipeInfo(r) : null}));
-  if(prem) L.sort((a, b) => (b.info.on / b.info.total) - (a.info.on / a.info.total) || b.info.on - a.info.on);
+  const L = lib.recipes.map(r => Object.assign({}, r, {info: recipeInfo(r)}));
+  if(prem) L.sort((a, b) => (b.info.on / b.info.total) - (a.info.on / a.info.total) || a.info.per - b.info.per);
   else L.sort((a, b) => (TEASER_RECIPES.indexOf(b.id) >= 0) - (TEASER_RECIPES.indexOf(a.id) >= 0));
   return L;
 }
@@ -735,14 +752,14 @@ function recipeCard(r){
   const prem = isPremium(), open = prem || TEASER_RECIPES.includes(r.id);
   const f = lib && lib.img.recipes && lib.img.recipes[r.id];
   let badge = '';
-  if(prem && r.info) badge = r.info.on ? '<span class="pill ok">' + r.info.on + ' von ' + r.info.total + ' Zutaten im Angebot</span>' : '<span class="pill neutral">diese Woche nicht im Angebot</span>';
+  if(prem) badge = r.info.on ? '<span class="pill ok">' + r.info.on + ' von ' + r.info.total + ' Zutaten im Angebot</span>' : '<span class="pill neutral">diese Woche nicht im Angebot</span>';
   else if(!open) badge = '<span class="pill neutral">🔒 Premium</span>';
   else badge = '<span class="pill ok">Gratis zum Testen</span>';
   return '<button class="card" data-action="recipe" data-id="' + esc(r.id) + '" style="text-align:left;font:inherit;color:inherit;cursor:pointer;padding:0;overflow:hidden;gap:0">' +
     (f ? '<img src="' + imgUrl(f) + '" alt="" loading="lazy" decoding="async" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">' : '') +
     '<span class="stack" style="gap:6px;padding:12px 14px 14px"><b style="font-size:17px;overflow-wrap:anywhere">' + esc(r.title) + '</b>' +
     '<span class="small muted">▶ Video · ' + r.servings + ' Portionen · ' + r.minutes + ' Min.</span>' +
-    '<span style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">' + badge + (prem && r.info && r.info.on ? '<span class="small"><b>' + eur(r.info.sum) + '</b> für die Angebotszutaten</span>' : '') + '</span></span></button>';
+    '<span style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between"><span style="display:flex;gap:6px;flex-wrap:wrap">' + badge + '</span><span class="small" style="white-space:nowrap">ca. <b class="price" style="font-size:17px">' + eur(r.info.per) + '</b> pro Person</span></span></span></button>';
 }
 function recipeSheet(id){
   const base = lib && lib.recipes.find(x => x.id === id); if(!base) return;
@@ -759,12 +776,12 @@ function recipeSheet(id){
   openSheet((f ? '<img src="' + imgUrl(f) + '" alt="" style="width:calc(100% + 40px);margin:-20px -20px 4px;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:20px 20px 0 0">' : '') +
     '<div class="row"><h2 style="margin:0">' + esc(base.title) + '</h2><button class="btn small ghost" data-action="sheet-close" aria-label="Schließen">✕</button></div>' +
     '<p class="small muted">' + esc(base.intro || '') + ' Rezept nach dem Video von @' + esc(base.by) + '.</p>' +
-    '<p class="small"><b>' + base.servings + ' Portionen</b> · ' + base.minutes + ' Minuten' + (prem ? ' · <b>' + info.on + ' von ' + info.total + '</b> Zutaten diese Woche im Angebot' + (info.on ? ', zusammen <b>' + eur(info.sum) + '</b>' : '') : '') + '</p>' +
+    '<div class="row" style="background:rgba(11,110,79,.10);border-radius:14px;padding:10px 12px;margin:2px 0"><span class="small">' + base.servings + ' Portionen · ' + base.minutes + ' Min.' + (prem ? '<br><b>' + info.on + ' von ' + info.total + '</b> Zutaten diese Woche im Angebot' : '') + '</span><span style="text-align:right"><b class="price" style="font-size:22px">' + eur(info.per) + '</b><br><span class="small muted">pro Person, ca. ' + eur(info.cost) + ' gesamt</span></span></div>' +
     '<a class="btn ghost" href="' + esc(base.video_url) + '" target="_blank" rel="noopener">▶ Video zum Rezept ansehen</a>' +
     '<h2 style="font-size:16px;margin:12px 0 4px">Zutaten</h2><div class="stack" style="gap:8px">' + base.ingredients.map(row).join('') + '</div>' +
     '<button class="btn" data-action="recipe-list" data-id="' + esc(id) + '" style="margin-top:10px">Alle Zutaten auf die Einkaufsliste</button>' +
     '<h2 style="font-size:16px;margin:12px 0 4px">So geht\'s</h2><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">' + base.steps.map(st => '<li>' + esc(st) + '</li>').join('') + '</ol>' +
-    '<p class="small muted" style="margin-top:10px">' + (prem ? 'Preise laut den Angeboten dieser Woche, ohne Gewähr. Zutaten ohne Angebot und aus dem Vorrat sind nicht eingerechnet.' : 'Mit Premium siehst du, welche Zutaten diese Woche wo im Angebot sind.') + '</p>');
+    '<p class="small muted" style="margin-top:10px">Preis pro Person: anteilig für die benötigte Menge, ' + (prem ? 'mit den Angebotspreisen dieser Woche, sonst übliche Discounter-Preise.' : 'mit üblichen Discounter-Preisen. Mit Premium rechnen wir mit den Angebotspreisen der Woche.') + ' Gewürze und Vorrat sind nicht eingerechnet. Alle Angaben ohne Gewähr.</p>');
 }
 function recipeToList(id){
   const r = lib && lib.recipes.find(x => x.id === id); if(!r) return;
@@ -778,14 +795,21 @@ function recipeToList(id){
   });
   save(); closeSheet(); seg = 'list'; render(); window.scrollTo(0,0); toast(n ? n + ' Zutaten auf der Einkaufsliste' : 'Steht schon auf deiner Liste');
 }
+let recipeQ = '', offerQ = '';
+function qHit(text, q){ const t = norm(text); return norm(q).split(/\s+/).filter(Boolean).every(w => t.includes(w)); }
+function searchBox(id, val, ph){ return '<div style="position:relative"><input id="' + id + '" type="search" inputmode="search" enterkeyhint="search" autocomplete="off" placeholder="' + ph + '" value="' + esc(val) + '" style="padding-left:40px"><span aria-hidden="true" style="position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.55;font-size:16px">🔍</span></div>'; }
+function recipeResultsHtml(){
+  const L = recipeList().filter(r => !recipeQ || qHit(r.title + ' ' + (r.intro || '') + ' ' + r.ingredients.map(i => i.name).join(' '), recipeQ));
+  return L.length ? '<div class="stack">' + L.map(recipeCard).join('') + '</div>' : '<p class="empty">Kein Rezept gefunden. Versuch es mit einer Zutat, z. B. „Hähnchen“ oder „Nudeln“.</p>';
+}
 function viewRecipesSeg(){
   if(!lib){ setTimeout(loadLib, 0); return '<p class="empty">Lade die Rezepte …</p>'; }
   if(!offersLoaded) setTimeout(() => loadOffers(), 0);
   const prem = isPremium();
-  const L = recipeList();
   return (prem ? '<p class="small muted" style="margin:0">Oben stehen die Rezepte, für die diese Woche die meisten Zutaten im Angebot sind.</p>'
     : '<div class="card"><b>36 Rezepte mit Video</b><span class="small muted">2 Rezepte sind gratis. Mit Premium siehst du alle Rezepte und welche Zutaten diese Woche wo im Angebot sind.</span><button class="btn small" data-action="seg" data-seg="offers" style="align-self:flex-start">7 Tage kostenlos testen</button></div>') +
-    '<div class="stack">' + L.map(recipeCard).join('') + '</div>' +
+    searchBox('q-recipes', recipeQ, 'Rezept oder Zutat suchen, z. B. Hähnchen') +
+    '<div id="recipe-results">' + recipeResultsHtml() + '</div>' +
     '<p class="small muted">Alle Rezepte folgen dem jeweils verlinkten TikTok-Video. Bilder: eigene, KI-erstellte Beispielfotos.</p>';
 }
 function segTabs(){
@@ -808,6 +832,11 @@ function premiumBox(){
     '<button class="btn" data-action="premium-start"' + (busy ? ' disabled' : '') + ' style="background:var(--hero-bar);color:var(--hero);font-weight:800">' + (busy ? 'Einen Moment …' : '7 Tage kostenlos testen') + '</button>' +
     '<p class="small muted">Danach 4,99 € pro Monat inkl. MwSt. Jederzeit kündbar, in der Testwoche kostenlos. Bezahlung sicher über Stripe.</p></div>';
 }
+function offerResultsHtml(shown){
+  const L = shown.filter(o => !offerQ || qHit(o.title + ' ' + o.store + ' ' + (o.keyword || '') + ' ' + (o.unit || ''), offerQ));
+  return L.length ? '<div class="stack">' + L.map(o => offerCard(o, false)).join('') + '</div>' : '<p class="empty">Nichts gefunden' + (storeFilter !== 'Alle' ? ' bei ' + esc(storeFilter) + '. Tipp: Laden-Filter auf „Alle“ stellen.' : '. Versuch es mit einem anderen Wort.') + '</p>';
+}
+function currentShown(){ const mine = offers.filter(aldiOk); return mine.filter(o => storeFilter === 'Alle' || o.store === storeFilter); }
 function viewOffersSeg(){
   const prem = isPremium();
   let html = '';
@@ -828,11 +857,12 @@ function viewOffersSeg(){
   }
   html += premiumBox();
   html += '<div class="row"><h2>Top-Angebote der Woche</h2><button class="btn small ghost" data-action="offers-reload" aria-label="Angebote aktualisieren">' + I.refresh + '</button></div>';
-  if(offers.some(o => /aldi/i.test(o.store || ''))) html += aldiBox();
+  if(offersLoaded && !offersLoading && mine.length) html += searchBox('q-offers', offerQ, 'Angebot suchen, z. B. Hackfleisch');
   if(stores.length > 2) html += '<div class="chips" role="group" aria-label="Laden">' + stores.map(s => '<button class="chip" data-action="store" data-store="' + esc(s) + '" aria-pressed="' + (s === storeFilter) + '">' + esc(s) + '</button>').join('') + '</div>';
   if(!offersLoaded || offersLoading) html += '<p class="empty">Lade die Angebote …</p>';
-  else if(!shown.length) html += '<p class="empty">Die neuen Angebote kommen in Kürze. Schau bald wieder vorbei.</p>';
-  else html += '<div class="stack">' + shown.map(o => offerCard(o, false)).join('') + '</div>';
+  else if(!mine.length) html += '<p class="empty">Die neuen Angebote kommen in Kürze. Schau bald wieder vorbei.</p>';
+  else html += '<div id="offer-results">' + offerResultsHtml(shown) + '</div>';
+  if(offers.some(o => /aldi/i.test(o.store || ''))) html += aldiBox();
   html += marketBox();
   html += '<p class="small muted">Alle Angaben ohne Gewähr. Angebote gelten, solange der Vorrat reicht. Es gelten Preis und Verfügbarkeit im jeweiligen Markt.</p>';
   return html;
@@ -1054,6 +1084,11 @@ if(location.hash === '#premium'){
   setTimeout(poll, 1500);
   try{ history.replaceState(null, '', location.pathname + '#angebote'); }catch(e){}
 }
+// Suche: nur die Trefferliste neu zeichnen, damit die Tastatur offen bleibt
+document.addEventListener('input', e => {
+  if(e.target.id === 'q-recipes'){ recipeQ = e.target.value; const box = $('recipe-results'); if(box) box.innerHTML = recipeResultsHtml(); }
+  if(e.target.id === 'q-offers'){ offerQ = e.target.value; const box = $('offer-results'); if(box) box.innerHTML = offerResultsHtml(currentShown()); }
+});
 document.addEventListener('visibilitychange', () => { if(document.visibilityState === 'visible' && S.setup.done){ refreshPremium(); } });
 render();
 if(S.setup.done){ loadStations(); refreshPremium(); }

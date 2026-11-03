@@ -17,7 +17,10 @@
 "Rinderhack",
 "Rinder-Hack",
 "Rinderhackfleisch"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Spaghetti",
@@ -28,7 +31,10 @@
 "Nudeln",
 "Penne",
 "Fusilli"
-]
+],
+"p": 0.99,
+"s": 500,
+"a": 400
 },
 {
 "name": "Pizzatomaten oder passierte Tomaten",
@@ -39,7 +45,10 @@
 "Pizzatomaten",
 "Gehackte Tomaten",
 "stückige Tomaten"
-]
+],
+"p": 0.65,
+"s": 500,
+"a": 800
 },
 {
 "name": "Parmesan oder Grana Padano",
@@ -47,14 +56,20 @@
 "match": [
 "Parmesan",
 "Grana Padano"
-]
+],
+"p": 2.99,
+"s": 150,
+"a": 40
 },
 {
 "name": "Zwiebeln",
 "qty": "2",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 240
 },
 {
 "name": "Knoblauchzehen",
@@ -84,7 +99,8 @@
 "Tomaten, je 1 TL Kräuter, Paprikapulver und etwas Zucker dazugeben, mit Salz, Pfeffer und Brühe abschmecken.",
 "Zugedeckt etwa 20 Minuten bei schwacher Hitze köcheln lassen.",
 "Spaghetti nach Packungsangabe kochen, Käse reiben und alles zusammen servieren."
-]
+],
+"est": 7.93
 },
 {
 "id": "hack-spitzkohl",
@@ -102,14 +118,20 @@
 "Rinderhack",
 "Rinder-Hack",
 "Rinderhackfleisch"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Spitzkohl",
 "qty": "500 g",
 "match": [
 "Spitzkohl"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 500
 },
 {
 "name": "Möhren",
@@ -117,21 +139,30 @@
 "match": [
 "Möhren",
 "Karotten"
-]
+],
+"p": 0.99,
+"s": 1000,
+"a": 200
 },
 {
 "name": "Paprika",
 "qty": "200 g",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 200
 },
 {
 "name": "Zwiebeln",
 "qty": "150 g",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 150
 },
 {
 "name": "Tomatenmark",
@@ -166,7 +197,8 @@
 "Spitzkohl, Möhren und Paprika dazugeben und kurz anbraten.",
 "400 ml Wasser, Sojasoße und Chilisoße dazugeben und etwa 15 Minuten köcheln lassen.",
 "Mit Frühlingszwiebeln bestreut servieren."
-]
+],
+"est": 6.82
 },
 {
 "id": "haehnchen-paprika-mais",
@@ -188,7 +220,10 @@
 "Hähnchenbrust-Innenfilet",
 "Hähnchen-Brustfilet",
 "Hähnchen-Brustfilets"
-]
+],
+"p": 5.49,
+"s": 600,
+"a": 500
 },
 {
 "name": "Sahne",
@@ -197,14 +232,20 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 500
 },
 {
 "name": "Paprika",
 "qty": "1",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 170
 },
 {
 "name": "Möhre",
@@ -212,7 +253,10 @@
 "match": [
 "Möhren",
 "Karotten"
-]
+],
+"p": 0.99,
+"s": 1000,
+"a": 80
 },
 {
 "name": "Mais",
@@ -220,7 +264,10 @@
 "match": [
 "Mais",
 "Goldmais"
-]
+],
+"p": 0.99,
+"s": 285,
+"a": 150
 },
 {
 "name": "Knoblauchzehe",
@@ -250,7 +297,8 @@
 "Curry, Salz, Brühe-Gewürz, Pfeffer und Paprika dazugeben.",
 "Sahne und angerührte Stärke dazugeben, aufkochen und 5–10 Minuten köcheln.",
 "Hähnchen zurück in die Pfanne geben, 5–10 Minuten ziehen lassen und mit Reis servieren."
-]
+],
+"est": 7.83
 },
 {
 "id": "haehnchen-ofen-kartoffeln",
@@ -269,21 +317,30 @@
 "Hähnchenschenkel",
 "Unterkeulen",
 "Hähnchenkeulen"
-]
+],
+"p": 4.49,
+"s": 1000,
+"a": 1250
 },
 {
 "name": "Kartoffeln",
 "qty": "6 große",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 1260
 },
 {
 "name": "Spitzpaprika (rot und grün)",
 "qty": "4–6",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 850
 },
 {
 "name": "Kleine Tomaten",
@@ -295,14 +352,20 @@
 "Strauchtomaten",
 "Datteltomaten",
 "Tomaten XXL"
-]
+],
+"p": 1.79,
+"s": 500,
+"a": 360
 },
 {
 "name": "Kleine Zwiebeln",
 "qty": "5",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 600
 },
 {
 "name": "Knoblauchzehen",
@@ -314,7 +377,10 @@
 "qty": "5 EL",
 "match": [
 "Joghurt"
-]
+],
+"p": 0.99,
+"s": 500,
+"a": 75
 },
 {
 "name": "Tomatenmark",
@@ -337,7 +403,8 @@
 "Joghurt, Tomatenmark, Öl und Gewürze zur Marinade verrühren und die Schenkel damit einreiben.",
 "Kartoffeln in Spalten, Paprika in Stücke schneiden, mit Tomaten, Zwiebeln und Knoblauch aufs Blech geben.",
 "Hähnchen darauflegen und 50–60 Minuten backen."
-]
+],
+"est": 12.46
 },
 {
 "id": "zwiebelfleisch",
@@ -356,14 +423,20 @@
 "Schweinenacken",
 "Nackenbraten",
 "Kamm"
-]
+],
+"p": 6.99,
+"s": 1000,
+"a": 1000
 },
 {
 "name": "Zwiebeln",
 "qty": "1 kg",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 1000
 },
 {
 "name": "Bier",
@@ -398,7 +471,8 @@
 "Mit Salz, Pfeffer, Paprikapulver und Muskat würzen.",
 "Mit Bier und Brühe ablöschen und zugedeckt etwa 1,5 Stunden schmoren.",
 "Mit Petersilie servieren, dazu Kartoffeln, Knödel oder Brot."
-]
+],
+"est": 8.28
 },
 {
 "id": "paprika-hack-reispfanne",
@@ -415,7 +489,10 @@
 "match": [
 "Hackfleisch",
 "Hack"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Reis",
@@ -424,21 +501,30 @@
 "Reis",
 "Basmati",
 "Langkornreis"
-]
+],
+"p": 1.49,
+"s": 1000,
+"a": 300
 },
 {
 "name": "Paprika",
 "qty": "3",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 510
 },
 {
 "name": "Zwiebeln",
 "qty": "2",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 240
 },
 {
 "name": "Passierte Tomaten",
@@ -449,7 +535,10 @@
 "Pizzatomaten",
 "Gehackte Tomaten",
 "stückige Tomaten"
-]
+],
+"p": 0.65,
+"s": 500,
+"a": 200
 },
 {
 "name": "Knoblauchzehen",
@@ -479,7 +568,8 @@
 "Paprikastücke und den ungekochten Reis dazugeben und kurz anbraten.",
 "Mit Brühe aufgießen, passierte Tomaten und Kräuter dazugeben.",
 "20–30 Minuten köcheln, bis der Reis gar ist, dabei öfter umrühren."
-]
+],
+"est": 8.04
 },
 {
 "id": "hack-reis-cremig",
@@ -496,7 +586,10 @@
 "match": [
 "Hackfleisch",
 "Hack"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 350
 },
 {
 "name": "Gekochter Reis",
@@ -505,21 +598,30 @@
 "Reis",
 "Basmati",
 "Langkornreis"
-]
+],
+"p": 1.49,
+"s": 1000,
+"a": 350
 },
 {
 "name": "Paprika",
 "qty": "1",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 170
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Passierte Tomaten",
@@ -530,7 +632,10 @@
 "Pizzatomaten",
 "Gehackte Tomaten",
 "stückige Tomaten"
-]
+],
+"p": 0.65,
+"s": 500,
+"a": 500
 },
 {
 "name": "Sahne",
@@ -539,7 +644,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 200
 },
 {
 "name": "Crème fraîche",
@@ -548,7 +656,10 @@
 "Crème fraîche",
 "Creme fraiche",
 "Crème Fraîche"
-]
+],
+"p": 0.99,
+"s": 200,
+"a": 15
 },
 {
 "name": "Knoblauchzehen",
@@ -572,7 +683,8 @@
 "Tomatenmark kurz mitrösten.",
 "Passierte Tomaten und Sahne dazugeben, mit Salz, Pfeffer, Paprika und Brühe würzen und 10 Minuten köcheln.",
 "Reis und Crème fraîche unterrühren und kurz erhitzen."
-]
+],
+"est": 6.36
 },
 {
 "id": "hack-risoni",
@@ -589,21 +701,30 @@
 "match": [
 "Hackfleisch",
 "Hack"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Risoni-Nudeln",
 "qty": "500 g",
 "match": [
 "Risoni"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 500
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Crème fraîche",
@@ -612,7 +733,10 @@
 "Crème fraîche",
 "Creme fraiche",
 "Crème Fraîche"
-]
+],
+"p": 0.99,
+"s": 200,
+"a": 30
 },
 {
 "name": "Knoblauchzehen",
@@ -647,7 +771,8 @@
 "Risoni 1 Minute mitrösten.",
 "Mit Brühe ablöschen und 10–12 Minuten köcheln, dabei öfter umrühren.",
 "Crème fraîche unterrühren und mit Petersilie servieren."
-]
+],
+"est": 6.78
 },
 {
 "id": "haehnchen-hackbaellchen",
@@ -666,7 +791,10 @@
 "Hähnchenhack",
 "Geflügelhack",
 "Hähnchen-Hackfleisch"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Reis",
@@ -675,14 +803,20 @@
 "Reis",
 "Basmati",
 "Langkornreis"
-]
+],
+"p": 1.49,
+"s": 1000,
+"a": 100
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Möhre",
@@ -690,7 +824,10 @@
 "match": [
 "Möhren",
 "Karotten"
-]
+],
+"p": 0.99,
+"s": 1000,
+"a": 80
 },
 {
 "name": "Saure Sahne",
@@ -698,7 +835,10 @@
 "match": [
 "Saure Sahne",
 "Schmand"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 60
 },
 {
 "name": "Mayonnaise",
@@ -732,7 +872,8 @@
 "Bällchen in eine Auflaufform legen.",
 "Brühe, Tomatenmark, saure Sahne und Mehl verrühren und darübergießen.",
 "Bei 180 °C Umluft etwa 40 Minuten backen."
-]
+],
+"est": 5.61
 },
 {
 "id": "reispfanne-haehnchen-ei",
@@ -754,7 +895,10 @@
 "Hähnchenbrust-Innenfilet",
 "Hähnchen-Brustfilet",
 "Hähnchen-Brustfilets"
-]
+],
+"p": 5.49,
+"s": 600,
+"a": 400
 },
 {
 "name": "Express-Reis",
@@ -763,14 +907,20 @@
 "Reis",
 "Basmati",
 "Langkornreis"
-]
+],
+"p": 1.49,
+"s": 1000,
+"a": 200
 },
 {
 "name": "Eier",
 "qty": "3",
 "match": [
 "Eier"
-]
+],
+"p": 2.29,
+"s": 600,
+"a": 180
 },
 {
 "name": "TK-Buttergemüse",
@@ -780,7 +930,10 @@
 "Gemüsemischung",
 "Rahmgemüse",
 "Wintergemüse"
-]
+],
+"p": 1.79,
+"s": 750,
+"a": 250
 },
 {
 "name": "Öl, Hähnchengewürz, Sojasoße",
@@ -794,7 +947,8 @@
 "TK-Gemüse dazugeben und zugedeckt 5 Minuten mitbraten.",
 "Reis und verquirlte Eier dazugeben und braten, bis das Ei gestockt ist.",
 "Nach Wunsch mit Sojasoße abschmecken."
-]
+],
+"est": 5.24
 },
 {
 "id": "haehnchen-brokkoli-reis",
@@ -816,7 +970,10 @@
 "Hähnchenbrust-Innenfilet",
 "Hähnchen-Brustfilet",
 "Hähnchen-Brustfilets"
-]
+],
+"p": 5.49,
+"s": 600,
+"a": 250
 },
 {
 "name": "Express-Reis",
@@ -825,28 +982,40 @@
 "Reis",
 "Basmati",
 "Langkornreis"
-]
+],
+"p": 1.49,
+"s": 1000,
+"a": 250
 },
 {
 "name": "TK-Brokkoli",
 "qty": "400 g",
 "match": [
 "Brokkoli"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 400
 },
 {
 "name": "Soße Hollandaise",
 "qty": "250 ml",
 "match": [
 "Hollandaise"
-]
+],
+"p": 0.99,
+"s": 250,
+"a": 250
 },
 {
 "name": "Rote Zwiebel",
 "qty": "40 g",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 40
 },
 {
 "name": "Salz, Pfeffer, Gewürze nach Wahl",
@@ -858,7 +1027,8 @@
 "Brokkoli kochen.",
 "Zwiebel in Ringe schneiden und mit dem Hähnchen in der Pfanne anbraten, würzen.",
 "Reis, Brokkoli und Soße Hollandaise dazugeben und verrühren."
-]
+],
+"est": 4.89
 },
 {
 "id": "haehnchen-reis-auflauf",
@@ -880,7 +1050,10 @@
 "Hähnchenbrust-Innenfilet",
 "Hähnchen-Brustfilet",
 "Hähnchen-Brustfilets"
-]
+],
+"p": 5.49,
+"s": 600,
+"a": 600
 },
 {
 "name": "Champignons",
@@ -888,7 +1061,10 @@
 "match": [
 "Champignons",
 "Kulturchampignons"
-]
+],
+"p": 1.49,
+"s": 400,
+"a": 400
 },
 {
 "name": "Sahne",
@@ -897,7 +1073,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 500
 },
 {
 "name": "Reis",
@@ -906,21 +1085,30 @@
 "Reis",
 "Basmati",
 "Langkornreis"
-]
+],
+"p": 1.49,
+"s": 1000,
+"a": 400
 },
 {
 "name": "Geriebener Mozzarella",
 "qty": "150 g",
 "match": [
 "Mozzarella"
-]
+],
+"p": 0.89,
+"s": 125,
+"a": 150
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Knoblauchzehen",
@@ -945,7 +1133,8 @@
 "Sahne und Brühe dazugeben, aufkochen und mit Stärke binden, abschmecken.",
 "Reis in eine Form geben, Hähnchen darauf, Soße darüber und mit Käse bestreuen.",
 "Bei 200 °C Ober-/Unterhitze 20 Minuten backen."
-]
+],
+"est": 10.77
 },
 {
 "id": "kartoffel-brokkoli-auflauf",
@@ -961,21 +1150,30 @@
 "qty": "1 kg",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 1000
 },
 {
 "name": "Brokkoli",
 "qty": "800 g",
 "match": [
 "Brokkoli"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 800
 },
 {
 "name": "Zwiebeln",
 "qty": "100 g",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 100
 },
 {
 "name": "Sahne",
@@ -984,7 +1182,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 200
 },
 {
 "name": "Reibekäse",
@@ -996,14 +1197,20 @@
 "gerieben",
 "Gouda",
 "Emmentaler"
-]
+],
+"p": 1.79,
+"s": 200,
+"a": 150
 },
 {
 "name": "Butter",
 "qty": "3 EL",
 "match": [
 "Butter"
-]
+],
+"p": 1.79,
+"s": 750,
+"a": 45
 },
 {
 "name": "Mehl",
@@ -1022,7 +1229,8 @@
 "Nach und nach Sahne und etwas Kochwasser einrühren, mit Brühe, Salz, Pfeffer, Muskat und Paprika würzen.",
 "Kartoffeln und Brokkoli in eine Form geben und die Soße darübergießen.",
 "Mit Käse bestreuen und etwa 25 Minuten goldbraun backen."
-]
+],
+"est": 5.75
 },
 {
 "id": "kartoffel-spinat-feta",
@@ -1038,14 +1246,20 @@
 "qty": "1 kg",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 1000
 },
 {
 "name": "Frischer Spinat",
 "qty": "400 g",
 "match": [
 "Spinat"
-]
+],
+"p": 1.99,
+"s": 400,
+"a": 400
 },
 {
 "name": "Feta",
@@ -1054,7 +1268,10 @@
 "Feta",
 "Schafskäse",
 "Hirtenkäse"
-]
+],
+"p": 1.69,
+"s": 200,
+"a": 150
 },
 {
 "name": "Kochsahne",
@@ -1063,7 +1280,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 350
 },
 {
 "name": "Streukäse",
@@ -1075,14 +1295,20 @@
 "gerieben",
 "Gouda",
 "Emmentaler"
-]
+],
+"p": 1.79,
+"s": 200,
+"a": 50
 },
 {
 "name": "Zwiebel",
 "qty": "½",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 60
 },
 {
 "name": "Knoblauchzehen",
@@ -1101,7 +1327,8 @@
 "Sahne dazugeben, aufkochen, 100 g Feta einrühren und einkochen lassen.",
 "Kartoffeln in Scheiben in eine Form legen, restlichen Feta darüber verteilen und die Soße darübergießen.",
 "Mit Käse bestreuen und bei 180 °C Umluft etwa 20 Minuten backen."
-]
+],
+"est": 6.16
 },
 {
 "id": "gemuese-kartoffel-auflauf",
@@ -1117,7 +1344,10 @@
 "qty": "600 g",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 600
 },
 {
 "name": "TK-Kaisergemüse",
@@ -1128,7 +1358,10 @@
 "Blumenkohl",
 "Röschentrilogie",
 "Gemüsemischung"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 450
 },
 {
 "name": "Sahne",
@@ -1137,14 +1370,20 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 200
 },
 {
 "name": "Frischkäse natur",
 "qty": "100 g",
 "match": [
 "Frischkäse"
-]
+],
+"p": 0.99,
+"s": 200,
+"a": 100
 },
 {
 "name": "Reibekäse",
@@ -1156,7 +1395,10 @@
 "gerieben",
 "Gouda",
 "Emmentaler"
-]
+],
+"p": 1.79,
+"s": 200,
+"a": 150
 },
 {
 "name": "Salz, Knoblauchpulver, Kräuter",
@@ -1169,7 +1411,8 @@
 "Kartoffeln mit Sahne, 200 ml Wasser, Frischkäse und Gewürzen aufkochen und 15 Minuten köcheln.",
 "Gemüse dazugeben und weitere 5 Minuten köcheln.",
 "In eine Form füllen, mit Käse bestreuen und 30–35 Minuten überbacken."
-]
+],
+"est": 4.57
 },
 {
 "id": "kartoffel-hack-auflauf",
@@ -1185,7 +1428,10 @@
 "qty": "5",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 750
 },
 {
 "name": "Hackfleisch",
@@ -1193,7 +1439,10 @@
 "match": [
 "Hackfleisch",
 "Hack"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 200
 },
 {
 "name": "Gehackte Tomaten",
@@ -1204,7 +1453,10 @@
 "Pizzatomaten",
 "Gehackte Tomaten",
 "stückige Tomaten"
-]
+],
+"p": 0.65,
+"s": 500,
+"a": 200
 },
 {
 "name": "Sahne",
@@ -1213,14 +1465,20 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 200
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Knoblauchzehen",
@@ -1244,7 +1502,8 @@
 "Hack auf die Kartoffeln geben.",
 "Sahne mit Salz, Pfeffer und Vegeta würzen und darübergießen.",
 "Bei 180 °C 20–30 Minuten backen."
-]
+],
+"est": 3.95
 },
 {
 "id": "lachs-backblech",
@@ -1260,42 +1519,60 @@
 "qty": "4",
 "match": [
 "Lachs"
-]
+],
+"p": 4.49,
+"s": 250,
+"a": 500
 },
 {
 "name": "Festkochende Kartoffeln",
 "qty": "1 kg",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 1000
 },
 {
 "name": "Paprika",
 "qty": "2",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 340
 },
 {
 "name": "Rote Zwiebeln",
 "qty": "3",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 360
 },
 {
 "name": "TK-Brokkoli",
 "qty": "200 g",
 "match": [
 "Brokkoli"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 200
 },
 {
 "name": "Schmand",
 "qty": "100 g",
 "match": [
 "Schmand"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 100
 },
 {
 "name": "Knoblauchzehen",
@@ -1320,7 +1597,8 @@
 "Lachs mit 4 EL Öl, Paprika, Chili und Salz bestreichen.",
 "Lachs und Brokkoli aufs Blech geben und etwa 15 Minuten weiterbacken.",
 "Gesalzenen Schmand darauf verteilen."
-]
+],
+"est": 12.78
 },
 {
 "id": "ofen-lachs-kartoffeln",
@@ -1336,14 +1614,20 @@
 "qty": "1 kg",
 "match": [
 "Lachs"
-]
+],
+"p": 4.49,
+"s": 250,
+"a": 1000
 },
 {
 "name": "Kartoffeln (Drillinge)",
 "qty": "1 kg",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 1000
 },
 {
 "name": "Öl",
@@ -1361,7 +1645,8 @@
 "Kartoffeln vierteln und mit Öl und Gewürzen mischen.",
 "Kartoffeln aufs Blech geben, Lachs dazulegen und mit der Öl-Gewürzmischung bestreichen.",
 "Alles 30–35 Minuten backen."
-]
+],
+"est": 18.96
 },
 {
 "id": "lachs-sahne-gratin",
@@ -1377,14 +1662,20 @@
 "qty": "250 g",
 "match": [
 "Lachs"
-]
+],
+"p": 4.49,
+"s": 250,
+"a": 250
 },
 {
 "name": "Kartoffeln",
 "qty": "200 g",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 200
 },
 {
 "name": "Möhren",
@@ -1392,7 +1683,10 @@
 "match": [
 "Möhren",
 "Karotten"
-]
+],
+"p": 0.99,
+"s": 1000,
+"a": 240
 },
 {
 "name": "Sahne",
@@ -1401,21 +1695,30 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 250
 },
 {
 "name": "Schalotte",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 40
 },
 {
 "name": "Butter",
 "qty": "1 EL",
 "match": [
 "Butter"
-]
+],
+"p": 1.79,
+"s": 750,
+"a": 15
 },
 {
 "name": "Tomatenmark",
@@ -1439,7 +1742,8 @@
 "Schalotte hacken, mit Tomatenmark, Brühe, Knoblauchpulver, Pfeffer und Sahne verrühren.",
 "Lachs in eine Form legen, Soße darübergeben und 25 Minuten bei 200 °C backen.",
 "Mit Kartoffeln und Möhren servieren."
-]
+],
+"est": 6.0
 },
 {
 "id": "tomaten-sahne-pasta",
@@ -1459,7 +1763,10 @@
 "Nudeln",
 "Penne",
 "Fusilli"
-]
+],
+"p": 0.99,
+"s": 500,
+"a": 130
 },
 {
 "name": "Sahne",
@@ -1468,7 +1775,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 180
 },
 {
 "name": "Käse",
@@ -1480,7 +1790,10 @@
 "gerieben",
 "Gouda",
 "Emmentaler"
-]
+],
+"p": 1.79,
+"s": 200,
+"a": 60
 },
 {
 "name": "Tomatenmark",
@@ -1499,7 +1812,8 @@
 "Nudeln dazugeben und mit der Sahne vermischen.",
 "Kräuter und Käse unterrühren und würzen.",
 "Mit etwas Nudelwasser cremig rühren."
-]
+],
+"est": 1.51
 },
 {
 "id": "champignon-rahm-pasta",
@@ -1519,7 +1833,10 @@
 "Nudeln",
 "Penne",
 "Fusilli"
-]
+],
+"p": 0.99,
+"s": 500,
+"a": 200
 },
 {
 "name": "Champignons",
@@ -1527,7 +1844,10 @@
 "match": [
 "Champignons",
 "Kulturchampignons"
-]
+],
+"p": 1.49,
+"s": 400,
+"a": 200
 },
 {
 "name": "Sahne",
@@ -1536,14 +1856,20 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 200
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Käse",
@@ -1555,7 +1881,10 @@
 "gerieben",
 "Gouda",
 "Emmentaler"
-]
+],
+"p": 1.79,
+"s": 200,
+"a": 40
 },
 {
 "name": "Speisestärke",
@@ -1574,7 +1903,8 @@
 "Stärke darüberstreuen und kurz mitbraten.",
 "Sahne, 100 ml Wasser und Gewürze dazugeben und 5 Minuten köcheln.",
 "Käse und Nudeln unterheben."
-]
+],
+"est": 2.44
 },
 {
 "id": "hack-nudelauflauf",
@@ -1594,7 +1924,10 @@
 "Nudeln",
 "Penne",
 "Fusilli"
-]
+],
+"p": 0.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Hackfleisch",
@@ -1602,7 +1935,10 @@
 "match": [
 "Hackfleisch",
 "Hack"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Gehackte Tomaten",
@@ -1613,7 +1949,10 @@
 "Pizzatomaten",
 "Gehackte Tomaten",
 "stückige Tomaten"
-]
+],
+"p": 0.65,
+"s": 500,
+"a": 400
 },
 {
 "name": "Mozzarella und Gouda",
@@ -1626,14 +1965,20 @@
 "Gouda",
 "Emmentaler",
 "Mozzarella"
-]
+],
+"p": 1.79,
+"s": 200,
+"a": 80
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Knoblauchzehen",
@@ -1657,7 +2002,8 @@
 "Tomaten und etwas Wasser dazugeben und einige Minuten köcheln.",
 "Soße mit den Nudeln mischen, in eine Form füllen und mit Käse bestreuen.",
 "Bei 200 °C backen, bis der Käse goldbraun ist."
-]
+],
+"est": 7.37
 },
 {
 "id": "rotkohl-knoedel-auflauf",
@@ -1674,7 +2020,10 @@
 "match": [
 "Knödel",
 "Kloßteig"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 500
 },
 {
 "name": "Rotkohl",
@@ -1682,14 +2031,20 @@
 "match": [
 "Rotkohl",
 "Apfelrotkohl"
-]
+],
+"p": 1.29,
+"s": 680,
+"a": 680
 },
 {
 "name": "Schmand",
 "qty": "300 g",
 "match": [
 "Schmand"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 300
 },
 {
 "name": "Milch",
@@ -1707,7 +2062,8 @@
 "Rotkohl in eine Auflaufform geben, Knödel halbieren und darauf verteilen.",
 "Schmand mit Milch, Kräutern, Salz und Pfeffer verrühren und darübergeben.",
 "Bei 180 °C Umluft 20–25 Minuten überbacken."
-]
+],
+"est": 3.96
 },
 {
 "id": "schichtkohl",
@@ -1723,7 +2079,10 @@
 "qty": "2 kg",
 "match": [
 "Weißkohl"
-]
+],
+"p": 0.99,
+"s": 1000,
+"a": 2000
 },
 {
 "name": "Hackfleisch",
@@ -1731,28 +2090,40 @@
 "match": [
 "Hackfleisch",
 "Hack"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 800
 },
 {
 "name": "Kartoffeln",
 "qty": "400 g",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 400
 },
 {
 "name": "Zwiebeln",
 "qty": "2",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 240
 },
 {
 "name": "Schmand",
 "qty": "200 g",
 "match": [
 "Schmand"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 200
 },
 {
 "name": "Butterschmalz",
@@ -1776,7 +2147,8 @@
 "Kohl, Kartoffeln und Hack in einem großen Topf schichten, Kohl mit Kümmel, Zucker und Muskat würzen.",
 "500 ml Wasser angießen und zugedeckt etwa 45–60 Minuten schmoren.",
 "Mit angerührter Stärke binden, Schmand unterrühren und mit Schnittlauch servieren."
-]
+],
+"est": 11.46
 },
 {
 "id": "nudel-haehnchen-brokkoli",
@@ -1796,7 +2168,10 @@
 "Nudeln",
 "Penne",
 "Fusilli"
-]
+],
+"p": 0.99,
+"s": 500,
+"a": 325
 },
 {
 "name": "Hähnchenbrust",
@@ -1809,14 +2184,20 @@
 "Hähnchenbrust-Innenfilet",
 "Hähnchen-Brustfilet",
 "Hähnchen-Brustfilets"
-]
+],
+"p": 5.49,
+"s": 600,
+"a": 400
 },
 {
 "name": "TK-Brokkoli",
 "qty": "600 g",
 "match": [
 "Brokkoli"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 600
 },
 {
 "name": "Sahne",
@@ -1825,7 +2206,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 200
 },
 {
 "name": "Geriebener Käse",
@@ -1838,7 +2222,10 @@
 "Gouda",
 "Emmentaler",
 "Mozzarella"
-]
+],
+"p": 1.79,
+"s": 200,
+"a": 80
 },
 {
 "name": "Tomaten",
@@ -1850,7 +2237,10 @@
 "Strauchtomaten",
 "Datteltomaten",
 "Tomaten XXL"
-]
+],
+"p": 1.79,
+"s": 500,
+"a": 150
 },
 {
 "name": "Butter, Mehl, Milch",
@@ -1869,7 +2259,8 @@
 "Aus Butter, Mehl und Milch eine weiße Soße rühren, mit etwas Wasser verdünnen.",
 "Nudeln, Soße, Sahne, Brokkoli, Hähnchen und Tomaten in eine Form geben.",
 "Mit Käse bestreuen und 30 Minuten überbacken."
-]
+],
+"est": 8.13
 },
 {
 "id": "haehnchen-stirfry",
@@ -1891,14 +2282,20 @@
 "Hähnchenbrust-Innenfilet",
 "Hähnchen-Brustfilet",
 "Hähnchen-Brustfilets"
-]
+],
+"p": 5.49,
+"s": 600,
+"a": 450
 },
 {
 "name": "Brokkoli",
 "qty": "500 g",
 "match": [
 "Brokkoli"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 500
 },
 {
 "name": "Champignons",
@@ -1906,21 +2303,30 @@
 "match": [
 "Champignons",
 "Kulturchampignons"
-]
+],
+"p": 1.49,
+"s": 400,
+"a": 250
 },
 {
 "name": "Spitzpaprika",
 "qty": "1",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 170
 },
 {
 "name": "Rote Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Sojasoße",
@@ -1944,7 +2350,8 @@
 "Hähnchen in sehr heißem Öl unter Rühren braten und herausnehmen.",
 "Brokkoli, Champignons, Paprika und Zwiebel unter Rühren kurz braten.",
 "Hähnchen und Soße dazugeben und rühren, bis die Soße andickt. Mit Reis servieren."
-]
+],
+"est": 7.37
 },
 {
 "id": "chili-con-carne",
@@ -1962,7 +2369,10 @@
 "Rinderhack",
 "Rinder-Hack",
 "Rinderhackfleisch"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Gehackte Tomaten",
@@ -1973,7 +2383,10 @@
 "Pizzatomaten",
 "Gehackte Tomaten",
 "stückige Tomaten"
-]
+],
+"p": 0.65,
+"s": 500,
+"a": 400
 },
 {
 "name": "Kidneybohnen",
@@ -1981,21 +2394,30 @@
 "match": [
 "Kidneybohnen",
 "Bohnen"
-]
+],
+"p": 0.79,
+"s": 400,
+"a": 400
 },
 {
 "name": "Große Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 168
 },
 {
 "name": "Rote Paprika",
 "qty": "1",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 170
 },
 {
 "name": "Chilischote",
@@ -2029,7 +2451,8 @@
 "Paprikapulver, Kreuzkümmel und Chilipulver kurz mitrösten.",
 "Tomaten, Tomatenmark, Brühe, Majoran und Zucker dazugeben und 30 Minuten köcheln.",
 "Kidneybohnen dazugeben und nochmal 10 Minuten köcheln."
-]
+],
+"est": 7.19
 },
 {
 "id": "kuerbissuppe",
@@ -2046,21 +2469,30 @@
 "match": [
 "Kürbis",
 "Hokkaido"
-]
+],
+"p": 1.99,
+"s": 1200,
+"a": 1200
 },
 {
 "name": "Kartoffeln",
 "qty": "3–4 kleine",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 525
 },
 {
 "name": "Zwiebeln",
 "qty": "2",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 240
 },
 {
 "name": "Sahne (optional)",
@@ -2069,7 +2501,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 50
 },
 {
 "name": "Pekannüsse",
@@ -2088,7 +2523,8 @@
 "Kürbis, Kartoffeln und Gewürze dazugeben, mit kochendem Wasser knapp bedecken.",
 "25 Minuten köcheln und fein pürieren.",
 "Pekannüsse mit Butter und Honig in der Pfanne karamellisieren und auf die Suppe geben."
-]
+],
+"est": 3.02
 },
 {
 "id": "frikadellen-zwiebelsosse",
@@ -2105,21 +2541,30 @@
 "match": [
 "Hackfleisch",
 "Hack"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Zwiebeln",
 "qty": "3",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 360
 },
 {
 "name": "Ei",
 "qty": "1",
 "match": [
 "Eier"
-]
+],
+"p": 2.29,
+"s": 600,
+"a": 60
 },
 {
 "name": "Sahne",
@@ -2128,7 +2573,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 100
 },
 {
 "name": "Altes Brötchen",
@@ -2157,7 +2605,8 @@
 "Frikadellen formen, in Semmelbröseln wenden und in Butterschmalz braten.",
 "Für die Soße 2 Zwiebeln in Streifen mit Knoblauch in Butter braten, Thymian und Zucker dazu, mit Balsamico ablöschen.",
 "Mehl einrühren, mit Fond und Sahne aufgießen, mit Paprika, Salz und Pfeffer abschmecken."
-]
+],
+"est": 6.08
 },
 {
 "id": "koefte-zaziki",
@@ -2174,7 +2623,10 @@
 "match": [
 "Hackfleisch",
 "Hack"
-]
+],
+"p": 4.99,
+"s": 500,
+"a": 500
 },
 {
 "name": "Griechischer Joghurt",
@@ -2182,21 +2634,30 @@
 "match": [
 "Joghurt",
 "griech"
-]
+],
+"p": 0.99,
+"s": 500,
+"a": 350
 },
 {
 "name": "Gurke",
 "qty": "1",
 "match": [
 "Gurke"
-]
+],
+"p": 0.69,
+"s": 400,
+"a": 400
 },
 {
 "name": "Zwiebeln",
 "qty": "2",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 240
 },
 {
 "name": "Tomate",
@@ -2208,14 +2669,20 @@
 "Strauchtomaten",
 "Datteltomaten",
 "Tomaten XXL"
-]
+],
+"p": 1.79,
+"s": 500,
+"a": 60
 },
 {
 "name": "Ei",
 "qty": "1",
 "match": [
 "Eier"
-]
+],
+"p": 2.29,
+"s": 600,
+"a": 60
 },
 {
 "name": "Paniermehl",
@@ -2238,7 +2705,8 @@
 "Mit Hack, Ei, Paniermehl, Tomatenmark, Backpulver und Gewürzen vermengen.",
 "Köfte formen und in der Pfanne mit etwas Öl braten.",
 "Gurke reiben und gut ausdrücken, mit Joghurt, Knoblauch, Salz und Dill verrühren."
-]
+],
+"est": 7.13
 },
 {
 "id": "brokkoli-haehnchen-curry",
@@ -2260,35 +2728,50 @@
 "Hähnchenbrust-Innenfilet",
 "Hähnchen-Brustfilet",
 "Hähnchen-Brustfilets"
-]
+],
+"p": 5.49,
+"s": 600,
+"a": 400
 },
 {
 "name": "Brokkoli",
 "qty": "1",
 "match": [
 "Brokkoli"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 450
 },
 {
 "name": "Paprika",
 "qty": "1",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 170
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Kokosmilch",
 "qty": "400 ml",
 "match": [
 "Kokosmilch"
-]
+],
+"p": 1.29,
+"s": 400,
+"a": 400
 },
 {
 "name": "Basmatireis",
@@ -2297,7 +2780,10 @@
 "Reis",
 "Basmati",
 "Langkornreis"
-]
+],
+"p": 1.49,
+"s": 1000,
+"a": 150
 },
 {
 "name": "Rote Currypaste",
@@ -2322,7 +2808,8 @@
 "Currypaste dazugeben und mit Kokosmilch ablöschen.",
 "Würzen, Limettensaft dazu und ca. 15 Minuten köcheln.",
 "Mit Reis, Lauchzwiebeln und Sesam servieren."
-]
+],
+"est": 7.35
 },
 {
 "id": "mango-curry",
@@ -2344,28 +2831,40 @@
 "Hähnchenbrust-Innenfilet",
 "Hähnchen-Brustfilet",
 "Hähnchen-Brustfilets"
-]
+],
+"p": 5.49,
+"s": 600,
+"a": 300
 },
 {
 "name": "Kokosmilch",
 "qty": "400 ml",
 "match": [
 "Kokosmilch"
-]
+],
+"p": 1.29,
+"s": 400,
+"a": 400
 },
 {
 "name": "Frische Mango",
 "qty": "1",
 "match": [
 "Mango"
-]
+],
+"p": 1.49,
+"s": 400,
+"a": 400
 },
 {
 "name": "Zwiebel",
 "qty": "1",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 120
 },
 {
 "name": "Knoblauchzehen",
@@ -2389,7 +2888,8 @@
 "Mango würfeln, einen Teil dazugeben, aufkochen und pürieren.",
 "Hähnchenwürfel dazugeben und garen.",
 "Restliche Mango dazugeben und mit Reis servieren."
-]
+],
+"est": 5.68
 },
 {
 "id": "kartoffelsuppe-wuerstchen",
@@ -2405,7 +2905,10 @@
 "qty": "1 kg",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 1000
 },
 {
 "name": "Möhren",
@@ -2413,7 +2916,10 @@
 "match": [
 "Möhren",
 "Karotten"
-]
+],
+"p": 0.99,
+"s": 1000,
+"a": 160
 },
 {
 "name": "Lauch",
@@ -2421,14 +2927,20 @@
 "match": [
 "Lauch",
 "Porree"
-]
+],
+"p": 0.99,
+"s": 300,
+"a": 150
 },
 {
 "name": "Zwiebeln",
 "qty": "2",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 240
 },
 {
 "name": "Sahne",
@@ -2437,7 +2949,10 @@
 "Sahne",
 "Schlagsahne",
 "Kochsahne"
-]
+],
+"p": 0.79,
+"s": 200,
+"a": 200
 },
 {
 "name": "Wiener Würstchen",
@@ -2445,7 +2960,10 @@
 "match": [
 "Wiener",
 "Würstchen"
-]
+],
+"p": 2.49,
+"s": 400,
+"a": 200
 },
 {
 "name": "Gemüsebrühe",
@@ -2465,7 +2983,8 @@
 "Lorbeer entfernen und pürieren.",
 "Sahne dazugeben und kräftig mit Salz, Pfeffer und Muskat würzen.",
 "Würstchen in Scheiben dazugeben, erhitzen und mit Petersilie servieren."
-]
+],
+"est": 3.99
 },
 {
 "id": "ofengemuese",
@@ -2481,21 +3000,30 @@
 "qty": "1",
 "match": [
 "Brokkoli"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 450
 },
 {
 "name": "Blumenkohl",
 "qty": "1",
 "match": [
 "Blumenkohl"
-]
+],
+"p": 1.99,
+"s": 800,
+"a": 800
 },
 {
 "name": "Kartoffeln",
 "qty": "3–4",
 "match": [
 "Kartoffeln"
-]
+],
+"p": 2.49,
+"s": 2500,
+"a": 525
 },
 {
 "name": "Möhren",
@@ -2503,14 +3031,20 @@
 "match": [
 "Möhren",
 "Karotten"
-]
+],
+"p": 0.99,
+"s": 1000,
+"a": 240
 },
 {
 "name": "Rote Paprika",
 "qty": "1",
 "match": [
 "Paprika"
-]
+],
+"p": 1.99,
+"s": 500,
+"a": 170
 },
 {
 "name": "Knoblauchzehen",
@@ -2533,7 +3067,8 @@
 "Kartoffeln, Möhren und Paprika klein schneiden.",
 "Alles mit Öl, Knoblauch und Gewürzen vermengen.",
 "Auf einem Blech bei 200 °C etwa 40 Minuten backen. Dazu passt Joghurt-Dip."
-]
+],
+"est": 4.77
 },
 {
 "id": "feta-gemuese-ofen",
@@ -2551,7 +3086,10 @@
 "Feta",
 "Schafskäse",
 "Hirtenkäse"
-]
+],
+"p": 1.69,
+"s": 200,
+"a": 300
 },
 {
 "name": "Datteltomaten",
@@ -2563,21 +3101,30 @@
 "Strauchtomaten",
 "Datteltomaten",
 "Tomaten XXL"
-]
+],
+"p": 1.79,
+"s": 500,
+"a": 300
 },
 {
 "name": "Brokkoli",
 "qty": "200 g",
 "match": [
 "Brokkoli"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 200
 },
 {
 "name": "Blumenkohl",
 "qty": "200 g",
 "match": [
 "Blumenkohl"
-]
+],
+"p": 1.99,
+"s": 800,
+"a": 200
 },
 {
 "name": "Olivenöl, Salz, Pfeffer, Petersilie",
@@ -2590,7 +3137,8 @@
 "Feta in die Mitte einer Form legen, Tomaten drumherum verteilen.",
 "Würzen, mit Olivenöl beträufeln und 20–30 Minuten backen.",
 "Alles mit einer Gabel zu einer Soße zerdrücken, Gemüse unterheben und mit Petersilie servieren."
-]
+],
+"est": 4.7
 },
 {
 "id": "linsen-bolognese",
@@ -2610,14 +3158,20 @@
 "Nudeln",
 "Penne",
 "Fusilli"
-]
+],
+"p": 0.99,
+"s": 500,
+"a": 200
 },
 {
 "name": "Rote Linsen",
 "qty": "100 g",
 "match": [
 "Linsen"
-]
+],
+"p": 1.49,
+"s": 500,
+"a": 100
 },
 {
 "name": "Möhren",
@@ -2625,7 +3179,10 @@
 "match": [
 "Möhren",
 "Karotten"
-]
+],
+"p": 0.99,
+"s": 1000,
+"a": 160
 },
 {
 "name": "Passierte Tomaten",
@@ -2636,14 +3193,20 @@
 "Pizzatomaten",
 "Gehackte Tomaten",
 "stückige Tomaten"
-]
+],
+"p": 0.65,
+"s": 500,
+"a": 400
 },
 {
 "name": "Zwiebel",
 "qty": "½",
 "match": [
 "Zwiebeln"
-]
+],
+"p": 1.29,
+"s": 1000,
+"a": 60
 },
 {
 "name": "Knoblauchzehe",
@@ -2672,7 +3235,8 @@
 "Linsen dazugeben, mit Brühe ablöschen, Tomatenmark, Oregano und Kurkuma dazu und 8 Minuten köcheln.",
 "Spaghetti kochen.",
 "Passierte Tomaten, Sojasoße, Essig, Joghurt, Sirup und Paprika dazugeben, aufkochen und abschmecken."
-]
+],
+"est": 1.45
 }
 ]
 }
