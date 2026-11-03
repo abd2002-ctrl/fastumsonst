@@ -316,7 +316,7 @@ async function loadStations(){
     stations = j.stations.map(s => ({
       id:s.id, name:(s.brand ? s.brand + ' ' : '') + (s.street ? s.street : s.name || 'Tankstelle'),
       addr:[(s.street||'') + ' ' + (s.houseNumber||''), s.place||''].filter(x => x.trim()).join(', '),
-      dist:s.dist, isOpen:s.isOpen, e5:s.e5, e10:s.e10, diesel:s.diesel
+      dist:s.dist, isOpen:s.isOpen, e5:s.e5, e10:s.e10, diesel:s.diesel, lat:s.lat, lng:s.lng
     }));
     source = 'live';
   }catch(e){
@@ -411,6 +411,21 @@ function tip(cls, icon, title, text, go, sg){
   return '<button class="card tip" data-action="go" data-go="' + go + '"' + (sg ? ' data-seg="' + sg + '"' : '') + ' style="text-align:left;font:inherit;color:inherit;cursor:pointer;flex-direction:row">' +
     '<span class="ico ' + cls + '">' + icon + '</span><span class="stack" style="gap:2px"><b style="font-size:15px">' + title + '</b><span class="small muted">' + text + '</span></span></button>';
 }
+// ===== Navigation: ein Tipp öffnet Apple Karten oder Google Maps mit dem Ziel =====
+function routeBtn(name, addr, lat, lng, label){
+  if(!isFinite(+lat) || !isFinite(+lng)) return '';
+  return '<button class="btn small ghost" data-action="route" data-name="' + esc(name) + '" data-addr="' + esc(addr || '') + '" data-lat="' + (+lat) + '" data-lng="' + (+lng) + '">' + (label || '📍 Route') + '</button>';
+}
+function routeSheet(d){
+  const lat = +d.lat, lng = +d.lng, q = encodeURIComponent(d.name + (d.addr ? ', ' + d.addr : ''));
+  const apple = 'https://maps.apple.com/?daddr=' + lat + ',' + lng + '&q=' + q;
+  const google = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng;
+  const ios = /iphone|ipad|ipod|macintosh/i.test(navigator.userAgent);
+  const a = '<a class="btn" href="' + apple + '" target="_blank" rel="noopener">Apple Karten öffnen</a>';
+  const g = '<a class="btn ' + (ios ? 'ghost' : '') + '" href="' + google + '" target="_blank" rel="noopener">Google Maps öffnen</a>';
+  openSheet('<div class="row"><h2 style="margin:0">Route zu ' + esc(d.name) + '</h2><button class="btn small ghost" data-action="sheet-close" aria-label="Schließen">✕</button></div>' +
+    (d.addr ? '<p class="small muted">' + esc(d.addr) + '</p>' : '') + '<div class="stack" style="gap:10px">' + (ios ? a + g : g) + '</div>');
+}
 function viewTanken(){
   const t = tankNow(), {list, avg, f} = fuelList(), th = timeHint();
   let tankCard;
@@ -431,7 +446,8 @@ function viewTanken(){
     rec = '<div class="card ' + (need ? 'best' : '') + '" style="' + (need ? 'background:var(--accent-soft)' : '') + '">' +
       '<span class="pill ' + (need ? 'ok' : 'neutral') + '">' + (need ? 'BESTE WAHL JETZT' : 'NOCH KEIN TANKEN NÖTIG') + '</span>' +
       '<b style="font-size:18px">' + esc(best.name) + '</b>' +
-      '<p class="small muted">' + num(best.dist,1) + ' km entfernt · ' + num(best[f],3) + ' €/l' + (save50 > 0.5 ? ' · ca. ' + eur(save50) + ' günstiger als der Durchschnitt pro Tankfüllung' : '') + '</p>' +
+      '<p class="small muted">' + num(best.dist,1) + ' km entfernt · ' + esc(best.addr) + ' · ' + num(best[f],3) + ' €/l' + (save50 > 0.5 ? ' · ca. ' + eur(save50) + ' günstiger als der Durchschnitt pro Tankfüllung' : '') + '</p>' +
+      (best.lat ? '<div class="btns">' + routeBtn(best.name, best.addr, best.lat, best.lng, '📍 Route starten') + '</div>' : '') +
       '<div class="tip"><span class="ico ' + (th.good ? 'ok' : 'neutral') + '">' + I.clock + '</span><span class="stack" style="gap:2px"><b>' + th.title + '</b><span class="small muted">' + th.text + '</span></span></div></div>';
   }
   const chips = '<div class="chips" role="group" aria-label="Sprit">' + Object.keys(FUELS).map(k => '<button class="chip" data-action="fuel" data-fuel="' + k + '" aria-pressed="' + (k === f) + '">' + FUELS[k].replace('Super ','') + '</button>').join('') + '</div>';
@@ -442,7 +458,7 @@ function viewTanken(){
       (i === 0 ? '<span class="pill ok">AM GÜNSTIGSTEN</span>' : '') +
       '<span class="name">' + esc(s.name) + '</span><span class="small muted">' + num(s.dist,1) + ' km · ' + esc(s.addr) + '</span></div>' +
       '<div class="price">' + priceHtml(s[f]) + '</div></div>' +
-      '<button class="btn small ghost" data-action="fill" data-station="' + esc(s.id) + '">Hier getankt</button></div>').join('');
+      '<div class="btns"><button class="btn small ghost" data-action="fill" data-station="' + esc(s.id) + '">Hier getankt</button>' + routeBtn(s.name, s.addr, s.lat, s.lng) + '</div></div>').join('');
   const src = source === 'live'
     ? 'Live-Preise · Quelle: MTS-K über Tankerkönig.de (CC BY 4.0)'
     : 'Beispieldaten · Echte Preise erscheinen, sobald die App online ist und du den Standort erlaubst.';
@@ -489,7 +505,7 @@ function viewMehr(){
   (S.uid ? '<div class="row" style="flex-wrap:wrap;margin-top:6px"><span class="small muted">Geräte-ID: <span class="mono" style="user-select:all;overflow-wrap:anywhere">' + esc(S.uid) + '</span></span><button class="btn small ghost" data-action="copy-id">Kopieren</button></div>' : '') + '</div>' +
   '<div class="card"><h2>Feedback</h2><p class="small muted">Was fehlt dir? Was nervt? Schreib uns, jede Nachricht hilft, die App besser zu machen.</p>' +
   '<div class="row" style="flex-wrap:wrap"><b style="user-select:all;overflow-wrap:anywhere">' + esc(FEEDBACK_EMAIL) + '</b><button class="btn small ghost" data-action="copy-mail">Adresse kopieren</button></div></div>' +
-  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Einstellungen, Tankfüllungen und deine Wunschliste bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Alle Angaben ohne Gewähr.</p></div>' +
+  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Einstellungen, Tankfüllungen und deine Wunschliste bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Filialen in der Nähe: © OpenStreetMap-Mitwirkende (ODbL) über Photon/komoot. Alle Angaben ohne Gewähr.</p></div>' +
   '<div class="card"><h2>Daten zurücksetzen</h2><p class="small muted">Löscht Tankfüllungen, Wunschliste und Einstellungen auf diesem Gerät.</p>' +
   (resetArmed ? '<div class="btns"><button class="btn danger" data-action="reset-yes">Ja, alles löschen</button><button class="btn ghost" data-action="reset-no">Abbrechen</button></div>' : '<button class="btn danger" data-action="reset">Zurücksetzen</button>') + '</div>' + LEGAL;
 }
@@ -621,9 +637,37 @@ function aldiBox(){
     '<span class="small muted">' + (aldiBusy ? 'Erkenne deinen Aldi über deinen Standort …' : z ? (S.aldi.auto ? (S.aldi.unsure ? 'Du wohnst nah an der Grenze zwischen Aldi Nord und Aldi Süd. Bitte prüf kurz, ob das stimmt, und tippe sonst auf den anderen. ' : 'Automatisch über deinen Standort erkannt. ') : 'Von dir gewählt. ') + 'Du siehst nur Angebote von ' + aldiName(z) + '.' : 'Aldi Nord und Aldi Süd haben unterschiedliche Angebote.') + '</span>' +
     (!z && !aldiBusy ? '<button class="btn small ghost" data-action="aldi-auto" style="align-self:flex-start">Mit meinem Standort erkennen</button>' : '') + '</div>';
 }
+let near = null, nearBusy = false, nearTried = false;
+try{ const c = JSON.parse(localStorage.getItem('fastumsonst-near') || 'null'); if(c && Date.now() - c.at < 864e5) near = c.stores; }catch(e){}
+const storeKey = st => { const t = String(st || '').toLowerCase(); return /aldi\s*s/.test(t) ? 'Aldi Süd' : /aldi\s*n/.test(t) ? 'Aldi Nord' : /lidl/.test(t) ? 'Lidl' : /kaufland/.test(t) ? 'Kaufland' : /penny/.test(t) ? 'Penny' : /netto/.test(t) ? 'Netto' : /norma/.test(t) ? 'Norma' : /rewe/.test(t) ? 'Rewe' : /edeka/.test(t) ? 'Edeka' : ''; };
+const storeAddr = n => [((n.street || '') + ' ' + (n.nr || '')).trim(), ((n.zip || '') + ' ' + (n.city || '')).trim()].filter(Boolean).join(', ');
+async function loadNear(ask){
+  if(nearBusy) return; nearBusy = true; if(ask) render();
+  try{
+    if(!ask && !(await geoGranted())) throw new Error('kein Standort');
+    const pos = await getPos();
+    const chains = [...new Set(offers.map(o => storeKey(o.store)).filter(Boolean).concat(['Rewe', 'Edeka']))];
+    const r = await fetch('/api/stores?lat=' + pos.lat.toFixed(2) + '&lng=' + pos.lng.toFixed(2) + '&chains=' + encodeURIComponent(chains.join(',')));
+    const j = await r.json();
+    if(j.ok){ near = j.stores || {}; try{ localStorage.setItem('fastumsonst-near', JSON.stringify({at: Date.now(), stores: near})); }catch(e){} }
+  }catch(e){ if(ask) toast('Standort nicht verfügbar. Bitte erlaube den Standort in den Einstellungen.'); }
+  nearBusy = false; render();
+}
+function maybeLoadNear(){ if(nearTried || !offersLoaded) return; nearTried = true; if(!near) loadNear(false); }
+function nearLine(o){
+  const n = near && near[storeKey(o.store)];
+  if(!n) return '';
+  return '<span class="small" style="color:var(--accent)">📍 ' + num(n.km, 1) + ' km · ' + esc(storeAddr(n) || n.name) + '</span>';
+}
+function nearBtn(o){ const n = near && near[storeKey(o.store)]; return n ? routeBtn(n.name, storeAddr(n), n.lat, n.lng) : ''; }
+function nearHint(){
+  if(near || !offers.length) return '';
+  return '<button class="card" data-action="near-ask" style="text-align:left;font:inherit;color:inherit;cursor:pointer;flex-direction:row;align-items:center;gap:12px"><span style="font-size:24px">📍</span><span class="stack" style="gap:2px"><b>' + (nearBusy ? 'Suche Filialen in deiner Nähe …' : 'Filialen in deiner Nähe anzeigen') + '</b><span class="small muted">Entfernung, Adresse und Route mit einem Tipp</span></span></button>';
+}
 function marketBox(){
   return '<div class="card"><h2>Rewe und Edeka</h2><p class="small muted">Bei Rewe und Edeka macht fast jeder Markt eigene Angebote. Damit du sicher richtig liegst, siehst du hier direkt die Angebote deines eigenen Markts. Dort einmal deinen Markt auswählen.</p>' +
-    '<div class="btns"><a class="btn small ghost" href="https://www.rewe.de/angebote/" target="_blank" rel="noopener">Angebote deines Rewe</a><a class="btn small ghost" href="https://www.edeka.de/" target="_blank" rel="noopener">Angebote deines Edeka</a></div></div>';
+    '<div class="btns"><a class="btn small ghost" href="https://www.rewe.de/angebote/" target="_blank" rel="noopener">Angebote deines Rewe</a><a class="btn small ghost" href="https://www.edeka.de/" target="_blank" rel="noopener">Angebote deines Edeka</a></div>' +
+    ['Rewe', 'Edeka'].map(k => { const n = near && near[k]; return n ? '<div class="row" style="gap:8px"><span class="small">📍 ' + esc(n.name) + ', ' + num(n.km, 1) + ' km · ' + esc(storeAddr(n)) + '</span>' + routeBtn(n.name, storeAddr(n), n.lat, n.lng, 'Route') + '</div>' : ''; }).join('') + '</div>';
 }
 async function startPremium(){
   busy = true; premiumMsg = ''; render();
@@ -709,7 +753,7 @@ function offerCard(o, locked){
   return '<div class="card offer"><div class="row" style="align-items:flex-start;gap:12px">' +
     thumb(o) +
     '<div class="stack" style="gap:4px;min-width:0;flex:1"><span class="pill neutral">' + esc(o.store) + '</span><b style="font-size:16px;overflow-wrap:anywhere">' + esc(o.title) + '</b>' +
-    '<span class="small muted">' + (o.unit ? esc(o.unit) + ' · ' : '') + 'gültig bis ' + deDate(o.valid_until) + (o.region && o.region !== 'bundesweit' ? ' · ' + esc(o.region) : '') + '</span></div>' +
+    '<span class="small muted">' + (o.unit ? esc(o.unit) + ' · ' : '') + 'gültig bis ' + deDate(o.valid_until) + (o.region && o.region !== 'bundesweit' ? ' · ' + esc(o.region) : '') + '</span>' + nearLine(o) + '</div>' +
     '<div class="stack" style="gap:2px;align-items:flex-end;flex-shrink:0"><span class="price" style="font-size:22px">' + eur(+o.price) + '</span>' +
     (o.old_price ? '<span class="small muted" style="text-decoration:line-through">' + eur(+o.old_price) + '</span>' : '') +
     (pct >= 5 ? '<span class="pill ok">−' + pct + ' %</span>' : '') + '</div></div>' +
@@ -717,6 +761,7 @@ function offerCard(o, locked){
       '<button class="btn small ' + (onList(o) ? '' : 'ghost') + '" data-action="list-toggle" data-id="' + esc(o.id) + '">' + (onList(o) ? '✓ Auf der Liste' : '+ Einkaufsliste') + '</button>' +
       links.map(l => '<a class="btn small ghost" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.title || 'Rezept-Idee') + '</a>').join('') +
       (o.keyword ? '<a class="btn small ghost" href="' + esc(chefkochUrl(o.keyword)) + '" target="_blank" rel="noopener">Rezepte mit ' + esc(o.keyword) + '</a>' : '') +
+      nearBtn(o) +
       (o.source_url ? '<a class="btn small ghost" href="' + esc(o.source_url) + '" target="_blank" rel="noopener">Zum Angebot</a>' : '') + '</div>') +
     '</div>';
 }
@@ -860,6 +905,7 @@ function viewOffersSeg(){
   if(premiumMsg) html += '<div class="banner" role="alert"><span>' + esc(premiumMsg) + '</span><button data-action="pmsg-close">OK</button></div>';
   if(!offersLoaded) setTimeout(() => loadOffers(), 0);
   setTimeout(maybeDetectAldi, 0);
+  setTimeout(maybeLoadNear, 0);
   const mine = offers.filter(aldiOk);
   const stores = ['Alle', ...[...new Set(mine.map(o => o.store))].sort()];
   if(storeFilter !== 'Alle' && stores.indexOf(storeFilter) < 0) storeFilter = 'Alle';
@@ -868,12 +914,14 @@ function viewOffersSeg(){
     const teasers = mine.filter(o => o.is_teaser).slice(0, 3);
     html += premiumBox();
     html += '<button class="card" data-action="seg" data-seg="recipes" style="text-align:left;font:inherit;color:inherit;cursor:pointer"><b>🍳 36 Rezepte mit Video</b><span class="small muted">2 davon gratis zum Testen. Tippe hier für den Reiter „Rezepte“.</span></button>';
+    if(teasers.length) html += nearHint();
     if(teasers.length) html += '<h2>Vorschau aus dieser Woche</h2><div class="stack">' + teasers.map(o => offerCard(o, true)).join('') + '</div>';
     html += '<p class="small muted">Schon Premium auf einem anderen Gerät? Schreib uns an ' + esc(FEEDBACK_EMAIL) + ' und nenn deine Geräte-ID (unter „Mehr“), dann übertragen wir dein Abo.</p>';
     return html;
   }
   html += premiumBox();
   html += '<div class="row"><h2>Top-Angebote der Woche</h2><button class="btn small ghost" data-action="offers-reload" aria-label="Angebote aktualisieren">' + I.refresh + '</button></div>';
+  html += nearHint();
   if(offersLoaded && !offersLoading && mine.length) html += searchBox('q-offers', offerQ, 'Angebot suchen, z. B. Hackfleisch');
   if(stores.length > 2) html += '<div class="chips" role="group" aria-label="Laden">' + stores.map(s => '<button class="chip" data-action="store" data-store="' + esc(s) + '" aria-pressed="' + (s === storeFilter) + '">' + esc(s) + '</button>').join('') + '</div>';
   if(!offersLoaded || offersLoading) html += '<p class="empty">Lade die Angebote …</p>';
@@ -1004,6 +1052,8 @@ document.addEventListener('click', e => {
     case 'offers-reload': refreshPremium(); break;
     case 'aldi': S.aldi = {zone:a.dataset.zone, auto:false, at:Date.now()}; save(); render(); toast('Du siehst jetzt ' + aldiName(a.dataset.zone)); break;
     case 'aldi-auto': detectAldi(true); break;
+    case 'route': routeSheet(a.dataset); break;
+    case 'near-ask': if(!nearBusy) loadNear(true); break;
     case 'recipe': recipeSheet(a.dataset.id); break;
     case 'recipe-list': recipeToList(a.dataset.id); break;
     case 'list-toggle': { const o = offers.find(x => x.id === a.dataset.id); if(o) toggleList(o); break; }
