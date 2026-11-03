@@ -123,7 +123,7 @@ const SUPABASE_KEY = 'sb_publishable_xTaqmavv44TYZvdd_xqRAg_vOeAowNl';
 const VAPID_PUBLIC = 'BLLNu7AkOUtEwNouUgIEQsaz2tS4cCBgFrFefBz1mp2Ku4E9qvl4dlSxE2wq4rREBP7KrElu4MIGVlsrKhBZF0k';
 function defaults(){ return {setup:{tankL:50, cons:6.5, weekKm:250, fuel:'e10', done:false}, tank:null, fills:[], wishes:[], demo:false, cloud:{enabled:false, tankAlarm:true}}; }
 function load(){ try{ const r = localStorage.getItem(KEY); if(r){ const d = JSON.parse(r); return Object.assign(defaults(), d, {setup:Object.assign(defaults().setup, d.setup||{})}); } }catch(e){} return defaults(); }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} scheduleSync(); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} scheduleSync(); scheduleDataSync(); }
 let S = load();
 if(!S.cloud) S.cloud = defaults().cloud;
 let tab = 'home', stations = [], source = '', loading = false, resetArmed = false, installEvt = null;
@@ -181,6 +181,7 @@ async function enableAlarms(){
     e = (await sb().from('settings').upsert(settingsRow(uid))).error;
     if(e) throw new Error('Speichern fehlgeschlagen: ' + e.message);
     save(); toast('Benachrichtigungen eingeschaltet');
+    syncFavs();
     await loadAlerts();
   }catch(err){ alarmMsg = err.message || 'Das hat nicht geklappt. Bitte versuch es noch einmal.'; }
   busy = false; render();
@@ -225,9 +226,135 @@ async function disableAlarms(){
   try{
     const reg = await navigator.serviceWorker.ready; const sub = await reg.pushManager.getSubscription(); if(sub) await sub.unsubscribe();
   }catch(e){}
-  try{ await userId(); await sb().rpc('delete_me'); await sb().auth.signOut(); }catch(e){}
+  try{
+    const uidv = await userId();
+    if(S.account || isPremium()){
+      // Konto mit E-Mail oder Premium behalten: nur Alarm-Daten löschen
+      const c = sb();
+      await c.from('push_subscriptions').delete().eq('user_id', uidv);
+      await c.from('price_alerts').delete().eq('user_id', uidv);
+      await c.from('settings').delete().eq('user_id', uidv);
+    } else { await sb().rpc('delete_me'); await sb().auth.signOut(); }
+  }catch(e){}
   S.cloud = defaults().cloud; alerts = []; alertsLoaded = false; alertsTried = false; offArmed = false; save();
   busy = false; render(); toast('Benachrichtigungen aus, Daten gelöscht');
+}
+
+// ===== Konto per E-Mail: Premium und Daten auf jedem Gerät =====
+// Ablauf: E-Mail eingeben -> 6-stelliger Code per Mail -> Code in der App eintippen.
+// Ein Code statt Link, weil sich Links am iPhone in Safari öffnen und nicht in der App auf dem Home-Bildschirm.
+let acct = {step:'', email:'', type:'', msg:'', busy:false};
+const SYNC_KEYS = ['setup','tank','fills','wishes','list','favs','homeStore','plan','planPrefs','saved','stationSort','aldi'];
+function accountFromUser(u){ return u && u.email && !u.is_anonymous ? {email:u.email} : null; }
+async function refreshAccount(){
+  try{
+    const c = sb(); if(!c) return;
+    const {data} = await c.auth.getSession();
+    const a = data.session ? accountFromUser(data.session.user) : null;
+    if(JSON.stringify(a) !== JSON.stringify(S.account || null)){ S.account = a; try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} if(tab === 'mehr') render(); }
+  }catch(e){}
+}
+let dataTimer = null;
+function scheduleDataSync(){
+  if(!S.account) return;
+  clearTimeout(dataTimer);
+  dataTimer = setTimeout(pushData, 2500);
+}
+async function pushData(){
+  try{
+    if(!S.account) return;
+    const uidv = await userId(); const d = {};
+    SYNC_KEYS.forEach(k => { if(S[k] !== undefined) d[k] = S[k]; });
+    await sb().from('user_data').upsert({user_id:uidv, data:d, updated_at:new Date().toISOString()});
+  }catch(e){}
+}
+async function pullData(){
+  try{
+    const uidv = await userId();
+    const r = await sb().from('user_data').select('data').eq('user_id', uidv).maybeSingle();
+    if(r.error || !r.data || !r.data.data) return false;
+    const d = r.data.data;
+    SYNC_KEYS.forEach(k => { if(d[k] !== undefined) S[k] = d[k]; });
+    S.setup = Object.assign(defaults().setup, S.setup || {});
+    return true;
+  }catch(e){ return false; }
+}
+const acctErr = m => /rate|seconds|security purposes/i.test(m) ? 'Bitte warte kurz, bevor du einen neuen Code anforderst.'
+  : /expired|invalid|otp/i.test(m) ? 'Der Code stimmt nicht oder ist abgelaufen. Prüf die Ziffern oder fordere einen neuen Code an.'
+  : /not found|signups not allowed|no user/i.test(m) ? 'Zu dieser E-Mail gibt es noch kein Konto. Prüf die Schreibweise.'
+  : /sending|smtp|email/i.test(m) ? 'Die E-Mail konnte gerade nicht verschickt werden. Bitte versuch es später noch einmal.'
+  : /fetch|network|offline/i.test(m) ? 'Keine Verbindung. Prüf dein Internet und versuch es noch einmal.'
+  : 'Das hat nicht geklappt: ' + m;
+async function acctSend(email){
+  email = String(email || '').trim().toLowerCase();
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ acct.msg = 'Bitte gib eine gültige E-Mail-Adresse ein.'; render(); return; }
+  acct.email = email; acct.busy = true; acct.msg = ''; render();
+  try{
+    const c = sb(); if(!c) throw new Error('offline');
+    await userId(); // sorgt für ein (anonymes) Konto auf diesem Gerät
+    const u = await c.auth.updateUser({email});
+    if(!u.error){ acct = {step:'code', email, type:'email_change', msg:'', busy:false}; render(); return; }
+    if(!/already|exists|registered/i.test(u.error.message)) throw u.error;
+    // E-Mail hat schon ein Konto (z. B. neues Handy): Anmelde-Code schicken
+    const r = await c.auth.signInWithOtp({email, options:{shouldCreateUser:false}});
+    if(r.error) throw r.error;
+    acct = {step:'code', email, type:'email', msg:'', busy:false}; render();
+  }catch(e){ acct.busy = false; acct.msg = acctErr(e.message || ''); render(); }
+}
+async function acctVerify(code){
+  code = String(code || '').replace(/\D/g, '');
+  if(code.length < 6){ acct.msg = 'Bitte gib den Code aus der E-Mail ein.'; render(); return; }
+  acct.busy = true; acct.msg = ''; render();
+  try{
+    const c = sb();
+    if(acct.type === 'email_change'){
+      const r = await c.auth.verifyOtp({email:acct.email, token:code, type:'email_change'});
+      if(r.error) throw r.error;
+      await c.auth.refreshSession();
+      S.account = {email:acct.email}; save(); await pushData();
+      acct = {step:'', email:'', type:'', msg:'', busy:false};
+      toast('Konto gesichert'); syncFavs();
+    } else {
+      // Erst mit einem Zweit-Client prüfen, damit ein falscher Code nichts kaputt macht
+      const tmp = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {auth:{persistSession:false, autoRefreshToken:false, storageKey:'fastumsonst-tmp'}});
+      const r = await tmp.auth.verifyOtp({email:acct.email, token:code, type:'email'});
+      if(r.error || !r.data.session) throw (r.error || new Error('invalid'));
+      // Das bisherige anonyme Konto dieses Geräts aufräumen (außer es hat selbst Premium)
+      try{
+        const old = (await c.auth.getSession()).data.session;
+        if(old && old.user.is_anonymous && !isPremium()){
+          await c.from('push_subscriptions').delete().eq('user_id', old.user.id);
+          await c.rpc('delete_me');
+        }
+      }catch(e){}
+      const s = await c.auth.setSession({access_token:r.data.session.access_token, refresh_token:r.data.session.refresh_token});
+      if(s.error) throw s.error;
+      S.account = {email:acct.email};
+      const had = await pullData();
+      S.cloud = defaults().cloud; save();
+      acct = {step:'', email:'', type:'', msg:'', busy:false};
+      toast(had ? 'Angemeldet, deine Daten sind da' : 'Angemeldet');
+      offersLoaded = false; await refreshPremium();
+      if(pushState() === 'ok' && Notification.permission === 'granted') alarmMsg = 'Schalte die Benachrichtigungen auf diesem Gerät einmal neu ein.';
+    }
+  }catch(e){ acct.msg = acctErr(e.message || ''); }
+  acct.busy = false; render();
+}
+async function acctLogout(){
+  try{ await pushData(); const reg = await navigator.serviceWorker.getRegistration(); const sub = reg && reg.pushManager ? await reg.pushManager.getSubscription() : null; if(sub) await sub.unsubscribe(); }catch(e){}
+  try{ await sb().auth.signOut({scope:'local'}); }catch(e){}
+  S.account = null; S.uid = null; S.cloud = defaults().cloud; S.premiumCache = null; premium = null; save(); render(); toast('Abgemeldet');
+}
+function accountCard(){
+  if(S.account) return '<div class="card" id="konto"><h2>Dein Konto</h2><p class="small muted">Angemeldet als <b>' + esc(S.account.email) + '</b>. Premium, Einkaufsliste, Wochenplan, Lieblingsprodukte und deine Auto-Daten sind gesichert. Auf einem neuen Handy einfach mit derselben E-Mail anmelden.</p>' +
+    '<button class="btn small ghost" data-action="acct-logout" style="align-self:flex-start">Auf diesem Gerät abmelden</button></div>';
+  const msg = acct.msg ? '<p class="err">' + esc(acct.msg) + '</p>' : '';
+  if(acct.step === 'code') return '<form class="card" id="code-form" novalidate><h2>Code eingeben</h2><p class="small muted">Wir haben dir einen Code an <b>' + esc(acct.email) + '</b> geschickt. Schau auch im Spam-Ordner nach.</p>' +
+    '<div class="field"><label for="acct-code">Code aus der E-Mail</label><input id="acct-code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="123456"></div>' + msg +
+    '<div class="btns"><button class="btn" type="submit"' + (acct.busy ? ' disabled' : '') + '>' + (acct.busy ? 'Wird geprüft …' : 'Bestätigen') + '</button><button class="btn ghost" type="button" data-action="acct-back">Andere E-Mail</button></div></form>';
+  return '<form class="card" id="acct-form" novalidate><h2>Konto sichern</h2><p class="small muted">' + (isPremium() ? '<b>Wichtig:</b> Ohne Konto ist dein Premium nur auf diesem Handy. ' : '') + 'Mit deiner E-Mail bleiben Premium, Einkaufsliste und Einstellungen erhalten, auch bei einem neuen Handy. Kein Passwort nötig, du bekommst einen Code per E-Mail. Schon ein Konto? Gib einfach dieselbe E-Mail ein.</p>' +
+    '<div class="field"><label for="acct-mail">E-Mail-Adresse</label><input id="acct-mail" type="email" inputmode="email" autocomplete="email" value="' + esc(acct.email) + '" placeholder="name@beispiel.de"></div>' + msg +
+    '<button class="btn" type="submit"' + (acct.busy ? ' disabled' : '') + '>' + (acct.busy ? 'Wird gesendet …' : 'Code schicken') + '</button></form>';
 }
 
 // ===== Helfer =====
@@ -378,11 +505,13 @@ function timeHint(){
 }
 
 // ===== Gespart =====
+function shopSaved(){ return (S.saved || {})[new Date().toISOString().slice(0, 7)] || 0; }
 function savings(){
   const fuel = S.fills.filter(f => thisMonth(f.at)).reduce((a,f) => a + (f.saved||0), 0);
   const wish = S.wishes.filter(w => w.bought && thisMonth(w.boughtAt)).reduce((a,w) => a + (w.saved||0), 0);
   const all = S.fills.reduce((a,f) => a + (f.saved||0), 0) + S.wishes.filter(w => w.bought).reduce((a,w) => a + (w.saved||0), 0);
-  return {fuel, wish, total: fuel + wish, all};
+  const shop = shopSaved(), shopAll = Object.values(S.saved || {}).reduce((a, x) => a + x, 0);
+  return {fuel, wish, shop, total: fuel + wish + shop, all: all + shopAll};
 }
 function wishStatus(w){
   if(w.bought) return {cls:'ok', text: w.saved > 0 ? 'Gekauft · ' + eur(w.saved) + ' gespart' : 'Gekauft'};
@@ -544,9 +673,10 @@ function viewMehr(){
   '<p class="small muted">' + (ios ? 'iPhone: In Safari unten auf das Teilen-Symbol tippen und „Zum Home-Bildschirm“ wählen.' : 'Android: Im Chrome-Menü (drei Punkte) „App installieren“ oder „Zum Startbildschirm hinzufügen“ wählen. iPhone: In Safari auf Teilen und dann „Zum Home-Bildschirm“.') + '</p></div>' +
   '<div class="card"><h2>Premium</h2>' + (isPremium() ? '<p class="small muted">Aktiv bis ' + new Date(premium.until).toLocaleDateString('de-DE') + '.</p><button class="btn small ghost" data-action="portal" style="align-self:flex-start">Abo verwalten oder hier kündigen</button>' : '<p class="small muted">Top-Angebote der Woche, Rezepte der Woche und Einkaufsliste. 7 Tage kostenlos, danach 4,99 € im Monat.</p><button class="btn small" data-action="go" data-go="angebote" data-seg="offers" style="align-self:flex-start">Premium ansehen</button>') +
   (S.uid ? '<div class="row" style="flex-wrap:wrap;margin-top:6px"><span class="small muted">Geräte-ID: <span class="mono" style="user-select:all;overflow-wrap:anywhere">' + esc(S.uid) + '</span></span><button class="btn small ghost" data-action="copy-id">Kopieren</button></div>' : '') + '</div>' +
+  accountCard() +
   '<div class="card"><h2>Feedback</h2><p class="small muted">Was fehlt dir? Was nervt? Schreib uns, jede Nachricht hilft, die App besser zu machen.</p>' +
   '<div class="row" style="flex-wrap:wrap"><b style="user-select:all;overflow-wrap:anywhere">' + esc(FEEDBACK_EMAIL) + '</b><button class="btn small ghost" data-action="copy-mail">Adresse kopieren</button></div></div>' +
-  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Deine Einstellungen, Tankfüllungen und deine Wunschliste bleiben auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Filialen in der Nähe: © OpenStreetMap-Mitwirkende (ODbL) über Photon/komoot. Alle Angaben ohne Gewähr.</p></div>' +
+  '<div class="card"><h2>Über die App</h2><p class="small muted">FastUmsonst ' + VERSION + '. Ohne Konto bleiben deine Einstellungen, Tankfüllungen und Listen nur auf diesem Gerät. Spritpreise: Markttransparenzstelle für Kraftstoffe (MTS-K) über Tankerkönig.de, Lizenz CC BY 4.0. Filialen in der Nähe: © OpenStreetMap-Mitwirkende (ODbL) über Photon/komoot. Alle Angaben ohne Gewähr.</p></div>' +
   '<div class="card"><h2>Daten zurücksetzen</h2><p class="small muted">Löscht Tankfüllungen, Wunschliste und Einstellungen auf diesem Gerät.</p>' +
   (resetArmed ? '<div class="btns"><button class="btn danger" data-action="reset-yes">Ja, alles löschen</button><button class="btn ghost" data-action="reset-no">Abbrechen</button></div>' : '<button class="btn danger" data-action="reset">Zurücksetzen</button>') + '</div>' + LEGAL;
 }
@@ -742,7 +872,7 @@ function onList(o){ return (S.list || []).some(i => i.id === o.id); }
 function toggleList(o){
   S.list = S.list || [];
   if(onList(o)) S.list = S.list.filter(i => i.id !== o.id);
-  else S.list.push({id:o.id, title:o.title, store:o.store, price:+o.price, unit:o.unit || '', keyword:o.keyword || '', valid_until:o.valid_until, done:false});
+  else S.list.push({id:o.id, title:o.title, store:o.store, price:+o.price, unit:o.unit || '', keyword:o.keyword || '', valid_until:o.valid_until, offer:true, save: o.old_price && +o.old_price > +o.price ? Math.round((o.old_price - o.price) * 100) / 100 : 0, done:false});
   save(); render(); toast(onList(o) ? 'Auf der Einkaufsliste' : 'Von der Liste entfernt');
 }
 function chefkochUrl(q){ return 'https://www.chefkoch.de/rs/s0/' + String(q).trim().toLowerCase().split(/\s+/).filter(Boolean).map(encodeURIComponent).join('+') + '/Rezepte.html'; }
@@ -803,6 +933,7 @@ function offerCard(o, locked){
       links.map(l => '<a class="btn small ghost" href="' + esc(l.url) + '" target="_blank" rel="noopener">' + esc(l.title || 'Rezept-Idee') + '</a>').join('') +
       (o.keyword ? '<a class="btn small ghost" href="' + esc(chefkochUrl(o.keyword)) + '" target="_blank" rel="noopener">Rezepte mit ' + esc(o.keyword) + '</a>' : '') +
       nearBtn(o) +
+      (o.keyword ? (favs().some(w => favHit(o, w)) ? '<button class="btn small ghost" disabled>⭐ Gemerkt</button>' : '<button class="btn small ghost" data-action="fav-add" data-w="' + esc(o.keyword) + '">☆ ' + esc(o.keyword) + ' merken</button>') : '') +
       (o.source_url ? '<a class="btn small ghost" href="' + esc(o.source_url) + '" target="_blank" rel="noopener">Zum Angebot</a>' : '') + '</div>') +
     '</div>';
 }
@@ -814,9 +945,9 @@ function wordHit(text, w){
   if(w.length <= 5){ const i = text.indexOf(w); if(i < 0) return false; return text.split(/[\s\-(),/]+/).some(part => part.startsWith(w)); }
   return text.includes(w);
 }
-function offerFor(ing){
+function offerFor(ing, store){
   if(!ing.match || !ing.match.length) return null;
-  const c = offers.filter(aldiOk).filter(o => { const t = norm(o.title + ' ' + (o.keyword || '')); return ing.match.some(w => wordHit(t, w)); });
+  const c = offers.filter(aldiOk).filter(o => (!store || o.store === store) && ing.match.some(w => wordHit(norm(o.title + ' ' + (o.keyword || '')), w)));
   c.sort((x, y) => x.price - y.price);
   return c[0] || null;
 }
@@ -835,19 +966,31 @@ function ingCost(i, o){
   if(o){ const g = packGrams(o); return (+o.price || 0) * (i.a && g ? Math.min(i.a / g, 4) : 1); }
   return (+i.p || 0) * (i.a && i.s ? i.a / i.s : 1);
 }
-function recipeInfo(r){
-  const prem = isPremium();
+// ===== Ein Laden pro Einkauf: Rezepte werden immer für genau einen Laden gerechnet =====
+const STORE_ORDER = ['Lidl', 'Aldi Süd', 'Aldi Nord', 'Kaufland', 'Penny', 'Netto', 'Norma'];
+function offerStores(){ return [...new Set(offers.filter(aldiOk).map(o => o.store))].sort((a, b) => (STORE_ORDER.indexOf(a) + 99) % 99 - (STORE_ORDER.indexOf(b) + 99) % 99); }
+function infoAt(r, store){
   const main = r.ingredients.filter(i => i.match);
-  const hits = main.map(i => ({i, o: prem ? offerFor(i) : null}));
+  const hits = main.map(i => ({i, o: store ? offerFor(i, store) : null}));
   const on = hits.filter(h => h.o);
   const cost = hits.reduce((a, h) => a + ingCost(h.i, h.o), 0);
-  return {total: main.length, on: on.length, sum: on.reduce((a, h) => a + (+h.o.price || 0), 0), cost, per: cost / (r.servings || 1), hits};
+  const normal = main.reduce((a, i) => a + ingCost(i, null), 0);
+  return {store, total: main.length, on: on.length, cost, per: cost / (r.servings || 1), save: Math.max(0, normal - cost), hits};
+}
+function homeStore(){ const h = S.homeStore; return h && h !== 'auto' && offerStores().includes(h) ? h : ''; }
+function recipeInfo(r, forceStore){
+  if(!isPremium()) return infoAt(r, '');
+  if(forceStore) return infoAt(r, forceStore);
+  const h = homeStore(); if(h) return infoAt(r, h);
+  const all = offerStores().map(st => infoAt(r, st));
+  all.sort((a, b) => a.cost - b.cost || b.on - a.on);
+  return all[0] || infoAt(r, '');
 }
 function recipeList(){
   if(!lib) return [];
   const prem = isPremium();
   const L = lib.recipes.map(r => Object.assign({}, r, {info: recipeInfo(r)}));
-  if(prem) L.sort((a, b) => (b.info.on / b.info.total) - (a.info.on / a.info.total) || a.info.per - b.info.per);
+  if(prem) L.sort((a, b) => b.info.on - a.info.on || b.info.save - a.info.save);
   else L.sort((a, b) => (TEASER_RECIPES.indexOf(b.id) >= 0) - (TEASER_RECIPES.indexOf(a.id) >= 0));
   return L;
 }
@@ -855,7 +998,7 @@ function recipeCard(r){
   const prem = isPremium(), open = prem || TEASER_RECIPES.includes(r.id);
   const f = lib && lib.img.recipes && lib.img.recipes[r.id];
   let badge = '';
-  if(prem) badge = r.info.on ? '<span class="pill ok">' + r.info.on + ' von ' + r.info.total + ' Zutaten im Angebot</span>' : '<span class="pill neutral">diese Woche nicht im Angebot</span>';
+  if(prem) badge = r.info.on ? '<span class="pill ok">Alles bei ' + esc(r.info.store) + ' · ' + r.info.on + ' im Angebot</span>' : '<span class="pill neutral">' + (r.info.store ? 'bei ' + esc(r.info.store) + ' ' : '') + 'nichts im Angebot</span>';
   else if(!open) badge = '<span class="pill neutral">🔒 Premium</span>';
   else badge = '<span class="pill ok">Gratis zum Testen</span>';
   return '<button class="card" data-action="recipe" data-id="' + esc(r.id) + '" style="text-align:left;font:inherit;color:inherit;cursor:pointer;padding:0;overflow:hidden;gap:0">' +
@@ -864,39 +1007,94 @@ function recipeCard(r){
     '<span class="small muted">▶ Video · ' + r.servings + ' Portionen · ' + r.minutes + ' Min.</span>' +
     '<span style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:space-between"><span style="display:flex;gap:6px;flex-wrap:wrap">' + badge + '</span><span class="small" style="white-space:nowrap">ca. <b class="price" style="font-size:17px">' + eur(r.info.per) + '</b> pro Person</span></span></span></button>';
 }
-function recipeSheet(id){
+let sheetStore = '';
+function recipeSheet(id, store){
   const base = lib && lib.recipes.find(x => x.id === id); if(!base) return;
   const prem = isPremium();
   if(!prem && !TEASER_RECIPES.includes(id)){ seg = 'offers'; premiumMsg = 'Alle 36 Rezepte mit Angebotspreisen gibt es mit Premium. Teste es 7 Tage kostenlos.'; render(); window.scrollTo(0,0); return; }
-  const info = recipeInfo(base);
+  const info = recipeInfo(base, store);
+  sheetStore = info.store || '';
   const f = lib.img.recipes && lib.img.recipes[id];
+  const storePick = prem && offerStores().length > 1 ? '<div class="stack" style="gap:6px"><span class="small muted">Einkaufen bei:</span><div class="chips" style="gap:6px">' + offerStores().map(st => { const x = infoAt(base, st); return '<button class="chip" data-action="recipe-store" data-id="' + esc(id) + '" data-store="' + esc(st) + '" aria-pressed="' + (st === info.store) + '" style="padding:0 10px;font-size:13px">' + esc(st) + ' · ' + eur(x.per) + '</button>'; }).join('') + '</div></div>' : '';
   const row = (i) => {
-    const o = i.match ? offerFor(i) : null;
-    const right = o && prem ? '<span class="stack" style="gap:2px;align-items:flex-end;flex-shrink:0"><b class="mono" style="white-space:nowrap">' + eur(+o.price) + '</b><span class="pill neutral" style="font-size:11px">' + esc(o.store) + '</span></span>' : '';
-    const note = !i.match ? ' <span class="small muted">(Vorrat)</span>' : (o && prem ? '<br><span class="small muted">im Angebot: ' + esc(o.title) + (o.unit ? ', ' + esc(o.unit) : '') + '</span>' : '');
+    const o = i.match && prem && info.store ? offerFor(i, info.store) : null;
+    let right = '', note = '';
+    if(!i.match) note = ' <span class="small muted">(Vorrat)</span>';
+    else if(o){ right = '<span class="stack" style="gap:2px;align-items:flex-end;flex-shrink:0"><b class="mono" style="white-space:nowrap">' + eur(+o.price) + '</b><span class="pill ok" style="font-size:11px">Angebot</span></span>'; note = '<br><span class="small muted">' + esc(o.title) + (o.unit ? ', ' + esc(o.unit) : '') + '</span>'; }
+    else right = '<span class="small muted" style="white-space:nowrap">ca. ' + eur(ingCost(i, null)) + '</span>';
     return '<div class="row" style="gap:10px;align-items:flex-start"><span style="min-width:0;overflow-wrap:anywhere">' + esc((i.qty ? i.qty + ' ' : '') + i.name) + note + '</span>' + right + '</div>';
   };
   openSheet((f ? '<img src="' + imgUrl(f) + '" alt="" style="width:calc(100% + 40px);margin:-20px -20px 4px;aspect-ratio:4/3;object-fit:cover;display:block;border-radius:20px 20px 0 0">' : '') +
     '<div class="row"><h2 style="margin:0">' + esc(base.title) + '</h2><button class="btn small ghost" data-action="sheet-close" aria-label="Schließen">✕</button></div>' +
     '<p class="small muted">' + esc(base.intro || '') + ' Rezept nach dem Video von @' + esc(base.by) + '.</p>' +
-    '<div class="row" style="background:rgba(11,110,79,.10);border-radius:14px;padding:10px 12px;margin:2px 0"><span class="small">' + base.servings + ' Portionen · ' + base.minutes + ' Min.' + (prem ? '<br><b>' + info.on + ' von ' + info.total + '</b> Zutaten diese Woche im Angebot' : '') + '</span><span style="text-align:right"><b class="price" style="font-size:22px">' + eur(info.per) + '</b><br><span class="small muted">pro Person, ca. ' + eur(info.cost) + ' gesamt</span></span></div>' +
+    '<div class="row" style="background:rgba(11,110,79,.10);border-radius:14px;padding:10px 12px;margin:2px 0"><span class="small">' + base.servings + ' Portionen · ' + base.minutes + ' Min.' + (prem && info.store ? '<br>Alles bei <b>' + esc(info.store) + '</b>, ' + info.on + ' von ' + info.total + ' im Angebot' : '') + '</span><span style="text-align:right"><b class="price" style="font-size:22px">' + eur(info.per) + '</b><br><span class="small muted">pro Person, ca. ' + eur(info.cost) + ' gesamt</span></span></div>' +
+    storePick +
     '<a class="btn ghost" href="' + esc(base.video_url) + '" target="_blank" rel="noopener">▶ Video zum Rezept ansehen</a>' +
-    '<h2 style="font-size:16px;margin:12px 0 4px">Zutaten</h2><div class="stack" style="gap:8px">' + base.ingredients.map(row).join('') + '</div>' +
-    '<button class="btn" data-action="recipe-list" data-id="' + esc(id) + '" style="margin-top:10px">Alle Zutaten auf die Einkaufsliste</button>' +
+    '<h2 style="font-size:16px;margin:12px 0 4px">Zutaten' + (prem && info.store ? ' bei ' + esc(info.store) : '') + '</h2><div class="stack" style="gap:8px">' + base.ingredients.map(row).join('') + '</div>' +
+    '<button class="btn" data-action="recipe-list" data-id="' + esc(id) + '" style="margin-top:10px">Alle Zutaten auf die Einkaufsliste' + (prem && info.store ? ' (' + esc(info.store) + ')' : '') + '</button>' +
     '<h2 style="font-size:16px;margin:12px 0 4px">So geht\'s</h2><ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px">' + base.steps.map(st => '<li>' + esc(st) + '</li>').join('') + '</ol>' +
-    '<p class="small muted" style="margin-top:10px">Preis pro Person: anteilig für die benötigte Menge, ' + (prem ? 'mit den Angebotspreisen dieser Woche, sonst übliche Discounter-Preise.' : 'mit üblichen Discounter-Preisen. Mit Premium rechnen wir mit den Angebotspreisen der Woche.') + ' Gewürze und Vorrat sind nicht eingerechnet. Alle Angaben ohne Gewähr.</p>');
+    '<p class="small muted" style="margin-top:10px">Preis pro Person: anteilig für die benötigte Menge, ' + (prem ? 'Angebotspreise dieser Woche im gewählten Laden, sonst übliche Discounter-Preise.' : 'mit üblichen Discounter-Preisen. Mit Premium rechnen wir mit den Angebotspreisen der Woche.') + ' Gewürze und Vorrat sind nicht eingerechnet. Alle Angaben ohne Gewähr.</p>');
+}
+// Zutaten eines Rezepts als Listeneinträge für genau einen Laden
+function ingredientItems(r, store, factor, tag){
+  const prem = isPremium();
+  return r.ingredients.filter(i => i.match).map((i, k) => {
+    const o = prem && store ? offerFor(i, store) : null;
+    const normal = (+i.p || 0) * (i.a && i.s ? i.a / i.s : 1);
+    return {id:'rz-' + r.id + '-' + k, key: o ? 'o' + o.id : 'n' + norm(i.name), title:o ? o.title : i.name, store:store || 'Einkauf', price:o ? +o.price : Math.round((+i.p || 0) * 100) / 100,
+      unit:o ? (o.unit || '') : (i.qty || ''), keyword:i.name, offer:!!o, save: o ? Math.max(0, Math.round((normal * (factor || 1) - ingCost(i, o) * (factor || 1)) * 100) / 100) : 0, tag:tag || r.title, done:false};
+  });
 }
 function recipeToList(id){
   const r = lib && lib.recipes.find(x => x.id === id); if(!r) return;
-  const prem = isPremium();
+  const store = isPremium() ? (sheetStore || recipeInfo(r).store) : '';
   S.list = S.list || []; let n = 0;
-  r.ingredients.filter(i => i.match).forEach((i, k) => {
-    const lid = 'rz-' + r.id + '-' + k;
-    if(S.list.some(x => x.id === lid)) return;
-    const o = prem ? offerFor(i) : null;
-    S.list.push({id:lid, title:o ? o.title : i.name, store:o ? o.store : 'Sonstiges', price:o ? +o.price : 0, unit:o ? (o.unit || '') : (i.qty || ''), keyword:i.name, done:false}); n++;
-  });
+  ingredientItems(r, store).forEach(it => { if(S.list.some(x => x.id === it.id)) return; S.list.push(it); n++; });
   save(); closeSheet(); seg = 'list'; render(); window.scrollTo(0,0); toast(n ? n + ' Zutaten auf der Einkaufsliste' : 'Steht schon auf deiner Liste');
+}
+// ===== Wochenplan: X Abendessen aus EINEM Laden, abwechslungsreich =====
+const PROTEIN = r => { const t = norm(r.ingredients.filter(i => i.match).map(i => i.name).join(' ')); return /lachs|fisch|garnele/.test(t) ? 'fisch' : /hähnchen|pute|chicken/.test(t) ? 'geflügel' : /hack|frikadell|köfte/.test(t) ? 'hack' : /schwein|rind|nacken|wurst|würstchen/.test(t) ? 'fleisch' : 'veggie'; };
+function makePlan(nights, persons, store){
+  const stores = store ? [store] : offerStores();
+  let best = null;
+  for(const st of stores.length ? stores : ['']){
+    const scored = lib.recipes.map(r => ({r, x: infoAt(r, st)})).sort((a, b) => b.x.on - a.x.on || b.x.save - a.x.save || a.x.per - b.x.per);
+    const pick = [], cnt = {};
+    for(const it of scored){ const p = PROTEIN(it.r); if((cnt[p] || 0) >= Math.ceil(nights / 3)) continue; pick.push(it); cnt[p] = (cnt[p] || 0) + 1; if(pick.length >= nights) break; }
+    const total = pick.reduce((a, it) => a + it.x.per * persons, 0), save = pick.reduce((a, it) => a + it.x.save / (it.r.servings || 1) * persons, 0), on = pick.reduce((a, it) => a + it.x.on, 0);
+    const cand = {store: st, nights, persons, ids: pick.map(it => it.r.id), total, save, on, at: Date.now()};
+    if(!best || cand.on > best.on || (cand.on === best.on && cand.total < best.total)) best = cand;
+  }
+  return best;
+}
+function planSheet(){
+  const pl = S.planPrefs || {nights:5, persons:2};
+  const ch = (name, val, opts) => opts.map(o => '<button class="chip" data-action="plan-pref" data-k="' + name + '" data-v="' + o + '" aria-pressed="' + (val === o) + '">' + o + '</button>').join('');
+  const st = homeStore();
+  openSheet('<div class="row"><h2 style="margin:0">🗓️ Wochenplan erstellen</h2><button class="btn small ghost" data-action="sheet-close" aria-label="Schließen">✕</button></div>' +
+    '<p class="small muted">Wir suchen dir abwechslungsreiche Abendessen mit möglichst vielen Angebotszutaten, alles aus <b>einem</b> Laden.</p>' +
+    '<span class="small"><b>Wie viele Abendessen?</b></span><div class="chips">' + ch('nights', pl.nights, [3, 4, 5, 7]) + '</div>' +
+    '<span class="small"><b>Für wie viele Personen?</b></span><div class="chips">' + ch('persons', pl.persons, [1, 2, 3, 4, 5, 6]) + '</div>' +
+    '<p class="small muted">Laden: <b>' + (st ? esc(st) + '</b> (dein Laden)' : 'automatisch</b>, der günstigste für diesen Plan') + '</p>' +
+    '<button class="btn" data-action="plan-make">Plan erstellen</button>');
+}
+function planCard(){
+  const p = S.plan; if(!p || !lib) return '';
+  const rs = p.ids.map(id => lib.recipes.find(r => r.id === id)).filter(Boolean);
+  if(!rs.length) return '';
+  return '<div class="card" style="gap:10px"><div class="row"><b>🗓️ Dein Wochenplan' + (p.store ? ' · alles bei ' + esc(p.store) : '') + '</b><button class="btn small ghost" data-action="plan-open">Neu</button></div>' +
+    '<span class="small muted">' + p.nights + ' Abendessen für ' + p.persons + (p.persons === 1 ? ' Person' : ' Personen') + ' · ca. <b>' + eur(p.total) + '</b>' + (p.save > 0.5 ? ' · ca. ' + eur(p.save) + ' gespart' : '') + '</span>' +
+    '<div class="stack" style="gap:6px">' + rs.map((r, i) => '<button class="row" data-action="recipe" data-id="' + esc(r.id) + '" style="text-align:left;font:inherit;color:inherit;background:none;border:0;padding:4px 0;cursor:pointer;gap:10px;justify-content:flex-start"><img src="' + imgUrl(lib.img.recipes && lib.img.recipes[r.id]) + '" alt="" style="width:52px;height:40px;border-radius:8px;object-fit:cover;flex-shrink:0"><span class="small" style="min-width:0"><b>Tag ' + (i + 1) + ':</b> ' + esc(r.title) + '</span></button>').join('') + '</div>' +
+    '<button class="btn" data-action="plan-list">Alles auf die Einkaufsliste (' + esc(p.store || 'ein Laden') + ')</button></div>';
+}
+function planToList(){
+  const p = S.plan; if(!p) return;
+  S.list = S.list || []; const before = S.list.length;
+  const byKey = {};
+  p.ids.forEach(id => { const r = lib.recipes.find(x => x.id === id); if(!r) return; const f = p.persons / (r.servings || 1);
+    ingredientItems(r, p.store, f, 'Wochenplan').forEach(it => { if(byKey[it.key]){ byKey[it.key].n++; byKey[it.key].save += it.save; } else byKey[it.key] = Object.assign(it, {n:1}); }); });
+  Object.values(byKey).forEach(it => { it.id = 'plan-' + it.key; if(it.n > 1) it.unit = (it.unit ? it.unit + ' · ' : '') + 'für ' + it.n + ' Rezepte'; if(!S.list.some(x => x.id === it.id)) S.list.push(it); });
+  save(); seg = 'list'; render(); window.scrollTo(0,0); toast((S.list.length - before) + ' Zutaten auf der Einkaufsliste');
 }
 let recipeQ = '', offerQ = '';
 function qHit(text, q){ const t = norm(text); return norm(q).split(/\s+/).filter(Boolean).every(w => t.includes(w)); }
@@ -909,7 +1107,10 @@ function viewRecipesSeg(){
   if(!lib){ setTimeout(loadLib, 0); return '<p class="empty">Lade die Rezepte …</p>'; }
   if(!offersLoaded) setTimeout(() => loadOffers(), 0);
   const prem = isPremium();
-  return (prem ? '<p class="small muted" style="margin:0">Oben stehen die Rezepte, für die diese Woche die meisten Zutaten im Angebot sind.</p>'
+  const stores = offerStores(), h = S.homeStore || 'auto';
+  const storeChips = prem && stores.length ? '<div class="stack" style="gap:6px"><span class="small"><b>Wo kaufst du meistens ein?</b> Wir rechnen jedes Rezept für einen Laden.</span><div class="chips" style="gap:6px">' +
+    ['auto'].concat(stores).map(st => '<button class="chip" data-action="home-store" data-store="' + esc(st) + '" aria-pressed="' + (h === st || (st === 'auto' && !homeStore())) + '" style="padding:0 12px;font-size:14px">' + (st === 'auto' ? 'Günstigster' : esc(st)) + '</button>').join('') + '</div></div>' : '';
+  return (prem ? storeChips + (S.plan ? planCard() : '<button class="btn" data-action="plan-open">🗓️ Wochenplan erstellen</button>') + '<p class="small muted" style="margin:0">Oben stehen die Rezepte mit den meisten Angebotszutaten ' + (homeStore() ? 'bei ' + esc(homeStore()) : 'im jeweils günstigsten Laden') + '.</p>'
     : '<div class="card"><b>36 Rezepte mit Video</b><span class="small muted">2 Rezepte sind gratis. Mit Premium siehst du alle Rezepte und welche Zutaten diese Woche wo im Angebot sind.</span><button class="btn small" data-action="seg" data-seg="offers" style="align-self:flex-start">7 Tage kostenlos testen</button></div>') +
     searchBox('q-recipes', recipeQ, 'Rezept oder Zutat suchen, z. B. Hähnchen') +
     '<div id="recipe-results">' + recipeResultsHtml() + '</div>' +
@@ -922,7 +1123,9 @@ function segTabs(){
 }
 function premiumBox(){
   if(isPremium()){
-    return '<div class="card"><div class="row"><span class="stack" style="gap:2px"><b>Premium ist aktiv</b><span class="small muted">bis ' + new Date(premium.until).toLocaleDateString('de-DE') + ', verlängert sich automatisch</span></span><span class="pill ok">PREMIUM</span></div>' +
+    const sv = shopSaved();
+    return '<div class="card"><div class="row"><span class="stack" style="gap:2px"><b>Premium ist aktiv</b>' + (sv > 0 ? '<span class="small" style="color:var(--accent)"><b>' + eur(sv) + '</b> diesen Monat mit Angeboten gespart' + (sv >= 4.99 ? ' · Premium hat sich schon gelohnt 🎉' : '') + '</span>' : '<span class="small muted">Hake auf der Einkaufsliste ab, was du gekauft hast. Dann zeigen wir dir, wie viel du sparst.</span>') + '<span class="small muted">bis ' + new Date(premium.until).toLocaleDateString('de-DE') + ', verlängert sich automatisch</span></span><span class="pill ok">PREMIUM</span></div>' +
+      (S.account ? '' : '<div class="tip"><span class="ico">' + I.tag + '</span><span class="stack" style="gap:2px"><b>Sichere dein Premium</b><span class="small muted">Ohne Konto ist Premium nur auf diesem Handy. Mit deiner E-Mail bekommst du es bei einem neuen Handy zurück.</span><button class="btn small" data-action="go" data-go="mehr" data-scroll="acct-form" style="align-self:flex-start;margin-top:4px">Jetzt mit E-Mail sichern</button></span></div>') +
       '<button class="btn small ghost" data-action="portal"' + (busy ? ' disabled' : '') + ' style="align-self:flex-start">Abo verwalten oder hier kündigen</button></div>';
   }
   return '<div class="hero"><span class="pill" style="background:var(--hero-bar);color:var(--hero);font-weight:800">7 TAGE KOSTENLOS</span>' +
@@ -934,6 +1137,31 @@ function premiumBox(){
     '<span>✓ 36 Rezepte mit Video, passend zu den Angeboten der Woche</span></div>' +
     '<button class="btn" data-action="premium-start"' + (busy ? ' disabled' : '') + ' style="background:var(--hero-bar);color:var(--hero);font-weight:800">' + (busy ? 'Einen Moment …' : '7 Tage kostenlos testen') + '</button>' +
     '<p class="small muted">Danach 4,99 € pro Monat inkl. MwSt. Jederzeit kündbar, in der Testwoche kostenlos. Bezahlung sicher über Stripe.</p></div>';
+}
+// ===== Lieblingsprodukte: Hinweis, sobald sie im Angebot sind (in der App und per Push) =====
+const favs = () => S.favs || [];
+const favHit = (o, w) => wordHit(norm(o.title + ' ' + (o.keyword || '')), w);
+function favMatches(){ const m = []; offers.filter(aldiOk).forEach(o => { const w = favs().find(w => favHit(o, w)); if(w) m.push({o, w}); }); return m; }
+function addFav(w){
+  w = String(w || '').trim().slice(0, 40); if(w.length < 2) return false;
+  S.favs = favs(); if(S.favs.some(x => norm(x) === norm(w))) return false;
+  S.favs.push(w); save(); syncFavs(); return true;
+}
+async function syncFavs(){
+  try{
+    if(!(await hasSession())) return;
+    const uidv = await userId(); const c = sb();
+    await c.from('favorites').delete().eq('user_id', uidv);
+    if(favs().length) await c.from('favorites').insert(favs().map(w => ({user_id: uidv, word: w})));
+  }catch(e){}
+}
+function favCard(){
+  const m = favMatches();
+  return '<div class="card" style="gap:10px"><div class="row"><b>⭐ Deine Lieblingsprodukte</b>' + (m.length ? '<span class="pill ok">' + m.length + ' im Angebot</span>' : '') + '</div>' +
+    (favs().length ? '<div class="chips" style="gap:6px">' + favs().map(w => '<button class="chip" data-action="fav-del" data-w="' + esc(w) + '" aria-label="' + esc(w) + ' entfernen" style="padding:0 12px;font-size:14px">' + esc(w) + ' ✕</button>').join('') + '</div>' : '<span class="small muted">Trag ein, was du oft kaufst, zum Beispiel Kaffee, Butter oder Windeln. Wir sagen dir Bescheid, sobald es irgendwo im Angebot ist.</span>') +
+    '<form id="fav-form" style="display:flex;gap:8px" novalidate><input id="fav-in" placeholder="z. B. Kaffee" maxlength="40" autocomplete="off"><button class="btn small" type="submit">Merken</button></form>' +
+    (m.length ? '<div class="stack" style="gap:6px">' + m.slice(0, 6).map(x => '<span class="small">✓ <b>' + esc(x.o.title) + '</b> bei ' + esc(x.o.store) + ' für ' + eur(+x.o.price) + '</span>').join('') + '</div>' : '') +
+    (favs().length ? '<span class="small muted">' + (S.cloud && S.cloud.enabled ? 'Neue Angebote melden wir dir montags per Push.' : 'Tipp: Schalte unter „Alarme“ die Benachrichtigungen ein, dann melden wir neue Angebote montags per Push.') + '</span>' : '') + '</div>';
 }
 function offerResultsHtml(shown){
   const L = shown.filter(o => !offerQ || qHit(o.title + ' ' + o.store + ' ' + (o.keyword || '') + ' ' + (o.unit || ''), offerQ));
@@ -963,6 +1191,7 @@ function viewOffersSeg(){
   html += premiumBox();
   html += '<div class="row"><h2>Top-Angebote der Woche</h2><button class="btn small ghost" data-action="offers-reload" aria-label="Angebote aktualisieren">' + I.refresh + '</button></div>';
   html += nearHint();
+  if(offersLoaded) html += favCard();
   if(offersLoaded && !offersLoading && mine.length) html += searchBox('q-offers', offerQ, 'Angebot suchen, z. B. Hackfleisch');
   if(stores.length > 2) html += '<div class="chips" role="group" aria-label="Laden">' + stores.map(s => '<button class="chip" data-action="store" data-store="' + esc(s) + '" aria-pressed="' + (s === storeFilter) + '">' + esc(s) + '</button>').join('') + '</div>';
   if(!offersLoaded || offersLoading) html += '<p class="empty">Lade die Angebote …</p>';
@@ -1078,7 +1307,7 @@ document.addEventListener('click', e => {
   switch(act){
     case 'demo': loadDemo(); loadStations(); break;
     case 'clear-demo': S = defaults(); save(); render(); break;
-    case 'go': tab = a.dataset.go; if(a.dataset.seg) seg = a.dataset.seg; render(); window.scrollTo(0,0); if(tab === 'tanken' && !stations.length) loadStations(); break;
+    case 'go': tab = a.dataset.go; if(a.dataset.seg) seg = a.dataset.seg; render(); window.scrollTo(0,0); if(tab === 'tanken' && !stations.length) loadStations(); if(a.dataset.scroll && $(a.dataset.scroll)) $(a.dataset.scroll).scrollIntoView({block:'center'}); break;
     case 'fuel': S.setup.fuel = a.dataset.fuel; save(); render(); break;
     case 'reload': loadStations(); break;
     case 'tank-init': { const v = +$('t-init').value; S.tank = {liters: S.setup.tankL * v / 100, at: Date.now(), odo: null}; save(); render(); toast('Füllstand gespeichert'); break; }
@@ -1104,14 +1333,24 @@ document.addEventListener('click', e => {
     case 'pf-no': delete S.pendingFill; save(); closeSheet(); break;
     case 'near-ask': if(!nearBusy) loadNear(true); break;
     case 'recipe': recipeSheet(a.dataset.id); break;
+    case 'recipe-store': recipeSheet(a.dataset.id, a.dataset.store); break;
+    case 'fav-add': if(addFav(a.dataset.w)) toast('⭐ ' + a.dataset.w + ' gemerkt'); render(); break;
+    case 'fav-del': S.favs = favs().filter(w => w !== a.dataset.w); save(); syncFavs(); render(); break;
+    case 'home-store': S.homeStore = a.dataset.store; save(); render(); break;
+    case 'plan-open': if(!isPremium()){ seg = 'offers'; premiumMsg = 'Den Wochenplan gibt es mit Premium. Teste es 7 Tage kostenlos.'; render(); break; } planSheet(); break;
+    case 'plan-pref': S.planPrefs = Object.assign({nights:5, persons:2}, S.planPrefs || {}, {[a.dataset.k]: +a.dataset.v}); save(); planSheet(); break;
+    case 'plan-make': { const pl = S.planPrefs || {nights:5, persons:2}; S.plan = makePlan(pl.nights, pl.persons, homeStore()); save(); closeSheet(); seg = 'recipes'; render(); window.scrollTo(0,0); toast('Wochenplan erstellt'); break; }
+    case 'plan-list': planToList(); break;
     case 'recipe-list': recipeToList(a.dataset.id); break;
     case 'list-toggle': { const o = offers.find(x => x.id === a.dataset.id); if(o) toggleList(o); break; }
-    case 'list-done': { const it = (S.list || []).find(x => x.id === a.dataset.id); if(it){ it.done = !it.done; save(); render(); } break; }
+    case 'list-done': { const it = (S.list || []).find(x => x.id === a.dataset.id); if(it){ it.done = !it.done; if(it.save > 0){ const m = new Date().toISOString().slice(0, 7); S.saved = S.saved || {}; S.saved[m] = Math.max(0, Math.round(((S.saved[m] || 0) + (it.done ? it.save : -it.save)) * 100) / 100); } save(); render(); } break; }
     case 'list-clear-done': S.list = (S.list || []).filter(x => !x.done); save(); render(); break;
     case 'list-clear': S.list = []; save(); render(); toast('Einkaufsliste geleert'); break;
     case 'premium-start': if(!busy) startPremium(); break;
     case 'portal': if(!busy) openPortal(); break;
     case 'pmsg-close': premiumMsg = ''; render(); break;
+    case 'acct-logout': acctLogout(); break;
+    case 'acct-back': acct = {step:'', email:acct.email, type:'', msg:'', busy:false}; render(); break;
     case 'copy-id': navigator.clipboard && navigator.clipboard.writeText(S.uid || '').then(() => toast('Geräte-ID kopiert'), () => toast('Bitte die ID markieren und kopieren')); break;
     case 'alarms-on': if(!busy) enableAlarms(); break;
     case 'alarms-off': offArmed = true; render(); break;
@@ -1163,6 +1402,9 @@ document.addEventListener('submit', e => {
     S.fills.push({at:Date.now(), station:(sheetCtx && sheetCtx.station) || null, price, liters, avg:avg || null, saved, full, odo});
     save(); closeSheet(); render(); toast(saved > 0 ? eur(saved) + ' gespart gegenüber dem Durchschnitt' : 'Tankfüllung gespeichert');
   }
+  if(id === 'acct-form'){ if(!acct.busy) acctSend($('acct-mail').value); }
+  if(id === 'code-form'){ if(!acct.busy) acctVerify($('acct-code').value); }
+  if(id === 'fav-form'){ const v = $('fav-in').value; if(addFav(v)) toast('⭐ ' + v.trim() + ' gemerkt'); render(); }
   if(id === 'own-item-form'){
     const t = $('own-item').value.trim(); if(!t) return;
     S.list = S.list || []; S.list.push({id:'own-' + uid(), title:t, store:'Sonstiges', price:0, unit:'', keyword:t, done:false}); save(); render(); toast('Hinzugefügt');
@@ -1212,5 +1454,7 @@ setTimeout(checkPendingFill, 1200);
 if(location.hash === '#tankcheck'){ tab = 'tanken'; setTimeout(() => { render(); if(S.tank) tankCheckSheet(); }, 300); }
 render();
 if(S.setup.done){ loadStations(); refreshPremium(); }
+refreshAccount();
+if(location.hash === '#konto'){ tab = 'mehr'; render(); setTimeout(() => { const k = $('konto') || $('acct-form'); if(k) k.scrollIntoView({block:'center'}); }, 300); }
 })();
 </script>

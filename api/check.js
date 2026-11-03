@@ -97,5 +97,26 @@ export default async function handler(req, res) {
     }
   }
 
+  // 3) Lieblingsprodukte: montags 8 Uhr (ein Lauf im Fenster 8:00–8:29) für Premium-Kunden
+  const minute = new Date().getUTCMinutes();
+  const weekday = new Intl.DateTimeFormat('en-GB', { weekday: 'short', timeZone: 'Europe/Berlin' }).format(new Date());
+  if ((weekday === 'Mon' && hour === 8 && minute < 30) || req.query.fav === 'test') {
+    stats.fav = 0;
+    const today = new Date().toISOString().slice(0, 10);
+    const { data: offs } = await db.from('offers').select('id,title,keyword,store,price,valid_until').gte('valid_until', today);
+    const { data: favRows } = await db.from('favorites').select('user_id,word');
+    const byUser = {};
+    for (const f of favRows || []) (byUser[f.user_id] = byUser[f.user_id] || []).push(f.word.toLowerCase());
+    for (const [uid, words] of Object.entries(byUser)) {
+      const { data: prof } = await db.from('profiles').select('plan,premium_until').eq('user_id', uid).maybeSingle();
+      if (!prof || prof.plan !== 'premium' || new Date(prof.premium_until) < new Date()) continue;
+      const hits = (offs || []).filter(o => words.some(w => (o.title + ' ' + (o.keyword || '')).toLowerCase().includes(w))).sort((a, b) => a.price - b.price);
+      if (!hits.length) continue;
+      const top = hits.slice(0, 3).map(o => `${o.title} bei ${o.store} für ${Number(o.price).toFixed(2).replace('.', ',')} €`).join(', ');
+      const body = hits.length > 3 ? `${top} und ${hits.length - 3} weitere.` : top + '.';
+      if (await send(uid, { title: '⭐ Deine Lieblingsprodukte sind im Angebot', body, url: '/#angebote', tag: 'fav' })) stats.fav++;
+    }
+  }
+
   return res.status(200).json({ ok: true, hour, ...stats });
 }
