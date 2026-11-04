@@ -12,6 +12,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.11'}
+      - run: |
+          [ -f tr/urls.txt ] && while read n u; do [ -n "$n" ] && curl -fsSL -o "tr/$n" "$u"; done < tr/urls.txt || true
       - run: pip install -q faster-whisper
       - run: |
           python - <<'PY'
@@ -19,7 +21,7 @@ jobs:
           from faster_whisper import WhisperModel
           m = WhisperModel("medium", device="cpu", compute_type="int8")
           out = {}
-          for f in sorted(glob.glob("tr/*.wav")):
+          for f in sorted(glob.glob("tr/*.wav") + glob.glob("tr/*.mp3")):
               segs, info = m.transcribe(f, language="de", word_timestamps=True, beam_size=5)
               words = []
               text = ""
@@ -32,6 +34,6 @@ jobs:
       - run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
-          git add tr/result.json
+          git add tr
           git commit -m "Transkript" || true
           git push
