@@ -497,11 +497,13 @@ function sortedStations(list, f){
   return L;
 }
 function timeHint(){
-  const h = new Date().getHours();
-  if(h >= 18 && h < 22) return {good:true, title:'Jetzt ist eine gute Zeit', text:'Am frühen Abend sind die Spritpreise meist am niedrigsten.'};
-  if(h >= 6 && h < 12) return {good:false, title:'Wenn es nicht eilt: heute Abend tanken', text:'Morgens sind die Preise meist am höchsten. Ab etwa 18 Uhr wird es in der Regel günstiger.'};
-  if(h >= 12 && h < 18) return {good:false, title:'Lieber bis zum Abend warten', text:'Ab etwa 18 Uhr sinken die Preise meist. Wenn dein Tank reicht, lohnt sich das Warten.'};
-  return {good:false, title:'Faustregel: früher Abend', text:'Nachts und am Morgen steigen die Preise oft. Am günstigsten ist es meist zwischen 18 und 22 Uhr.'};
+  // Seit 1.4.2026 dürfen Tankstellen nur um 12 Uhr erhöhen, senken jederzeit (12-Uhr-Regel).
+  // ADAC-Auswertung Mai 2026: kurz vor 12 am günstigsten, ab 12 Uhr Sprung nach oben, ab ca. 17:30 wieder unter dem Tagesschnitt.
+  const d = new Date(), m = d.getHours() * 60 + d.getMinutes();
+  if(m >= 5*60 && m < 12*60) return {good:true, title:'Jetzt tanken, vor 12 Uhr', text:'Um 12 Uhr dürfen Tankstellen ihre Preise erhöhen. Kurz vor 12 ist es im Schnitt am günstigsten.'};
+  if(m >= 12*60 && m < 17*60 + 30) return {good:false, title:'Seit 12 Uhr ist Sprit teurer', text:'Wenn dein Tank reicht: morgen Vormittag tanken. Ab etwa 17:30 Uhr wird es meist wieder etwas günstiger.'};
+  if(m >= 17*60 + 30 && m < 22*60) return {good:true, title:'Jetzt geht es wieder', text:'Ab etwa 17:30 Uhr liegen die Preise meist unter dem Tagesschnitt. Am günstigsten ist es aber vormittags vor 12 Uhr.'};
+  return {good:false, title:'Morgen Vormittag tanken', text:'Viele Tankstellen haben nachts geschlossen. Am günstigsten ist es meist am Vormittag, kurz vor 12 Uhr.'};
 }
 
 // ===== Gespart =====
@@ -695,7 +697,7 @@ function viewAlarme(){
       '<p class="small muted">Du brauchst kein Konto und keine E-Mail-Adresse. Die App fragt nach Benachrichtigungen und deinem Standort.</p>';
     return head +
       '<div class="card"><h2>Das bekommst du</h2>' +
-      '<div class="tip"><span class="ico ok">' + I.pump + '</span><span class="stack" style="gap:2px"><b>Tank-Alarm</b><span class="small muted">Wird dein Tank knapp, meldet sich die App am Nachmittag mit der günstigsten Tankstelle in deiner Nähe.</span></span></div>' +
+      '<div class="tip"><span class="ico ok">' + I.pump + '</span><span class="stack" style="gap:2px"><b>Tank-Alarm</b><span class="small muted">Wird dein Tank knapp, meldet sich die App am Vormittag, also vor der Preiserhöhung um 12 Uhr, mit der günstigsten Tankstelle in deiner Nähe.</span></span></div>' +
       '<div class="tip"><span class="ico ok">' + I.tag + '</span><span class="stack" style="gap:2px"><b>Sprit-Wunschpreis</b><span class="small muted">Du legst fest, z. B. „E10 unter 1,85 €“. Sobald eine Tankstelle in der Nähe so günstig ist, bekommst du Bescheid.</span></span></div>' +
       action + '</div>';
   }
@@ -708,7 +710,7 @@ function viewAlarme(){
     '<button class="btn small danger" data-action="alert-del" data-id="' + esc(a.id) + '" aria-label="Preisalarm löschen">Löschen</button></div>').join('')
     : '<p class="small muted">' + (alertsLoaded ? 'Noch kein Preisalarm angelegt.' : 'Lade deine Preisalarme …') + '</p>';
   return head +
-    '<div class="card"><label class="switch" for="a-tank"><span class="stack" style="gap:2px"><b style="font-size:15px">Tank-Alarm</b><span class="small muted">Meldet sich zwischen 16 und 19 Uhr, wenn dein Tank unter ca. 25 % oder 120 km Reichweite fällt.</span></span>' +
+    '<div class="card"><label class="switch" for="a-tank"><span class="stack" style="gap:2px"><b style="font-size:15px">Tank-Alarm</b><span class="small muted">Meldet sich zwischen 8 und 11 Uhr (vor der Preiserhöhung um 12), wenn dein Tank unter ca. 25 % oder 120 km Reichweite fällt.</span></span>' +
     '<input type="checkbox" id="a-tank"' + (S.cloud.tankAlarm ? ' checked' : '') + '></label>' + tankHint + '</div>' +
     '<form class="card" id="alert-form" novalidate><h2>Sprit-Wunschpreis</h2>' +
     '<div class="fields"><div class="field"><label for="al-fuel">Sprit</label>' + fuelSelect('al-fuel', f) + '</div>' +

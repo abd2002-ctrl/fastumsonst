@@ -59,8 +59,8 @@ export default async function handler(req, res) {
     return delivered;
   }
 
-  // 1) Tank-Alarm: nachmittags/abends, damit man noch am selben Abend günstig tanken kann
-  if (hour >= 16 && hour < 19) {
+  // 1) Tank-Alarm: vormittags, damit man vor der Preiserhöhung um 12 Uhr tanken kann (12-Uhr-Regel seit 1.4.2026)
+  if (hour >= 8 && hour < 11) {
     const { data: rows } = await db.from('settings').select('*').eq('tank_alarm', true).not('tank_at', 'is', null).not('home_lat', 'is', null);
     for (const r of rows || []) {
       const days = (now - new Date(r.tank_at).getTime()) / (24 * HOUR);
@@ -73,8 +73,8 @@ export default async function handler(req, res) {
       if (last > new Date(r.tank_at).getTime() && now - last < 48 * HOUR) continue;
       const best = cheapest(await stationsNear(r.home_lat, r.home_lng), r.fuel);
       const body = best
-        ? `Noch ca. ${Math.round(reach)} km im Tank. Am günstigsten gerade: ${stationName(best)}, ${price(best[r.fuel])} €/l (${best.dist.toFixed(1).replace('.', ',')} km). Abends ist es meist am billigsten.`
-        : `Noch ca. ${Math.round(reach)} km im Tank. Tank am besten heute Abend, dann sind die Preise meist am niedrigsten.`;
+        ? `Noch ca. ${Math.round(reach)} km im Tank. Am günstigsten gerade: ${stationName(best)}, ${price(best[r.fuel])} €/l (${best.dist.toFixed(1).replace('.', ',')} km). Tank am besten vor 12 Uhr, danach steigen die Preise.`
+        : `Noch ca. ${Math.round(reach)} km im Tank. Tank am besten vor 12 Uhr, danach steigen die Preise.`;
       if (await send(r.user_id, { title: 'Zeit zum Tanken', body: body + ' Stimmt nicht? Tippe hier zum Anpassen.', url: '/#tankcheck', tag: 'tank' })) {
         await db.from('settings').update({ tank_notified_at: new Date().toISOString() }).eq('user_id', r.user_id);
         stats.tank++;
