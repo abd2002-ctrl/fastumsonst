@@ -39,6 +39,11 @@ th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4p
 .tbl{overflow-x:auto}
 .num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .pill{display:inline-block;font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;background:var(--accent-soft);color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.kpi b{font-size:24px;font-variant-numeric:tabular-nums}
+.kpi span{font-size:12px;opacity:.7}
 .pill.old{background:var(--warn-soft);color:var(--warn)}
 [hidden]{display:none!important}
 </style>
@@ -56,6 +61,21 @@ th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4p
   </form>
 
   <div id="app" hidden style="display:flex;flex-direction:column;gap:16px">
+    <div class="card" id="live">
+      <div class="row"><h2>Live-Statistik</h2><span class="small muted" id="live-time">lädt …</span></div>
+      <div class="kpis">
+        <div class="kpi"><b id="k-trial">–</b><span>im Probeabo</span></div>
+        <div class="kpi"><b id="k-active">–</b><span>zahlende Kunden</span></div>
+        <div class="kpi"><b id="k-mrr">–</b><span>Umsatz / Monat</span></div>
+        <div class="kpi"><b id="k-ending">–</b><span>gekündigt (läuft aus)</span></div>
+        <div class="kpi"><b id="k-users">–</b><span>Nutzer mit Konto</span></div>
+        <div class="kpi"><b id="k-new">–</b><span>neu heute / 7 Tage</span></div>
+        <div class="kpi"><b id="k-push">–</b><span>Push aktiviert</span></div>
+        <div class="kpi"><b id="k-alarm">–</b><span>Preis- / Tank-Alarme</span></div>
+      </div>
+      <p class="small muted">„Nutzer mit Konto“ zählt nur Geräte, die Alarme, Premium oder E-Mail-Login genutzt haben. Wer die App nur anschaut, wird nicht gezählt.</p>
+      <div class="tbl"><table><thead><tr><th>Abgeschlossen</th><th>Status</th><th>Probe endet</th></tr></thead><tbody id="subs"></tbody></table></div>
+    </div>
     <div class="card"><div class="row"><span><b id="stat-offers">0</b> aktuelle Angebote · <b id="stat-prem">0</b> Premium-Kunden</span><a class="btn small ghost" href="./" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">App öffnen</a></div></div>
 
     <form class="card" id="offer-form" novalidate>
@@ -136,7 +156,33 @@ async function api(action, data){
   if(!r.ok || !j.ok){ const err = new Error(j.message || ('Fehler ' + r.status)); err.status = r.status; throw err; }
   return j;
 }
-function showApp(on){ $('login').hidden = on; $('app').hidden = !on; $('logout').hidden = !on; }
+const dt = s => new Date(s * 1000).toLocaleString('de-DE', {day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'});
+const STATUS = {trialing:'Probeabo', active:'zahlt', canceled:'beendet', past_due:'Zahlung offen', unpaid:'unbezahlt', incomplete:'unvollständig', incomplete_expired:'abgebrochen'};
+let liveTimer = null;
+async function loadStats(){
+  try{
+    const j = await api('stats');
+    const s = j.stripe;
+    $('k-users').textContent = j.users;
+    $('k-new').textContent = j.users24 + ' / ' + j.users7;
+    $('k-push').textContent = j.pushes;
+    $('k-alarm').textContent = j.alerts + ' / ' + j.tankAlarm;
+    if(s){
+      $('k-trial').textContent = s.trialing;
+      $('k-active').textContent = s.active;
+      $('k-ending').textContent = s.ending;
+      const mrr = s.recent.length ? s.active * ((s.recent.find(r => r.amount) || {}).amount || 499) / 100 : 0;
+      $('k-mrr').textContent = eur(mrr);
+      $('subs').innerHTML = s.recent.length ? s.recent.map(r => '<tr><td class="num">' + dt(r.created) + '</td><td>' + esc(STATUS[r.status] || r.status) + (r.cancel ? ' <span class="pill old">gekündigt</span>' : '') + '</td><td class="num">' + (r.status === 'trialing' && r.trial_end ? dt(r.trial_end) : '–') + '</td></tr>').join('') : '<tr><td colspan="3" class="muted">Noch keine Abos. Das kommt noch!</td></tr>';
+    } else {
+      ['k-trial','k-active','k-ending','k-mrr'].forEach(id => $(id).textContent = '?');
+      $('subs').innerHTML = '<tr><td colspan="3" class="muted">Stripe nicht erreichbar' + (j.stripeError ? ': ' + esc(j.stripeError) : '') + '</td></tr>';
+    }
+    $('live-time').textContent = 'Stand ' + new Date().toLocaleTimeString('de-DE', {hour:'2-digit', minute:'2-digit', second:'2-digit'}) + ' · aktualisiert jede Minute';
+  }catch(e){ $('live-time').textContent = 'Fehler: ' + e.message; }
+}
+function startLive(){ loadStats(); clearInterval(liveTimer); liveTimer = setInterval(() => { if(!document.hidden) loadStats(); }, 60000); }
+function showApp(on){ if(on) startLive(); else clearInterval(liveTimer); $('login').hidden = on; $('app').hidden = !on; $('logout').hidden = !on; }
 async function load(){
   const j = await api('list');
   offers = j.offers || []; recipes = j.recipes || [];

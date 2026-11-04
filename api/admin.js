@@ -1,6 +1,7 @@
 // Verwaltung: Angebote pflegen und Premium freischalten. Geschützt durch ADMIN_PASSWORD.
 import crypto from 'node:crypto';
 import { createClient } from '@supabase/supabase-js';
+import Stripe from 'stripe';
 
 const SUPABASE_URL = 'https://ejnhcduokkjfubgildyy.supabase.co';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -143,6 +144,38 @@ export default async function handler(req, res) {
         const { error } = await db.from('recipes').delete().eq('id', body.id);
         if (error) throw error;
         return res.status(200).json({ ok: true });
+      }
+      case 'stats': {
+        const now = Date.now();
+        const cnt = q => q.then(r => r.count || 0, () => 0);
+        const since = ms => new Date(now - ms).toISOString();
+        const [users, users24, users7, pushes, alerts, tankAlarm] = await Promise.all([
+          cnt(db.from('profiles').select('user_id', { count: 'exact', head: true })),
+          cnt(db.from('profiles').select('user_id', { count: 'exact', head: true }).gte('created_at', since(864e5))),
+          cnt(db.from('profiles').select('user_id', { count: 'exact', head: true }).gte('created_at', since(7 * 864e5))),
+          cnt(db.from('push_subscriptions').select('endpoint', { count: 'exact', head: true })),
+          cnt(db.from('price_alerts').select('id', { count: 'exact', head: true }).eq('active', true)),
+          cnt(db.from('settings').select('user_id', { count: 'exact', head: true }).eq('tank_alarm', true))
+        ]);
+        const out = { ok: true, users, users24, users7, pushes, alerts, tankAlarm, stripe: null };
+        if (process.env.STRIPE_SECRET_KEY) {
+          try {
+            const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+            const list = await stripe.subscriptions.list({ status: 'all', limit: 100 });
+            const subs = list.data;
+            out.stripe = {
+              trialing: subs.filter(s => s.status === 'trialing').length,
+              active: subs.filter(s => s.status === 'active').length,
+              ending: subs.filter(s => ['trialing', 'active'].includes(s.status) && s.cancel_at_period_end).length,
+              canceled: subs.filter(s => s.status === 'canceled').length,
+              recent: subs.slice(0, 15).map(s => ({
+                created: s.created, status: s.status, trial_end: s.trial_end || null,
+                cancel: !!s.cancel_at_period_end, amount: (s.items.data[0] && s.items.data[0].price && s.items.data[0].price.unit_amount) || null
+              }))
+            };
+          } catch (e) { out.stripeError = e.message; }
+        }
+        return res.status(200).json(out);
       }
       case 'grant': {
         const uid = String(body.userId || '').trim();
