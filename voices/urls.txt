@@ -1,1 +1,1 @@
-eve.json https://fastumsonst.vercel.app/api/stations?lat=49.454&lng=11.077&rad=5
+morn.json https://fastumsonst.vercel.app/api/stations?lat=49.454&lng=11.077&rad=5
