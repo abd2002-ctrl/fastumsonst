@@ -1,5 +1,6 @@
 name: fetch-urls
 on:
+  workflow_dispatch:
   push:
     branches: [video-assets]
     paths: [voices/urls.txt]
